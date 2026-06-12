@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SafeNet ‚Äî AI Scam Protection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+  <style>
+    /* ‚îÄ‚îÄ‚îÄ RESET & BASE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #06060f;
+      --surface: #0d0d1a;
+      --card: rgba(255,255,255,0.035);
+      --card-hover: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.14);
+      --primary: #6366f1;
+      --primary-glow: rgba(99,102,241,0.25);
+      --blue: #3b82f6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --danger-glow: rgba(239,68,68,0.2);
+      --text: #f1f5f9;
+      --text-2: #94a3b8;
+      --text-3: #475569;
+      --radius: 16px;
+      --radius-lg: 22px;
+      --radius-xl: 28px;
+    }
+    html { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+    button { font-family: inherit; cursor: pointer; border: none; outline: none; }
+    input, textarea, select { font-family: inherit; outline: none; border: none; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; }
+
+    /* ‚îÄ‚îÄ‚îÄ ELDERLY MODE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    html.elderly p, html.elderly li, html.elderly span.em-text { font-size: 1.05rem !important; line-height: 1.8 !important; }
+    html.elderly label { font-size: 1rem !important; }
+    html.elderly h1 { font-size: 2.2rem !important; }
+    html.elderly h2 { font-size: 1.75rem !important; }
+    html.elderly h3 { font-size: 1.4rem !important; }
+    html.elderly h4 { font-size: 1.2rem !important; }
+    html.elderly input, html.elderly textarea, html.elderly select { font-size: 1.05rem !important; padding: 0.75rem 1rem !important; }
+    html.elderly .small-label { font-size: 0.8rem !important; }
+    html.elderly button[data-primary] { font-size: 1.1rem !important; padding: 0.9rem 1.5rem !important; }
+
+    /* ‚îÄ‚îÄ‚îÄ SCROLLBAR ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+
+    /* ‚îÄ‚îÄ‚îÄ NAVBAR ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    #navbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(6,6,15,0.85); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.5rem; height: 60px;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 0.6rem; font-weight: 800; font-size: 1.1rem; }
+    .nav-logo .logo-icon {
+      width: 34px; height: 34px; border-radius: 10px;
+      background: linear-gradient(135deg, #6366f1, #3b82f6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; box-shadow: 0 0 16px var(--primary-glow);
+    }
+    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-link {
+      padding: 0.4rem 0.85rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+      color: var(--text-2); transition: all 0.15s; background: none;
+    }
+    .nav-link:hover { color: var(--text); background: var(--card); }
+    .nav-link.active { color: var(--text); background: var(--card); border: 1px solid var(--border); }
+    .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
+    .btn-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--card); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; color: var(--text-2); transition: all 0.15s;
+    }
+    .btn-icon:hover { color: var(--text); border-color: var(--border-strong); }
+    .btn-elderly {
+      padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+      background: var(--card); border: 1px solid var(--border);
+      color: var(--text-2); display: flex; align-items: center; gap: 0.4rem; transition: all 0.15s;
+    }
+    .btn-elderly.on { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); color: #fca5a5; }
+
+    /* ‚îÄ‚îÄ‚îÄ MAIN CONTENT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    #main { flex: 1; max-width: 900px; width: 100%; margin: 0 auto; padding: 2rem 1.5rem; }
+
+    /* ‚îÄ‚îÄ‚îÄ TABS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; animation: fadeIn 0.2s ease; }
+
+    /* ‚îÄ‚îÄ‚îÄ CARDS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-xl); padding: 1.5rem;
+    }
+    .card-lg { padding: 2rem; }
+
+    /* ‚îÄ‚îÄ‚îÄ SCAN TYPE TABS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .seg-control {
+      display: flex; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 12px; padding: 3px; gap: 2px;
+    }
+    .seg-btn {
+      flex: 1; padding: 0.45rem 0.75rem; border-radius: 9px;
+      font-size: 0.78rem; font-weight: 600; color: var(--text-3);
+      background: none; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+    }
+    .seg-btn:hover { color: var(--text-2); }
+    .seg-btn.active { background: rgba(255,255,255,0.07); color: var(--text); border: 1px solid var(--border); }
+
+    /* ‚îÄ‚îÄ‚îÄ FORM ELEMENTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .form-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); margin-bottom: 0.4rem; display: block; }
+    .form-input {
+      width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      border-radius: 12px; padding: 0.65rem 0.9rem; color: var(--text); font-size: 0.875rem;
+      transition: border-color 0.15s; resize: none;
+    }
+    .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+    .form-input::placeholder { color: var(--text-3); }
+    select.form-input option { background: #1a1a2e; }
+
+    /* ‚îÄ‚îÄ‚îÄ BUTTONS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .btn-primary {
+      width: 100%; padding: 0.8rem 1.25rem; border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--blue));
+      color: white; font-weight: 700; font-size: 0.875rem;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      transition: all 0.2s; box-shadow: 0 4px 16px var(--primary-glow);
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
+    .btn-ghost {
+      padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.8rem; font-weight: 600;
+      background: var(--card); border: 1px solid var(--border); color: var(--text-2); transition: all 0.15s;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--border-strong); }
+    .btn-danger {
+      width: 100%; padding: 0.8rem; border-radius: 12px;
+      background: var(--danger); color: white; font-weight: 700; font-size: 0.9rem;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.15s;
+    }
+    .btn-danger:hover { background: #dc2626; }
+
+    /* ‚îÄ‚îÄ‚îÄ IMAGE UPLOAD ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .upload-zone {
+      border: 2px dashed var(--border); border-radius: 14px; padding: 2.5rem 1rem;
+      text-align: center; cursor: pointer; transition: all 0.15s; position: relative;
+    }
+    .upload-zone:hover { border-color: var(--primary); background: var(--primary-glow); }
+    .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    .upload-zone .upload-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .upload-preview { border-radius: 12px; overflow: hidden; max-height: 200px; display: flex; align-items: center; justify-content: center; background: #000; margin-top: 0.75rem; }
+    .upload-preview img { max-height: 200px; object-fit: contain; }
+
+    /* ‚îÄ‚îÄ‚îÄ RESULTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    #results { display: none; margin-top: 1.5rem; }
+    #results.visible { display: block; animation: fadeIn 0.3s ease; }
+
+    .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
+    .result-header h2 { font-size: 1rem; font-weight: 700; }
+
+    .result-grid { display: grid; grid-template-columns: 180px 1fr; gap: 1rem; margin-bottom: 1rem; }
+    @media(max-width: 600px) { .result-grid { grid-template-columns: 1fr; } }
+
+    /* Risk gauge */
+    .gauge-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+    .gauge-wrap { position: relative; width: 110px; height: 110px; }
+    .gauge-wrap svg { width: 100%; height: 100%; }
+    .gauge-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .gauge-score { font-size: 1.6rem; font-weight: 900; font-family: 'JetBrains Mono', monospace; line-height: 1; }
+    .gauge-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-3); margin-top: 2px; }
+    .verdict-badge { padding: 0.25rem 0.85rem; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
+    .verdict-safe { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.25); }
+    .verdict-suspicious { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+    .verdict-high { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+
+    /* Analysis panel */
+    .analysis-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+    .analysis-card h4 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem; }
+    .reason-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
+    .reason-list li { font-size: 0.82rem; color: var(--text-2); display: flex; gap: 0.5rem; line-height: 1.5; }
+    .reason-list li::before { content: '‚Ä¢'; color: var(--blue); flex-shrink: 0; font-weight: 900; }
+    .badge-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .badge { padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.7rem; font-weight: 700; }
+    .badge-tactic { background: rgba(255,255,255,0.06); color: var(--text-2); border: 1px solid var(--border); }
+    .badge-flag { background: rgba(239,68,68,0.1); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+
+    /* Choice simulator */
+    .choice-sim { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+    .choice-sim-header { padding: 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+    .choice-sim-header h3 { font-size: 0.875rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+    .choice-sim-body { padding: 1.25rem; }
+    .choice-desc { font-size: 0.8rem; color: var(--text-2); margin-bottom: 1rem; line-height: 1.55; }
+    .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+    @media(max-width: 600px) { .scenario-grid { grid-template-columns: 1fr; } }
+    .scenario-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem; }
+    .scenario-type { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem; }
+    .type-best { color: var(--success); }
+    .type-likely { color: var(--warning); }
+    .type-worst { color: var(--danger); }
+    .scenario-title { font-size: 0.78rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; line-height: 1.3; }
+    .scenario-impact { font-size: 0.73rem; color: var(--text-2); line-height: 1.5; margin-bottom: 0.3rem; }
+    .scenario-impact strong { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-3); display: block; }
+    .severity-bar { margin-top: 0.6rem; }
+    .severity-track { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .severity-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+
+    /* Actions */
+    .actions-card { background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.2); border-radius: var(--radius-lg); padding: 1.1rem; }
+    .actions-card h4 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--text-3); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; }
+    .action-list { display: flex; flex-direction: column; gap: 0.45rem; }
+    .action-item { font-size: 0.82rem; color: var(--text-2); display: flex; gap: 0.5rem; align-items: flex-start; }
+    .action-item::before { content: '‚úî'; color: var(--primary); font-weight: 900; flex-shrink: 0; font-size: 0.75rem; margin-top: 1px; }
+
+    /* ‚îÄ‚îÄ‚îÄ HISTORY ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .history-item {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 0.9rem 1.1rem; display: flex; align-items: center; gap: 1rem;
+      cursor: pointer; transition: all 0.15s; margin-bottom: 0.5rem;
+    }
+    .history-item:hover { border-color: var(--border-strong); background: var(--card-hover); }
+    .history-verdict-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .history-info { flex: 1; min-width: 0; }
+    .history-input { font-size: 0.82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .history-meta { font-size: 0.7rem; color: var(--text-3); margin-top: 2px; }
+    .history-score { font-size: 0.78rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
+
+    /* ‚îÄ‚îÄ‚îÄ REPORTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .report-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; margin-bottom: 0.75rem; }
+    .report-type-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--text-2); padding: 0.15rem 0.55rem; border-radius: 5px; }
+    .report-title { font-size: 0.9rem; font-weight: 700; margin: 0.4rem 0 0.3rem; }
+    .report-desc { font-size: 0.8rem; color: var(--text-2); line-height: 1.55; }
+    .report-source { font-size: 0.72rem; color: #fca5a5; font-family: 'JetBrains Mono', monospace; margin-top: 0.5rem; }
+
+    /* ‚îÄ‚îÄ‚îÄ EDUCATION ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .lesson-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+    .lesson-cat { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--blue); background: rgba(59,130,246,0.1); padding: 0.15rem 0.55rem; border-radius: 5px; display: inline-block; margin-bottom: 0.5rem; }
+    .lesson-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .lesson-desc { font-size: 0.82rem; color: var(--text-2); line-height: 1.6; }
+
+    /* ‚îÄ‚îÄ‚îÄ MODALS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+      align-items: center; justify-content: center; padding: 1rem;
+    }
+    .modal-overlay.open { display: flex; animation: fadeIn 0.15s ease; }
+    .modal { background: #111122; border: 1px solid var(--border-strong); border-radius: var(--radius-xl); padding: 2rem; max-width: 400px; width: 100%; text-align: center; }
+    .modal h2 { font-size: 1.2rem; font-weight: 800; margin: 0.75rem 0 0.5rem; }
+    .modal p { font-size: 0.85rem; color: var(--text-2); line-height: 1.6; margin-bottom: 1.25rem; }
+    .modal-icon { width: 64px; height: 64px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 0.25rem; }
+    .modal-stack { display: flex; flex-direction: column; gap: 0.6rem; }
+
+    /* Settings modal */
+    .settings-modal { max-width: 360px; text-align: left; }
+    .settings-modal h2 { text-align: center; }
+    .settings-modal p { text-align: center; }
+
+    /* ‚îÄ‚îÄ‚îÄ ALERT BANNERS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .alert { padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.82rem; line-height: 1.5; margin-bottom: 0.75rem; }
+    .alert-error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; }
+    .alert-success { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); color: #6ee7b7; }
+
+    /* ‚îÄ‚îÄ‚îÄ LOADING ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .loading-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1rem; gap: 0.75rem; }
+    .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    .loading-wrap p { font-size: 0.82rem; color: var(--text-3); font-weight: 600; }
+
+    /* ‚îÄ‚îÄ‚îÄ EMPTY STATE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .empty { text-align: center; padding: 3rem 1rem; color: var(--text-3); }
+    .empty .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .empty h3 { font-size: 0.95rem; font-weight: 700; color: var(--text-2); margin-bottom: 0.35rem; }
+    .empty p { font-size: 0.82rem; line-height: 1.55; }
+
+    /* ‚îÄ‚îÄ‚îÄ PAGE HEADER ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .page-header { margin-bottom: 1.5rem; }
+    .page-header h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.25rem; }
+    .page-header p { font-size: 0.85rem; color: var(--text-2); }
+
+    /* ‚îÄ‚îÄ‚îÄ UTILITY ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    .space-y > * + * { margin-top: 0.75rem; }
+    .space-y-sm > * + * { margin-top: 0.5rem; }
+    .flex { display: flex; }
+    .flex-between { display: flex; align-items: center; justify-content: space-between; }
+    .gap-sm { gap: 0.5rem; }
+    .text-muted { color: var(--text-3); font-size: 0.78rem; }
+    .text-sm { font-size: 0.82rem; }
+    .font-bold { font-weight: 700; }
+    .mt-1 { margin-top: 0.5rem; }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .mb-2 { margin-bottom: 1rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+    @media(max-width: 640px) { .grid-3 { grid-template-columns: 1fr; } }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<!-- ‚îÄ‚îÄ‚îÄ NAVBAR ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
+<nav id="navbar">
+  <div class="nav-logo">
+    <div class="logo-icon">üõ°Ô∏è</div>
+    SafeNet
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showTab('scanner')">üîç Scanner</button>
+    <button class="nav-link" onclick="showTab('history')">üìã History</button>
+    <button class="nav-link" onclick="showTab('reports')">üö® Reports</button>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-elderly" id="elderly-btn" onclick="handleElderlyClick()">‚ù§Ô∏è Elderly Mode</button>
+    <button class="btn-icon" onclick="openSettings()" title="Settings">‚öôÔ∏è</button>
+  </div>
+</nav>
+
+<!-- ‚îÄ‚îÄ‚îÄ ELDERLY MODE CONFIRM MODAL ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
+<div class="modal-overlay" id="elderly-modal">
+  <div class="modal">
+    <div class="modal-icon" style="background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25);">‚ù§Ô∏è</div>
+    <h2>Enable Elderly-Friendly Mode?</h2>
+    <p>This makes all text larger and easier to read, increases form field sizes, and improves overall readability for comfortable use.</p>
+    <div class="modal-stack">
+      <button class="btn-danger" onclick="confirmElderly()">‚ù§Ô∏è Yes, enable it</button>
+      <button class="btn-ghost" style="width:100%; justify-content:center;" onclick="closeModal('elderly-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ‚îÄ‚îÄ‚îÄ SETTINGS MODAL ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal settings-modal">
+    <div class="modal-icon" style="background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.25);">‚öôÔ∏è</div>
+    <h2>AI Settings</h2>
+    <p>Enter your OpenRouter API key to enable live AI scam analysis.</p>
+    <div class="space-y">
+      <div>
+        <label class="form-label">OpenRouter API Key</label>
+        <input type="password" class="form-input" id="settings-key" placeholder="sk-or-v1-..." />
+      </div>
+      <button class="btn-primary" data-primary onclick="saveSettings()">üíæ Save & Activate</button>
+      <button class="btn-ghost" style="width:100%; justify-content:center;" onclick="closeModal('settings-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ‚îÄ‚îÄ‚îÄ HISTORY DETAIL MODAL ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
+<div class="modal-overlay" id="history-detail-modal" style="align-items:flex-start; padding-top:2rem; overflow-y:auto;">
+  <div id="history-detail-content" style="background:#111122; border:1px solid var(--border-strong); border-radius:var(--radius-xl); padding:1.5rem; max-width:860px; width:100%; margin: 0 auto;">
+  </div>
+</div>
+
+<!-- ‚îÄ‚îÄ‚îÄ WARN COMMUNITY CONFIRM MODAL ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
+<div class="modal-overlay" id="warn-modal">
+  <div class="modal">
+    <div class="modal-icon" style="background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3);">&#x26A0;&#xFE0F;</div>
+    <h2>Warn the Community?</h2>
+    <p>This will forward the AI scan report to the Community Reports page so others can see this threat. The scanned content preview and risk details will be visible to anyone viewing reports.</p>
+    <div class="modal-stack">
+      <button onclick="confirmWarnCommunity()" style="width:100%;padding:0.8rem;border-radius:12px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:#fbbf24;font-weight:700;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+        &#x26A0;&#xFE0F; Yes, warn the community
+      </button>
+      <button class="btn-ghost" style="width:100%;justify-content:center;" onclick="closeModal('warn-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ‚îÄ‚îÄ‚îÄ MAIN ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
+<div id="main">
+
+  <!-- ‚ïê‚ïê‚ïê SCANNER TAB ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê -->
+  <div class="tab-pane active" id="tab-scanner">
+    <div class="page-header">
+      <h1>AI Scam Protection Scanner</h1>
+      <p>Paste a message, URL, or upload a screenshot to instantly detect scams and simulate outcomes.</p>
+    </div>
+
+    <!-- Scan type selector -->
+    <div class="seg-control mb-2" style="max-width:380px;">
+      <button class="seg-btn active" id="seg-text" onclick="switchScanType('text')">‚úâÔ∏è Message</button>
+      <button class="seg-btn" id="seg-url" onclick="switchScanType('url')">üåê Website URL</button>
+      <button class="seg-btn" id="seg-image" onclick="switchScanType('image')">üì∏ Screenshot</button>
+    </div>
+
+    <!-- Alert -->
+    <div id="scan-error" class="alert alert-error" style="display:none;"></div>
+
+    <!-- TEXT input -->
+    <div id="input-text" class="card space-y">
+      <div>
+        <label class="form-label">Paste Message Text</label>
+        <textarea id="text-input" class="form-input" rows="6" placeholder="Paste email content, SMS, DM, or any suspicious message here..."></textarea>
+      </div>
+      <button class="btn-primary" data-primary id="scan-btn-text" onclick="runScan('text')">
+        ‚ú® Analyze Message
+      </button>
+    </div>
+
+    <!-- URL input -->
+    <div id="input-url" class="card space-y" style="display:none;">
+      <div>
+        <label class="form-label">Paste Website URL</label>
+        <input type="text" id="url-input" class="form-input" placeholder="https://suspicious-site.xyz/verify" />
+      </div>
+      <button class="btn-primary" data-primary id="scan-btn-url" onclick="runScan('url')">
+        üåê Analyze URL
+      </button>
+    </div>
+
+    <!-- IMAGE input -->
+    <div id="input-image" class="card space-y" style="display:none;">
+      <div>
+        <label class="form-label">Upload Screenshot</label>
+        <div class="upload-zone" id="upload-zone">
+          <input type="file" accept="image/*" id="image-input" onchange="handleImageUpload(event)" />
+          <div class="upload-icon">üñºÔ∏è</div>
+          <p style="font-size:0.82rem; color:var(--text-2);">Click to upload or drag and drop</p>
+          <p style="font-size:0.72rem; color:var(--text-3); margin-top:0.25rem;">PNG, JPG, WEBP up to 5MB</p>
+        </div>
+        <div id="image-preview-wrap" class="upload-preview" style="display:none;">
+          <img id="image-preview" src="" alt="Preview" />
+        </div>
+      </div>
+      <button class="btn-primary" data-primary id="scan-btn-image" onclick="runScan('image')">
+        üì∏ Extract & Analyze
+      </button>
+    </div>
+
+    <!-- Results area -->
+    <div id="results">
+      <div class="result-header">
+        <div>
+          <div class="text-muted" style="font-weight:700; text-transform:uppercase; letter-spacing:0.06em; font-size:0.65rem;">Scan Complete</div>
+          <h2>Scam Analysis Report</h2>
+        </div>
+        <button class="btn-ghost" onclick="resetScan()">‚Ü© Scan Another</button>
+      </div>
+
+      <!-- Risk gauge + analysis -->
+      <div class="result-grid mb-1">
+        <div class="gauge-card">
+          <div class="text-muted" style="font-size:0.65rem; font-weight:700; text-transform:uppercase;">Risk Score</div>
+          <div class="gauge-wrap">
+            <svg viewBox="0 0 110 110" style="transform:rotate(-90deg);">
+              <circle cx="55" cy="55" r="46" fill="none" stroke="var(--border)" stroke-width="8"/>
+              <circle id="gauge-arc" cx="55" cy="55" r="46" fill="none" stroke="#6366f1" stroke-width="8"
+                stroke-dasharray="289.0" stroke-dashoffset="289.0" stroke-linecap="round"
+                style="transition: stroke-dashoffset 0.8s ease, stroke 0.4s;"/>
+            </svg>
+            <div class="gauge-center">
+              <div class="gauge-score" id="gauge-score">0</div>
+              <div class="gauge-label">/ 100</div>
+            </div>
+          </div>
+          <div id="verdict-badge" class="verdict-badge verdict-safe">SAFE</div>
+        </div>
+
+        <div class="analysis-card">
+          <h4>üîé Analysis Findings</h4>
+          <ul class="reason-list" id="reason-list"></ul>
+          <div class="flex-between" style="gap:1rem; flex-wrap:wrap;">
+            <div>
+              <div class="text-muted mb-1" style="font-size:0.65rem; font-weight:700; text-transform:uppercase;">Tactics Detected</div>
+              <div class="badge-row" id="tactics-row"></div>
+            </div>
+            <div>
+              <div class="text-muted mb-1" style="font-size:0.65rem; font-weight:700; text-transform:uppercase;">Flagged Terms</div>
+              <div class="badge-row" id="flags-row"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Choice simulator -->
+      <div class="choice-sim mb-1">
+        <div class="choice-sim-header">
+          <h3>‚ú® Reaction Choice Simulator</h3>
+          <div class="seg-control" id="choice-tabs" style="max-width:260px;"></div>
+        </div>
+        <div class="choice-sim-body">
+          <p class="choice-desc" id="choice-desc"></p>
+          <div class="scenario-grid" id="scenario-grid"></div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions-card">
+        <h4>üõ°Ô∏è Recommended Actions</h4>
+        <div class="action-list" id="actions-list"></div>
+      </div>
+
+      <!-- Warn Community button -->
+      <div id="warn-btn-wrap" style="margin-top:0.75rem;display:none;">
+        <button onclick="promptWarnCommunity()" style="width:100%;padding:0.8rem 1.25rem;border-radius:12px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.35);color:#fbbf24;font-weight:700;font-size:0.875rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(245,158,11,0.18)'" onmouseout="this.style.background='rgba(245,158,11,0.1)'">
+          ‚ö†Ô∏è Warn Community ‚Äî Forward This Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ‚ïê‚ïê‚ïê HISTORY TAB ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê -->
+  <div class="tab-pane" id="tab-history">
+    <div class="flex-between mb-2">
+      <div class="page-header" style="margin-bottom:0;">
+        <h1>Scan History</h1>
+        <p>All your previous scans saved locally on this device.</p>
+      </div>
+      <button class="btn-ghost" onclick="clearHistory()" style="flex-shrink:0;">üóëÔ∏è Clear All</button>
+    </div>
+
+    <!-- Stats bar -->
+    <div class="grid-3 mb-2" id="history-stats"></div>
+
+    <!-- List -->
+    <div id="history-list"></div>
+  </div>
+
+  <!-- ‚ïê‚ïê‚ïê REPORTS TAB ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê -->
+  <div class="tab-pane" id="tab-reports">
+    <div class="flex-between mb-2" style="flex-wrap:wrap;gap:0.75rem;">
+      <div class="page-header" style="margin-bottom:0;">
+        <h1>Community Reports</h1>
+        <p>AI-verified scam reports forwarded by users. Run a scan to contribute.</p>
+      </div>
+    </div>
+
+    <!-- How it works notice -->
+    <div style="background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.2);border-radius:14px;padding:0.9rem 1.1rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:0.75rem;">
+      <span style="font-size:1.1rem;flex-shrink:0;">üí°</span>
+      <p style="font-size:0.8rem;color:var(--text-2);line-height:1.6;margin:0;">
+        <strong style="color:var(--text);">How to report:</strong> Run a scan on a suspicious message or URL. When the results appear, click the <strong style="color:#fbbf24;">‚ö†Ô∏è Warn Community</strong> button to forward the AI report here so others can see it.
+      </p>
+    </div>
+
+    <div id="reports-list"></div>
+  </div>
+
+</div><!-- /#main -->
+
+<script>
+// ‚îÄ‚îÄ‚îÄ CONSTANTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+
+const TEXT_SYSTEM_PROMPT = `You are an expert cybersecurity analyst. Analyze the provided message (SMS, email, DM, chat) for scam indicators.
+
+Check for: urgency/fear language, brand impersonation, requests for passwords/OTPs/money, suspicious links, fake prizes, and grammar inconsistencies.
+
+Simulate 3 user responses:
+1. "Trust & Interact" ‚Äî click link, call number, share info, send money
+2. "Reply / Argue" ‚Äî reply STOP, engage the sender
+3. "Block & Report" ‚Äî block, delete, report
+
+For each response provide 3 scenarios (BEST_CASE, MOST_LIKELY, WORST_CASE) with realistic Data/Privacy impact, Financial impact, Emotional impact, and a severity score 0-100.
+
+Return ONLY valid JSON (no markdown, no code fences):
+{"riskScore":<0-100>,"verdict":"SAFE"|"SUSPICIOUS"|"HIGH_RISK","reasons":[...],"highlights":[...],"tactics":[...],"actions":[...],"simulatedOutcomes":[{"choiceName":"...","description":"...","scenarios":[{"type":"BEST_CASE"|"MOST_LIKELY"|"WORST_CASE","title":"...","impactData":"...","impactFinancial":"...","impactEmotional":"...","severityScore":<0-100>}]}]}`;
+
+const URL_SYSTEM_PROMPT = `You are a world-class web security expert and URL forensics analyst. Analyze the provided URL deeply.
+
+Check ALL of:
+1. DOMAIN: Is it a real brand domain or impersonation? (amazon.evil.com ‚Äî real domain is evil.com, not amazon)
+2. TLD RISK: .com/.org/.gov = trusted; .xyz/.top/.tk/.ml/.gq/.cf/.buzz/.click/.loan/.zip = HIGH risk
+3. PROTOCOL: HTTP (not HTTPS) = red flag. HTTPS alone does NOT mean safe.
+4. PATH: /verify /login /secure /confirm /reset combined with brand names = phishing
+5. BRAND IMPERSONATION: paypal-secure.xyz, apple-login.com, irs-refund.net
+6. LEGITIMACY: If it's clearly google.com, amazon.com etc ‚Äî say so and give LOW score. Don't false-positive on real sites.
+
+Simulate 3 user responses:
+1. "Visit the Website" ‚Äî open the URL
+2. "Search Instead" ‚Äî search Google for the brand name instead
+3. "Block & Report URL" ‚Äî avoid and report
+
+For each provide 3 scenarios (BEST_CASE, MOST_LIKELY, WORST_CASE) with Data/Privacy, Financial, Emotional impacts and severity score 0-100.
+
+Return ONLY valid JSON (no markdown):
+{"riskScore":<0-100>,"verdict":"SAFE"|"SUSPICIOUS"|"HIGH_RISK","reasons":[...],"highlights":[...],"tactics":[...],"actions":[...],"simulatedOutcomes":[{"choiceName":"...","description":"...","scenarios":[{"type":"BEST_CASE"|"MOST_LIKELY"|"WORST_CASE","title":"...","impactData":"...","impactFinancial":"...","impactEmotional":"...","severityScore":<0-100>}]}]}`;
+
+// ‚îÄ‚îÄ‚îÄ STATE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+let currentScanType = 'text';
+let currentScanInput = '';
+let currentResult = null;
+let selectedChoiceIdx = 0;
+let imageDataUrl = null;
+
+// ‚îÄ‚îÄ‚îÄ STORAGE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+const storage = {
+  getHistory() { try { return JSON.parse(localStorage.getItem('sn-history') || '[]'); } catch { return []; } },
+  addHistory(item) {
+    const h = this.getHistory();
+    h.unshift({ ...item, id: Date.now().toString(36), date: new Date().toISOString() });
+    localStorage.setItem('sn-history', JSON.stringify(h.slice(0, 100)));
+  },
+  clearHistory() { localStorage.removeItem('sn-history'); },
+  async getReports() {
+    if (window.location.protocol.startsWith('http')) {
+      try {
+        const res = await fetch('/api/reports');
+        if (res.ok) return await res.json();
+      } catch (e) {
+        console.warn('Failed to fetch reports from API, falling back to localStorage', e);
+      }
+    }
+    try { return JSON.parse(localStorage.getItem('sn-reports') || '[]'); } catch { return []; }
+  },
+  async addReport(item) {
+    if (window.location.protocol.startsWith('http')) {
+      try {
+        const res = await fetch('/api/reports', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(item)
+        });
+        if (res.ok) return await res.json();
+      } catch (e) {
+        console.warn('Failed to post report to API, falling back to localStorage', e);
+      }
+    }
+    const r = await this.getReports();
+    const newReport = { ...item, id: Date.now().toString(36), date: new Date().toISOString() };
+    r.unshift(newReport);
+    localStorage.setItem('sn-reports', JSON.stringify(r));
+    return newReport;
+  },
+  getApiKey() { return localStorage.getItem('sn-api-key') || ''; },
+  setApiKey(k) { localStorage.setItem('sn-api-key', k); },
+  getElderly() { return localStorage.getItem('sn-elderly') === 'true'; },
+  setElderly(v) { localStorage.setItem('sn-elderly', v); },
+};
+
+
+// ‚îÄ‚îÄ‚îÄ INIT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+window.addEventListener('DOMContentLoaded', async () => {
+  // Restore elderly mode
+  if (storage.getElderly()) {
+    document.getElementById('html-root').classList.add('elderly');
+    document.getElementById('elderly-btn').classList.add('on');
+    document.getElementById('elderly-btn').textContent = '‚ù§Ô∏è Elderly: ON';
+  }
+  renderHistory();
+  await renderReports();
+});
+
+// ‚îÄ‚îÄ‚îÄ TABS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+function showTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  const links = document.querySelectorAll('.nav-link');
+  const labels = ['scanner','history','reports'];
+  links[labels.indexOf(name)]?.classList.add('active');
+
+  if (name === 'history') renderHistory();
+  if (name === 'reports') renderReports();
+}
+
+function switchScanType(type) {
+  currentScanType = type;
+  ['text','url','image'].forEach(t => {
+    document.getElementById('input-' + t).style.display = t === type ? 'block' : 'none';
+    document.getElementById('seg-' + t).classList.toggle('active', t === type);
+  });
+  hideResults();
+  clearError();
+}
+
+function switchReportTab(tab) {
+  document.getElementById('reports-list-pane').style.display = tab === 'list' ? 'block' : 'none';
+  document.getElementById('reports-form-pane').style.display = tab === 'form' ? 'block' : 'none';
+  document.getElementById('seg-report-list').classList.toggle('active', tab === 'list');
+  document.getElementById('seg-report-form').classList.toggle('active', tab === 'form');
+}
+
+// ‚îÄ‚îÄ‚îÄ ELDERLY MODE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+function handleElderlyClick() {
+  const isOn = document.getElementById('html-root').classList.contains('elderly');
+  if (isOn) {
+    // Turn off immediately
+    document.getElementById('html-root').classList.remove('elderly');
+    document.getElementById('elderly-btn').classList.remove('on');
+    document.getElementById('elderly-btn').textContent = '‚ù§Ô∏è Elderly Mode';
+    storage.setElderly('false');
+  } else {
+    // Show confirm dialog
+    openModal('elderly-modal');
+  }
+}
+
+function confirmElderly() {
+  document.getElementById('html-root').classList.add('elderly');
+  document.getElementById('elderly-btn').classList.add('on');
+  document.getElementById('elderly-btn').textContent = '‚ù§Ô∏è Elderly: ON';
+  storage.setElderly('true');
+  closeModal('elderly-modal');
+}
+
+// ‚îÄ‚îÄ‚îÄ SETTINGS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+function openSettings() {
+  document.getElementById('settings-key').value = storage.getApiKey();
+  openModal('settings-modal');
+}
+
+function saveSettings() {
+  const key = document.getElementById('settings-key').value.trim();
+  storage.setApiKey(key);
+  closeModal('settings-modal');
+  if (key) alert('‚úÖ API key saved! Live AI analysis is now active.');
+}
+
+// ‚îÄ‚îÄ‚îÄ MODALS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+// ‚îÄ‚îÄ‚îÄ IMAGE UPLOAD ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+function handleImageUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    imageDataUrl = ev.target.result;
+    document.getElementById('image-preview').src = imageDataUrl;
+    document.getElementById('image-preview-wrap').style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+}
+
+// ‚îÄ‚îÄ‚îÄ SCAN ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+async function runScan(type) {
+  clearError();
+  hideResults();
+
+  let input = '';
+  if (type === 'text') {
+    input = document.getElementById('text-input').value.trim();
+    if (!input) return showError('Please paste a message to analyze.');
+  } else if (type === 'url') {
+    input = document.getElementById('url-input').value.trim();
+    if (!input) return showError('Please enter a URL to analyze.');
+  } else if (type === 'image') {
+    if (!imageDataUrl) return showError('Please upload a screenshot first.');
+  }
+
+  setBtnLoading(type, true);
+
+  try {
+    let result;
+    if (type === 'image') {
+      // Run OCR first
+      showError('üîç Extracting text from image via OCR...', true);
+      const ocrResult = await Tesseract.recognize(imageDataUrl, 'eng', { logger: () => {} });
+      const ocrText = ocrResult.data.text?.trim();
+      clearError();
+      if (!ocrText) return showError('No readable text found in the screenshot. Try a clearer image.');
+      input = ocrText;
+    }
+
+    const apiKey = storage.getApiKey();
+    if (apiKey) {
+      result = await callOpenRouter(type === 'url' ? URL_SYSTEM_PROMPT : TEXT_SYSTEM_PROMPT, input, apiKey, type);
+    } else {
+      result = runHeuristic(type === 'url' ? 'URL' : 'TEXT', input);
+    }
+
+    currentResult = result;
+    currentScanInput = input;
+    storage.addHistory({ type, input: input.substring(0, 120), verdict: result.verdict, riskScore: result.riskScore });
+    renderResults(result);
+  } catch (err) {
+    showError('Scan failed: ' + (err.message || 'Unknown error'));
+  } finally {
+    setBtnLoading(type, false);
+  }
+}
+
+function setBtnLoading(type, loading) {
+  const btn = document.getElementById('scan-btn-' + type);
+  if (!btn) return;
+  const labels = { text: '‚ú® Analyze Message', url: 'üåê Analyze URL', image: 'üì∏ Extract & Analyze' };
+  btn.disabled = loading;
+  btn.innerHTML = loading ? '<span class="spinner" style="width:18px;height:18px;border-width:2px;"></span> Analyzing...' : labels[type];
+}
+
+// ‚îÄ‚îÄ‚îÄ OPENROUTER API ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+async function callOpenRouter(systemPrompt, userContent, apiKey, type) {
+  const userMsg = type === 'url' ? `Analyze this URL: ${userContent}` : `Analyze this message: "${userContent}"`;
+  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'HTTP-Referer': 'https://safenet-app.local',
+      'X-Title': 'SafeNet Scanner',
+    },
+    body: JSON.stringify({
+      model: 'google/gemini-2.5-flash',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMsg },
+      ],
+      temperature: 0.3,
+      max_tokens: 2500,
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error?.message || `API error ${res.status}`);
+  }
+
+  const data = await res.json();
+  const raw = data.choices?.[0]?.message?.content || '{}';
+
+  // Strip markdown fences if present
+  let jsonStr = raw;
+  const fence = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (fence) jsonStr = fence[1].trim();
+  else {
+    const start = raw.indexOf('{'), end = raw.lastIndexOf('}');
+    if (start !== -1 && end !== -1) jsonStr = raw.slice(start, end + 1);
+  }
+
+  const parsed = JSON.parse(jsonStr);
+  if (typeof parsed.riskScore !== 'number') throw new Error('Invalid AI response');
+  return parsed;
+}
+
+// ‚îÄ‚îÄ‚îÄ HEURISTIC FALLBACK ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+function runHeuristic(type, input) {
+  const norm = input.toLowerCase();
+  let score = 15;
+  const reasons = [], highlights = [], tactics = [];
+
+  if (type === 'URL') {
+    if (!input.startsWith('https://')) { score += 25; reasons.push('Not using HTTPS ‚Äî insecure connection.'); highlights.push('http://'); tactics.push('Insecure Connection'); }
+    if (/\.(xyz|top|tk|ml|gq|cf|buzz|click|loan|zip)$/i.test(norm)) { score += 30; reasons.push('Uses a TLD commonly associated with spam and phishing.'); tactics.push('Suspicious TLD'); }
+    if (/(paypal|netflix|amazon|chase|apple|microsoft|fedex|ups|irs)/i.test(norm) && (norm.includes('-') || norm.includes('verify') || norm.includes('signin'))) { score += 45; reasons.push('Brand name combined with suspicious path ‚Äî likely typosquatting.'); tactics.push('Brand Impersonation'); }
+    if (/(login|verify|reset|secure|account|confirm)/i.test(norm)) { score += 15; reasons.push('URL path contains credential-harvesting keywords.'); tactics.push('Urgency Framing'); }
+  } else {
+    const kw = [
+      { w: 'crypto', s: 35, t: 'Investment Scam' }, { w: 'bitcoin', s: 35, t: 'Investment Scam' },
+      { w: 'lottery', s: 40, t: 'Fake Reward' }, { w: 'winner', s: 30, t: 'Fake Reward' },
+      { w: 'gift card', s: 35, t: 'Fake Reward' }, { w: 'irs', s: 45, t: 'Authority Impersonation' },
+      { w: 'tax refund', s: 40, t: 'Authority Impersonation' }, { w: 'verify your account', s: 40, t: 'Account Phishing' },
+      { w: 'suspicious activity', s: 30, t: 'Account Phishing' }, { w: 'card suspended', s: 40, t: 'Urgency' },
+      { w: 'unauthorized', s: 35, t: 'Fear-Mongering' }, { w: 'bank alert', s: 25, t: 'Impersonation' },
+      { w: 'congratulations', s: 20, t: 'Fake Reward' }, { w: 'urgent', s: 20, t: 'Urgency' },
+      { w: 'suspended', s: 30, t: 'Fear-Mongering' }, { w: 'security code', s: 30, t: 'Credential Phishing' },
+      { w: 'passcode', s: 30, t: 'Credential Phishing' }, { w: 'wire', s: 25, t: 'Financial Fraud' },
+      { w: 'package delivery failed', s: 35, t: 'Delivery Phishing' },
+    ];
+    kw.forEach(k => {
+      if (norm.includes(k.w)) {
+        score += k.s;
+        reasons.push(`Contains "${k.w}" ‚Äî associated with ${k.t}.`);
+        highlights.push(k.w);
+        if (!tactics.includes(k.t)) tactics.push(k.t);
+      }
+    });
+    if (/(https?:\/\/|www\.)/i.test(norm)) { score += 15; reasons.push('Contains an external link requesting action.'); if (!tactics.includes('Phishing Link')) tactics.push('Phishing Link'); }
+    if (/[A-Z]{4,}/.test(input)) { score += 10; reasons.push('Uses ALL CAPS to create false urgency.'); }
+  }
+
+  score = Math.max(8, Math.min(99, score));
+  const verdict = score > 70 ? 'HIGH_RISK' : score > 30 ? 'SUSPICIOUS' : 'SAFE';
+  const hr = verdict === 'HIGH_RISK', sus = verdict === 'SUSPICIOUS';
+
+  return {
+    riskScore: score, verdict,
+    reasons: reasons.length ? reasons : ['No explicit scam patterns detected.'],
+    highlights, tactics: tactics.length ? tactics : ['Standard Traffic'],
+    actions: hr ? ['Do NOT tap any links.', 'Block this sender immediately.', 'Forward to 7726 (spam reporting).']
+               : sus ? ['Verify the sender independently.', 'Never share passwords or PINs.', 'Proceed with caution.']
+               : ['No action needed. Standard safety guidelines apply.'],
+    simulatedOutcomes: [
+      { choiceName: 'Trust & Interact', description: 'Click the link, call the number, or provide the requested information.',
+        scenarios: [
+          { type: 'BEST_CASE', title: 'Tracker Placement Only', impactData: 'Phone/email marked as active and sold to spam lists.', impactFinancial: 'No immediate loss, but spam volume increases.', impactEmotional: 'Minor annoyance.', severityScore: hr ? 30 : sus ? 20 : 10 },
+          { type: 'MOST_LIKELY', title: 'Account Takeover', impactData: 'Login credentials and 2FA codes stolen.', impactFinancial: 'Attacker accesses accounts and makes unauthorized purchases.', impactEmotional: 'High stress, hours of recovery work.', severityScore: hr ? 75 : sus ? 50 : 25 },
+          { type: 'WORST_CASE', title: 'Identity Theft', impactData: 'SSN, address, and full identity profile compromised.', impactFinancial: 'Bank accounts drained, credit lines opened fraudulently.', impactEmotional: 'Severe distress, weeks of dispute filings.', severityScore: hr ? 95 : sus ? 75 : 40 },
+        ] },
+      { choiceName: 'Reply / Argue', description: 'Reply "STOP", ask who this is, or engage with the sender.',
+        scenarios: [
+          { type: 'BEST_CASE', title: 'Sender Goes Silent', impactData: 'Your number confirmed active and saved for future use.', impactFinancial: 'None.', impactEmotional: 'None.', severityScore: 10 },
+          { type: 'MOST_LIKELY', title: 'Targeted Flooding', impactData: 'Number tagged as responsive ‚Äî more scam attempts inbound.', impactFinancial: 'No direct loss.', impactEmotional: 'Increased anxiety from daily spam.', severityScore: 35 },
+          { type: 'WORST_CASE', title: 'Social Engineering', impactData: 'Conversation reveals bank name, job, or family details.', impactFinancial: 'Customized voice phishing attack launched against you.', impactEmotional: 'Feeling manipulated and paranoid.', severityScore: 65 },
+        ] },
+      { choiceName: 'Block & Report', description: 'Block the sender, delete the message, and report it.',
+        scenarios: [
+          { type: 'BEST_CASE', title: 'Threat Neutralized', impactData: 'Zero exposure. Report trains filters for others.', impactFinancial: 'Zero risk.', impactEmotional: 'Peace of mind.', severityScore: 0 },
+          { type: 'MOST_LIKELY', title: 'Clean Resolution', impactData: 'No data shared. Scam fails to connect.', impactFinancial: 'Zero risk.', impactEmotional: 'Calm and relieved.', severityScore: 5 },
+          { type: 'WORST_CASE', title: 'Scammer Rotates Number', impactData: 'Another generic spam attempt later from a new burner.', impactFinancial: 'Zero risk.', impactEmotional: 'Minor annoyance.', severityScore: 12 },
+        ] },
+    ],
+  };
+}
+
+// ‚îÄ‚îÄ‚îÄ RENDER RESULTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+function renderResults(result) {
+  // Gauge
+  const circ = 2 * Math.PI * 46; // 289.03
+  const offset = circ * (1 - result.riskScore / 100);
+  const arc = document.getElementById('gauge-arc');
+  arc.style.strokeDashoffset = circ;
+  arc.style.stroke = result.riskScore < 30 ? '#10b981' : result.riskScore < 70 ? '#f59e0b' : '#ef4444';
+  setTimeout(() => arc.style.strokeDashoffset = offset, 50);
+
+  document.getElementById('gauge-score').textContent = result.riskScore;
+  document.getElementById('gauge-score').style.color = result.riskScore < 30 ? '#34d399' : result.riskScore < 70 ? '#fbbf24' : '#f87171';
+
+  // Verdict badge
+  const vb = document.getElementById('verdict-badge');
+  vb.className = 'verdict-badge';
+  vb.classList.add(result.verdict === 'SAFE' ? 'verdict-safe' : result.verdict === 'SUSPICIOUS' ? 'verdict-suspicious' : 'verdict-high');
+  vb.textContent = result.verdict.replace('_', ' ');
+
+  // Reasons
+  document.getElementById('reason-list').innerHTML = result.reasons.map(r => `<li>${r}</li>`).join('');
+
+  // Tactics & flags
+  document.getElementById('tactics-row').innerHTML = result.tactics.map(t => `<span class="badge badge-tactic">${t}</span>`).join('') || '<span class="text-muted">None</span>';
+  document.getElementById('flags-row').innerHTML = result.highlights.map(h => `<span class="badge badge-flag">"${h}"</span>`).join('') || '<span class="text-muted">None</span>';
+
+  // Choice simulator
+  selectedChoiceIdx = 0;
+  renderChoiceTabs(result.simulatedOutcomes);
+  renderScenarios(result.simulatedOutcomes[0]);
+
+  // Actions
+  document.getElementById('actions-list').innerHTML = result.actions.map(a => `<div class="action-item">${a}</div>`).join('');
+
+  // Show results
+  const resultsEl = document.getElementById('results');
+  resultsEl.style.display = 'block';
+  resultsEl.classList.add('visible');
+  document.getElementById('warn-btn-wrap').style.display = 'block';
+  resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderChoiceTabs(outcomes) {
+  const tabs = document.getElementById('choice-tabs');
+  tabs.innerHTML = outcomes.map((c, i) => `
+    <button class="seg-btn ${i === 0 ? 'active' : ''}" onclick="selectChoice(${i})" id="choice-tab-${i}">
+      Choice ${i + 1}
+    </button>`).join('');
+}
+
+function selectChoice(idx) {
+  selectedChoiceIdx = idx;
+  document.querySelectorAll('#choice-tabs .seg-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+  renderScenarios(currentResult.simulatedOutcomes[idx]);
+}
+
+function renderScenarios(choice) {
+  document.getElementById('choice-desc').textContent = `${choice.choiceName} ‚Äî ${choice.description}`;
+  const typeMap = { BEST_CASE: { cls: 'type-best', label: 'Best Case' }, MOST_LIKELY: { cls: 'type-likely', label: 'Most Likely' }, WORST_CASE: { cls: 'type-worst', label: 'Worst Case' } };
+  const fillColor = s => s < 25 ? '#10b981' : s < 60 ? '#f59e0b' : '#ef4444';
+
+  document.getElementById('scenario-grid').innerHTML = choice.scenarios.map(s => {
+    const t = typeMap[s.type] || { cls: 'type-likely', label: s.type };
+    return `
+      <div class="scenario-card">
+        <div class="scenario-type ${t.cls}">${t.label}</div>
+        <div class="scenario-title">${s.title}</div>
+        <div class="scenario-impact"><strong>Privacy & Data</strong>${s.impactData}</div>
+        <div class="scenario-impact"><strong>Financial Risk</strong>${s.impactFinancial}</div>
+        <div class="scenario-impact"><strong>Emotional Toll</strong>${s.impactEmotional}</div>
+        <div class="severity-bar">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+            <span style="font-size:0.62rem;color:var(--text-3);font-weight:700;text-transform:uppercase;">Severity</span>
+            <span style="font-size:0.7rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:${fillColor(s.severityScore)};">${s.severityScore}/100</span>
+          </div>
+          <div class="severity-track"><div class="severity-fill" style="width:${s.severityScore}%;background:${fillColor(s.severityScore)};"></div></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function hideResults() {
+  const r = document.getElementById('results');
+  r.style.display = 'none';
+  r.classList.remove('visible');
+}
+
+function resetScan() {
+  hideResults();
+  document.getElementById('text-input').value = '';
+  document.getElementById('url-input').value = '';
+  imageDataUrl = null;
+  document.getElementById('image-preview-wrap').style.display = 'none';
+  currentResult = null;
+}
+
+// ‚îÄ‚îÄ‚îÄ HISTORY ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+function renderHistory() {
+  const history = storage.getHistory();
+  const container = document.getElementById('history-list');
+  const stats = document.getElementById('history-stats');
+
+  if (!container) return;
+
+  const total = history.length;
+  const highRisk = history.filter(h => h.verdict === 'HIGH_RISK').length;
+  const suspicious = history.filter(h => h.verdict === 'SUSPICIOUS').length;
+  const avg = total ? Math.round(history.reduce((s, h) => s + h.riskScore, 0) / total) : 0;
+
+  stats.innerHTML = [
+    { label: 'Total Scans', val: total, color: 'var(--text)' },
+    { label: 'High Risk', val: highRisk, color: '#f87171' },
+    { label: 'Avg Score', val: avg + '%', color: avg < 30 ? '#34d399' : avg < 70 ? '#fbbf24' : '#f87171' },
+  ].map(s => `
+    <div class="card" style="text-align:center;">
+      <div class="text-muted" style="font-size:0.65rem;font-weight:700;text-transform:uppercase;">${s.label}</div>
+      <div style="font-size:1.8rem;font-weight:900;color:${s.color};margin-top:0.25rem;font-family:'JetBrains Mono',monospace;">${s.val}</div>
+    </div>`).join('');
+
+  if (!history.length) {
+    container.innerHTML = `<div class="empty"><div class="empty-icon">üìã</div><h3>No scan history yet</h3><p>Run your first scan and results will appear here.</p></div>`;
+    return;
+  }
+
+  const dotColor = v => v === 'HIGH_RISK' ? '#ef4444' : v === 'SUSPICIOUS' ? '#f59e0b' : '#10b981';
+  const scoreColor = v => v === 'HIGH_RISK' ? '#f87171' : v === 'SUSPICIOUS' ? '#fbbf24' : '#34d399';
+
+  container.innerHTML = history.map((h, i) => `
+    <div class="history-item" onclick="viewHistoryItem(${i})">
+      <div class="history-verdict-dot" style="background:${dotColor(h.verdict)};"></div>
+      <div class="history-info">
+        <div class="history-input">${h.input}</div>
+        <div class="history-meta">${h.type?.toUpperCase()} &bull; ${new Date(h.date).toLocaleString()}</div>
+      </div>
+      <div class="history-score" style="color:${scoreColor(h.verdict)};">${h.riskScore}%</div>
+    </div>`).join('');
+}
+
+function viewHistoryItem(idx) {
+  const h = storage.getHistory()[idx];
+  if (!h) return;
+  const dotColor = v => v === 'HIGH_RISK' ? '#ef4444' : v === 'SUSPICIOUS' ? '#f59e0b' : '#10b981';
+  const content = document.getElementById('history-detail-content');
+  content.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+      <div>
+        <div class="text-muted" style="font-size:0.65rem;font-weight:700;text-transform:uppercase;">Scan Record</div>
+        <h2 style="font-size:1rem;font-weight:700;margin-top:0.2rem;">${h.type} Scan ‚Äî ${new Date(h.date).toLocaleString()}</h2>
+      </div>
+      <button class="btn-ghost" onclick="closeModal('history-detail-modal')">‚úï Close</button>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1rem;">
+      <div class="text-muted" style="font-size:0.65rem;font-weight:700;text-transform:uppercase;margin-bottom:0.35rem;">Scanned Content</div>
+      <p style="font-size:0.82rem;color:var(--text-2);line-height:1.55;word-break:break-all;">${h.input}</p>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.75rem;">
+      <div style="width:12px;height:12px;border-radius:50%;background:${dotColor(h.verdict)};flex-shrink:0;"></div>
+      <span style="font-size:0.875rem;font-weight:700;">${h.verdict.replace('_',' ')} ‚Äî Risk Score: ${h.riskScore}/100</span>
+    </div>`;
+  openModal('history-detail-modal');
+}
+
+function clearHistory() {
+  if (confirm('Clear all scan history from this device?')) {
+    storage.clearHistory();
+    renderHistory();
+  }
+}
+
+// ‚îÄ‚îÄ‚îÄ REPORTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+async function renderReports() {
+  const container = document.getElementById('reports-list');
+  if (!container) return;
+
+  container.innerHTML = '<div style="text-align:center;padding:2rem;"><span class="spinner"></span> Loading community reports...</div>';
+
+  const reports = await storage.getReports();
+
+  if (!reports.length) {
+    container.innerHTML = `<div class="empty"><div class="empty-icon">üö®</div><h3>No reports yet</h3><p>Be the first to file a community scam report by scanning a message or website and forwarding the results.</p></div>`;
+    return;
+  }
+
+  container.innerHTML = reports.map(r => `
+    <div class="report-item">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.4rem;">
+        <span class="report-type-badge">${r.type}</span>
+        <span class="text-muted">${new Date(r.date).toLocaleDateString()}</span>
+      </div>
+      <div class="report-title">${r.title}</div>
+      <div class="report-desc" style="white-space:pre-wrap;">${r.desc}</div>
+      ${r.source ? `<div class="report-source">üî¥ Source/Target: ${r.source}</div>` : ''}
+    </div>`).join('');
+}
+
+function promptWarnCommunity() {
+  if (!currentResult) return;
+  openModal('warn-modal');
+}
+
+async function confirmWarnCommunity() {
+  if (!currentResult) return;
+  closeModal('warn-modal');
+  
+  const type = currentScanType.toUpperCase();
+  const source = currentScanType === 'url' ? currentScanInput : (currentScanInput.length > 60 ? currentScanInput.substring(0, 57) + '...' : currentScanInput);
+  
+  // Format details
+  const title = `üö® AI Alert: ${currentResult.verdict.replace('_', ' ')} (${currentResult.riskScore}/100 Risk)`;
+  const desc = `Tactics Detected: ${currentResult.tactics.join(', ') || 'None'}\n\n` +
+               `Analysis Findings:\n${currentResult.reasons.map(r => `‚Ä¢ ${r}`).join('\n')}\n\n` +
+               `Content Scanned:\n"${currentScanInput}"`;
+
+  try {
+    await storage.addReport({ type, source, title, desc });
+    alert('‚úÖ Report posted successfully to community board!');
+    await renderReports();
+    showTab('reports');
+  } catch (err) {
+    alert('Failed to post report: ' + err.message);
+  }
+}
+
+
+
+// ‚îÄ‚îÄ‚îÄ UTILS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+function showError(msg, info = false) {
+  const el = document.getElementById('scan-error');
+  el.className = 'alert ' + (info ? 'alert-success' : 'alert-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function clearError() {
+  document.getElementById('scan-error').style.display = 'none';
+}
+</script>
+</body>
+</html>
