@@ -1,1114 +1,863 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>SafeNet | AI Scam & Phishing Protection</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          }
-        }
+  <meta name="description" content="Instantly check if a message, URL, or screenshot is a scam. Explore simulated reaction outcomes and protect yourself online.">
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-soft: #f1f5f9;
+      --text: #171717;
+      --muted: #64748b;
+      --line: rgba(148, 163, 184, 0.28);
+      --sky: #0284c7;
+      --sky-dark: #0369a1;
+      --indigo: #4f46e5;
+      --amber: #d97706;
+      --rose: #e11d48;
+      --shadow: 0 20px 70px rgba(15, 23, 42, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(circle at 20% -10%, rgba(14, 165, 233, 0.18), transparent 34rem),
+        radial-gradient(circle at 82% 12%, rgba(79, 70, 229, 0.14), transparent 32rem),
+        var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.5;
+    }
+
+    body.menu-open {
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .site-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.84);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav-wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex: 0 0 auto;
+      font-weight: 900;
+      font-size: 21px;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #0ea5e9, #4f46e5);
+      color: #fff;
+      box-shadow: 0 12px 28px rgba(2, 132, 199, 0.18);
+    }
+
+    .brand-text {
+      background: linear-gradient(90deg, #111827, #475569);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .desktop-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 40px;
+      border-radius: 10px;
+      padding: 0 12px;
+      color: #475569;
+      font-size: 14px;
+      font-weight: 700;
+      transition: background 0.18s ease, color 0.18s ease;
+    }
+
+    .nav-link:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+
+    .nav-actions {
+      margin-left: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pill-button,
+    .sign-in,
+    .menu-button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .pill-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-width: 130px;
+      min-height: 34px;
+      border-radius: 999px;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 0 14px;
+    }
+
+    .pill-button.active {
+      border-color: #fecdd3;
+      background: #fff1f2;
+      color: #be123c;
+    }
+
+    .sign-in {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 36px;
+      border-radius: 12px;
+      background: #0f172a;
+      color: #fff;
+      padding: 0 16px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .menu-button {
+      display: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: transparent;
+      color: #475569;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-panel {
+      display: none;
+      border-top: 1px solid var(--line);
+      background: #fff;
+      padding: 12px 24px 16px;
+    }
+
+    .mobile-panel.open {
+      display: grid;
+      gap: 8px;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 78px 24px 92px;
+    }
+
+    .hero-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(3, 105, 161, 0.14);
+      background: #f0f9ff;
+      color: #0369a1;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    h1 {
+      max-width: 860px;
+      margin: 34px auto 0;
+      font-size: clamp(42px, 7vw, 72px);
+      line-height: 1.04;
+      letter-spacing: 0;
+      font-weight: 900;
+      color: #0f172a;
+    }
+
+    .hero-copy {
+      max-width: 690px;
+      margin: 22px auto 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.7;
+    }
+
+    .cta-row {
+      margin-top: 34px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      border-radius: 16px;
+      padding: 0 24px;
+      font-size: 14px;
+      font-weight: 800;
+      transition: transform 0.18s ease, background 0.18s ease, border 0.18s ease;
+    }
+
+    .cta:hover {
+      transform: translateY(-1px);
+    }
+
+    .cta.primary {
+      background: var(--sky);
+      color: #fff;
+      box-shadow: 0 14px 34px rgba(2, 132, 199, 0.22);
+    }
+
+    .cta.primary:hover {
+      background: var(--sky-dark);
+    }
+
+    .cta.secondary {
+      border: 1px solid #d4d4d8;
+      background: #fff;
+      color: #334155;
+    }
+
+    .cta.secondary:hover {
+      background: #f8fafc;
+    }
+
+    .features {
+      margin: 76px auto 0;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+      text-align: left;
+    }
+
+    .feature-card {
+      min-height: 228px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 22px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.82);
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+    }
+
+    .feature-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+    }
+
+    .feature-icon.sky {
+      background: #f0f9ff;
+      color: var(--sky);
+    }
+
+    .feature-icon.indigo {
+      background: #eef2ff;
+      color: var(--indigo);
+    }
+
+    .feature-icon.amber {
+      background: #fffbeb;
+      color: var(--amber);
+    }
+
+    .feature-icon.rose {
+      background: #fff1f2;
+      color: var(--rose);
+    }
+
+    .feature-card h3 {
+      margin: 0;
+      color: #111827;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .feature-card p {
+      margin: 9px 0 0;
+      color: #64748b;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .netbot-trigger {
+      position: fixed;
+      left: 24px;
+      bottom: 24px;
+      z-index: 40;
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--sky);
+      color: #fff;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease;
+    }
+
+    .netbot-trigger:hover {
+      transform: scale(1.04);
+      background: var(--sky-dark);
+    }
+
+    .chat-box {
+      position: fixed;
+      left: 24px;
+      bottom: 88px;
+      z-index: 60;
+      display: none;
+      width: min(384px, calc(100vw - 48px));
+      height: 480px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.38);
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: 0 28px 90px rgba(15, 23, 42, 0.24);
+    }
+
+    .chat-box.open {
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 0.2s ease forwards;
+    }
+
+    .chat-head {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--sky);
+      color: #fff;
+      padding: 0 16px;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .chat-close {
+      width: 34px;
+      height: 34px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      background: #f8fafc;
+      padding: 16px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      font-size: 13px;
+    }
+
+    .message {
+      max-width: 82%;
+      border-radius: 18px;
+      padding: 11px 13px;
+      line-height: 1.55;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+    }
+
+    .message.bot {
+      justify-self: start;
+      border-bottom-left-radius: 4px;
+      border: 1px solid #e2e8f0;
+      background: #fff;
+      color: #334155;
+    }
+
+    .message.user {
+      justify-self: end;
+      border-bottom-right-radius: 4px;
+      background: var(--sky);
+      color: #fff;
+    }
+
+    .chat-form {
+      display: flex;
+      gap: 8px;
+      border-top: 1px solid #e2e8f0;
+      background: #fff;
+      padding: 12px;
+    }
+
+    .chat-form input {
+      min-width: 0;
+      flex: 1;
+      border: 1px solid #e2e8f0;
+      border-radius: 13px;
+      background: #f8fafc;
+      padding: 10px 12px;
+      font-size: 13px;
+      outline: 0;
+    }
+
+    .chat-form input:focus {
+      border-color: var(--sky);
+    }
+
+    .chat-form button {
+      width: 42px;
+      border: 0;
+      border-radius: 13px;
+      background: var(--sky);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      background: #fff;
+      padding: 24px;
+    }
+
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: #94a3b8;
+      font-size: 12px;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer-links a:hover {
+      color: var(--sky);
+      text-decoration: underline;
+    }
+
+    .icon {
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+      vertical-align: -0.14em;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    }
+
+    .filled {
+      fill: currentColor;
+    }
+
+    .elderly-mode {
+      font-size: 118%;
+    }
+
+    .elderly-mode body,
+    body.elderly-mode {
+      line-height: 1.75;
+    }
+
+    body.elderly-mode p,
+    body.elderly-mode li {
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+
+    body.elderly-mode h1 {
+      font-size: clamp(38px, 5vw, 58px);
+      line-height: 1.18;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
-  </script>
-  <style>
-    /* Custom CSS Overrides */
-    .verdict-safe { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
-    .verdict-suspicious { background-color: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-    .verdict-high { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-    
-    html.elderly-mode { font-size: 118%; }
-    html.elderly-mode body { line-height: 1.75; letter-spacing: 0.01em; }
-    html.elderly-mode p, html.elderly-mode li { font-size: 1.05rem !important; line-height: 1.8 !important; }
-    html.elderly-mode label { font-size: 1rem !important; }
-    html.elderly-mode h1 { font-size: 2.2rem !important; }
-    html.elderly-mode h2 { font-size: 1.75rem !important; }
-    html.elderly-mode h3 { font-size: 1.4rem !important; }
-    html.elderly-mode input, html.elderly-mode textarea { font-size: 1.05rem !important; }
-    html.elderly-mode button[type="submit"], html.elderly-mode .btn-cta { font-size: 1.1rem !important; padding-top: 0.85rem !important; padding-bottom: 0.85rem !important; }
-    
-    .animate-fadeIn {
-      animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    @media (max-width: 920px) {
+      .desktop-nav,
+      .sign-in {
+        display: none;
+      }
+
+      .menu-button {
+        display: inline-flex;
+      }
+
+      .nav-actions {
+        margin-left: auto;
+      }
+
+      .features {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .spinner {
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(2, 132, 199, 0.2);
-      border-top-color: #0284c7;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+
+    @media (max-width: 640px) {
+      .nav-wrap {
+        padding: 0 16px;
+        gap: 12px;
+      }
+
+      .brand-text {
+        font-size: 19px;
+      }
+
+      .pill-button {
+        min-width: 112px;
+        padding: 0 10px;
+      }
+
+      .hero {
+        padding: 58px 18px 70px;
+      }
+
+      h1 {
+        font-size: 42px;
+      }
+
+      .hero-copy {
+        font-size: 16px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+        margin-top: 54px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .netbot-trigger {
+        left: 18px;
+        bottom: 18px;
+      }
+
+      .chat-box {
+        left: 14px;
+        bottom: 82px;
+        width: calc(100vw - 28px);
+      }
     }
   </style>
 </head>
-<body class="min-h-full flex flex-col bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 transition-colors duration-300">
-
-  <!-- ‚îÄ‚îÄ‚îÄ HEADER ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
-  <header class="sticky top-0 z-50 w-full border-b border-neutral-200/40 bg-white/80 backdrop-blur-md dark:border-neutral-800/40 dark:bg-neutral-955/80 transition-all duration-300">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="flex h-16 items-center justify-between gap-4">
-        
-        <!-- Logo -->
-        <a href="javascript:void(0)" onclick="showView('home')" class="flex items-center gap-2 shrink-0">
-          <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-white shadow-md shadow-sky-500/10">
-            <i data-lucide="shield" class="h-5 w-5"></i>
+<body>
+  <div class="site-shell">
+    <header class="header">
+      <div class="nav-wrap">
+        <a class="brand" href="#top" aria-label="SafeNet home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
           </span>
-          <span class="font-extrabold tracking-tight text-xl bg-clip-text text-transparent bg-gradient-to-r from-neutral-950 to-neutral-700 dark:from-white dark:to-neutral-400">
-            SafeNet
-          </span>
+          <span class="brand-text">SafeNet</span>
         </a>
 
-        <!-- Navigation -->
-        <nav class="hidden md:flex items-center gap-1">
-          <a href="javascript:void(0)" id="nav-scan" onclick="showView('scan')" class="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all text-neutral-600 hover:bg-neutral-50 hover:text-neutral-950 dark:text-neutral-400 dark:hover:bg-neutral-900 dark:hover:text-white">
-            <i data-lucide="file-text" class="h-4.5 w-4.5"></i>
+        <nav class="desktop-nav" aria-label="Primary navigation">
+          <a class="nav-link" href="#scan">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path></svg>
             Scam Scanner
           </a>
-
-          <a href="javascript:void(0)" id="nav-reports" onclick="showView('reports')" class="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all text-neutral-600 hover:bg-neutral-50 hover:text-neutral-950 dark:text-neutral-400 dark:hover:bg-neutral-900 dark:hover:text-white">
-            <i data-lucide="users" class="h-4.5 w-4.5"></i>
+          <a class="nav-link" href="#reports">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
             Report Board
           </a>
-
-          <a href="javascript:void(0)" id="nav-dashboard" onclick="showView('dashboard')" class="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all text-neutral-600 hover:bg-neutral-50 hover:text-neutral-950 dark:text-neutral-400 dark:hover:bg-neutral-900 dark:hover:text-white">
-            <i data-lucide="layout-dashboard" class="h-4.5 w-4.5"></i>
+          <a class="nav-link" href="#history">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
             History Logs
           </a>
         </nav>
 
-        <!-- Actions -->
-        <div class="flex items-center gap-3 ml-auto">
-          <button id="elderly-btn" onclick="toggleElderlyMode()" class="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all border cursor-pointer shrink-0 min-w-[130px] justify-center bg-white border-neutral-200 text-neutral-600 hover:bg-neutral-50 dark:bg-neutral-900 dark:border-neutral-800 dark:text-neutral-400">
-            <i data-lucide="heart" class="h-4 w-4 fill-current"></i>
-            <span class="truncate">Elderly Mode</span>
+        <div class="nav-actions">
+          <button class="pill-button" id="elderlyToggle" type="button" title="Toggle large fonts and simple words">
+            <svg class="icon filled" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            <span id="elderlyLabel">Elderly Mode</span>
           </button>
-          
-          <button onclick="showView('auth')" class="rounded-xl bg-neutral-950 px-4 py-2 text-xs font-bold text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-100 shadow-xs">
-            <i data-lucide="log-in" class="h-4 w-4 inline mr-1"></i> Sign In
+          <a class="sign-in" href="#signin">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="M10 17l5-5-5-5"></path><path d="M15 12H3"></path></svg>
+            Sign In
+          </a>
+          <button class="menu-button" id="menuButton" type="button" aria-label="Open menu" aria-expanded="false">
+            <svg class="icon" id="menuIcon" viewBox="0 0 24 24"><path d="M3 12h18"></path><path d="M3 6h18"></path><path d="M3 18h18"></path></svg>
           </button>
         </div>
       </div>
-    </div>
-  </header>
 
-  <!-- ‚îÄ‚îÄ‚îÄ MAIN PANELS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
-  <main class="flex-1 flex flex-col">
+      <nav class="mobile-panel" id="mobilePanel" aria-label="Mobile navigation">
+        <a class="nav-link" href="#scan">Scam Scanner</a>
+        <a class="nav-link" href="#reports">Report Board</a>
+        <a class="nav-link" href="#history">History Logs</a>
+        <a class="nav-link" href="#signin">Sign In</a>
+      </nav>
+    </header>
 
-    <!-- ‚ïê‚ïê‚ïê HOME VIEW ‚ïê‚ïê‚ïê -->
-    <div id="view-home" class="relative isolate overflow-hidden flex-1 flex flex-col justify-center">
-      <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
-        <div class="relative left-[calc(50%-11rem)] aspect-1155/678 w-[36rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-sky-200 to-indigo-200 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72rem] dark:from-sky-950/10 dark:to-indigo-950/10"></div>
-      </div>
-
-      <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8 text-center space-y-12">
-        <div class="flex justify-center">
-          <span class="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-semibold bg-sky-50 text-sky-700 ring-1 ring-sky-700/10 dark:bg-sky-950/30 dark:text-sky-400 dark:ring-sky-800/30">
-            <i data-lucide="sparkles" class="h-3.5 w-3.5"></i>
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-inner">
+          <span class="badge">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M9.9 2.1 8.4 7.4 3.1 9l5.3 1.6 1.5 5.3 1.6-5.3L16.8 9l-5.3-1.6z"></path><path d="M19 12l-.9 3.1L15 16l3.1.9L19 20l.9-3.1L23 16l-3.1-.9z"></path></svg>
             AI-Powered Scam & Phishing Protection
           </span>
-        </div>
 
-        <div class="space-y-4 max-w-4xl mx-auto">
-          <h1 class="text-4xl font-extrabold tracking-tight text-neutral-900 sm:text-6xl dark:text-white bg-clip-text text-transparent bg-gradient-to-b from-neutral-900 via-neutral-800 to-neutral-500 dark:from-white dark:via-neutral-100 dark:to-neutral-500">
-            Received a suspicious message? <br />
-            Let's check if it is safe.
-          </h1>
-          <p class="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto leading-relaxed">
+          <h1 id="hero-title">Received a suspicious message?<br>Let's check if it is safe.</h1>
+
+          <p class="hero-copy">
             SafeNet is a free scanner that instantly checks emails, DMs, texts, or websites for fraud. Upload screenshots or paste text to audit risk metrics and preview choice simulations.
           </p>
-        </div>
 
-        <div class="flex items-center justify-center gap-4">
-          <button onclick="showView('scan')" class="rounded-2xl bg-sky-600 px-6 py-3.5 text-sm font-semibold text-white shadow-xs hover:bg-sky-550 transition-all cursor-pointer hover:scale-[1.01] btn-cta">
-            Start Scam Scan
-          </button>
-          <button onclick="showView('reports')" class="rounded-2xl border border-neutral-300 bg-white px-6 py-3.5 text-sm font-semibold text-neutral-750 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-350 dark:hover:bg-neutral-850 transition-all cursor-pointer hover:scale-[1.01] btn-cta">
-            View Scam Trends
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto pt-16 text-left">
-          
-          <div class="p-6 rounded-3xl border border-neutral-200/50 bg-white dark:border-neutral-800/50 dark:bg-neutral-950/50 shadow-xs flex flex-col justify-between gap-4">
-            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 dark:bg-sky-950 text-sky-600 dark:text-sky-400">
-              <i data-lucide="file-text" class="h-5.5 w-5.5"></i>
-            </span>
-            <div>
-              <h3 class="font-bold text-neutral-900 dark:text-white text-sm">Message Scanner</h3>
-              <p class="mt-2 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
-                Paste SMS codes, urgent bank notifications, or social DMs. AI isolates urgent indicators and flags malicious intents.
-              </p>
-            </div>
+          <div class="cta-row">
+            <a class="cta primary" href="#scan">Start Scam Scan</a>
+            <a class="cta secondary" href="#reports">View Scam Trends</a>
           </div>
 
-          <div class="p-6 rounded-3xl border border-neutral-200/50 bg-white dark:border-neutral-800/50 dark:bg-neutral-950/50 shadow-xs flex flex-col justify-between gap-4">
-            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400">
-              <i data-lucide="image" class="h-5.5 w-5.5"></i>
-            </span>
-            <div>
-              <h3 class="font-bold text-neutral-900 dark:text-white text-sm">Screenshot Analysis</h3>
-              <p class="mt-2 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
-                Upload images or screenshots. Client-side OCR extracts the texts automatically before auditing them for fraud patterns.
-              </p>
-            </div>
-          </div>
-
-          <div class="p-6 rounded-3xl border border-neutral-200/50 bg-white dark:border-neutral-800/50 dark:bg-neutral-950/50 shadow-xs flex flex-col justify-between gap-4">
-            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400">
-              <i data-lucide="globe" class="h-5.5 w-5.5"></i>
-            </span>
-            <div>
-              <h3 class="font-bold text-neutral-900 dark:text-white text-sm">Website Auditor</h3>
-              <p class="mt-2 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
-                Paste suspicious links. Check domain configurations, secure connections, and potential brand typosquatting alerts.
-              </p>
-            </div>
-          </div>
-
-          <div class="p-6 rounded-3xl border border-neutral-200/50 bg-white dark:border-neutral-800/50 dark:bg-neutral-950/50 shadow-xs flex flex-col justify-between gap-4">
-            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-400">
-              <i data-lucide="heart" class="h-5.5 w-5.5"></i>
-            </span>
-            <div>
-              <h3 class="font-bold text-neutral-900 dark:text-white text-sm">Elderly Friendly</h3>
-              <p class="mt-2 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
-                One-click access to scale up fonts, simplify explanations, and show clear guidelines on who to contact.
-              </p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <!-- ‚ïê‚ïê‚ïê SCAN VIEW ‚ïê‚ïê‚ïê -->
-    <div id="view-scan" class="hidden mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-10 space-y-8 w-full flex-1">
-      <div class="text-center space-y-2">
-        <h1 class="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
-          AI Scam Protection Scanner
-        </h1>
-        <p class="text-xs text-neutral-500 max-w-md mx-auto">
-          Audit suspicious messages, screenshots, or website links. Check risk percentages and explore choice outcomes.
-        </p>
-      </div>
-
-      <!-- Scan setup -->
-      <div id="scan-setup-panel" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 bg-white dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
-          
-          <!-- Scan Type Tabs -->
-          <div class="flex bg-neutral-100 dark:bg-neutral-900 p-1 rounded-xl">
-            <button onclick="switchScanTab('TEXT')" id="tab-btn-text" class="flex-1 text-center py-2 px-3 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 cursor-pointer bg-white dark:bg-neutral-850 text-neutral-950 dark:text-white shadow-xs">
-              <i data-lucide="file-text" class="h-4 w-4"></i> Message
-            </button>
-            <button onclick="switchScanTab('IMAGE')" id="tab-btn-image" class="flex-1 text-center py-2 px-3 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 cursor-pointer text-neutral-500 dark:text-neutral-400">
-              <i data-lucide="image" class="h-4 w-4"></i> Screenshot
-            </button>
-            <button onclick="switchScanTab('URL')" id="tab-btn-url" class="flex-1 text-center py-2 px-3 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 cursor-pointer text-neutral-500 dark:text-neutral-400">
-              <i data-lucide="globe" class="h-4 w-4"></i> Website Link
-            </button>
-          </div>
-
-          <div id="scan-error" class="hidden bg-rose-50 dark:bg-rose-950/20 text-rose-800 dark:text-rose-400 p-3.5 rounded-xl border border-rose-100 dark:border-rose-900/20 text-xs"></div>
-
-          <!-- Input fields -->
-          <div id="input-container" class="space-y-6">
-            <div id="input-text-group" class="space-y-2">
-              <label class="text-xs font-bold text-neutral-700 dark:text-neutral-350 uppercase tracking-wide">Paste Message Text</label>
-              <textarea id="scan-text-input" rows="6" placeholder="Paste email text, SMS message, social DM chat, or message history..." class="w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm border border-neutral-200 dark:border-neutral-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-500 transition-all resize-none"></textarea>
-            </div>
-            
-            <div id="input-url-group" class="hidden space-y-2">
-              <label class="text-xs font-bold text-neutral-700 dark:text-neutral-350 uppercase tracking-wide">Paste Website Link</label>
-              <input id="scan-url-input" type="url" placeholder="https://suspicious-login-link-here.com" class="w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-white text-sm border border-neutral-200 dark:border-neutral-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-sky-500/25 focus:border-sky-500 transition-all" />
-            </div>
-
-            <div id="input-image-group" class="hidden space-y-4">
-              <div class="space-y-2">
-                <label class="text-xs font-bold text-neutral-700 dark:text-neutral-350 uppercase tracking-wide">Upload Screenshot</label>
-                <div class="flex items-center justify-center w-full">
-                  <label class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-neutral-300 rounded-2xl cursor-pointer bg-neutral-50 dark:bg-neutral-900 dark:border-neutral-800 hover:bg-neutral-100/40 dark:hover:bg-neutral-850/40 transition-all">
-                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                      <i data-lucide="image" class="h-8 w-8 text-neutral-400 mb-2"></i>
-                      <p class="text-xs text-neutral-500 dark:text-neutral-455"><span class="font-semibold text-sky-600">Click to upload screenshot</span> or drag and drop</p>
-                      <p class="text-[10px] text-neutral-400 mt-1">PNG, JPG, or WEBP up to 5MB</p>
-                    </div>
-                    <input type="file" id="scan-image-input" accept="image/*" class="hidden" onchange="previewImage(event)" />
-                  </label>
-                </div>
+          <div class="features" id="scan">
+            <article class="feature-card">
+              <span class="feature-icon sky" aria-hidden="true">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>
+              </span>
+              <div>
+                <h3>Message Scanner</h3>
+                <p>Paste SMS codes, urgent bank notifications, or social DMs. AI isolates urgent indicators and flags malicious intents.</p>
               </div>
-              <div id="scan-image-preview-wrap" class="hidden relative border border-neutral-200 dark:border-neutral-800 rounded-2xl overflow-hidden max-h-56 flex items-center justify-center bg-black">
-                <img id="scan-image-preview" src="" class="max-h-56 object-contain" />
+            </article>
+
+            <article class="feature-card">
+              <span class="feature-icon indigo" aria-hidden="true">
+                <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
+              </span>
+              <div>
+                <h3>Screenshot Analysis</h3>
+                <p>Upload images or screenshots. Client-side OCR extracts the texts automatically before auditing them for fraud patterns.</p>
               </div>
-            </div>
+            </article>
+
+            <article class="feature-card" id="reports">
+              <span class="feature-icon amber" aria-hidden="true">
+                <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 0 20"></path><path d="M12 2a15.3 15.3 0 0 0 0 20"></path></svg>
+              </span>
+              <div>
+                <h3>Website Auditor</h3>
+                <p>Paste suspicious links. Check domain configurations, secure connections, and potential brand typosquatting alerts.</p>
+              </div>
+            </article>
+
+            <article class="feature-card" id="history">
+              <span class="feature-icon rose" aria-hidden="true">
+                <svg class="icon filled" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+              </span>
+              <div>
+                <h3>Elderly Friendly</h3>
+                <p>One-click access to scale up fonts, simplify explanations, and show clear guidelines on who to contact.</p>
+              </div>
+            </article>
           </div>
-
-          <button onclick="triggerScan()" id="btn-run-scan" class="w-full py-3 bg-sky-600 hover:bg-sky-550 text-white font-bold rounded-xl shadow-md shadow-sky-500/10 cursor-pointer flex items-center justify-center gap-1.5 transition-all">
-            <i data-lucide="sparkles" class="h-4.5 w-4.5"></i> Run Safety Scan
-          </button>
         </div>
+      </section>
+    </main>
 
-        <!-- Disclaimers -->
-        <div class="space-y-6">
-          <div class="bg-sky-50/20 border border-sky-100/40 rounded-3xl p-6 dark:bg-neutral-950/30 dark:border-neutral-800 space-y-3">
-            <h3 class="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
-              <i data-lucide="file-text" class="text-sky-500 h-4.5 w-4.5"></i> Dynamic Fraud Prevention
-            </h3>
-            <p class="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
-              SafeNet analyzes indicators such as urgent urgency, financial requests, domain registry alignments, and runs Tesseract OCR locally to scan screenshots without server dependency.
-            </p>
-          </div>
-        </div>
+    <button class="netbot-trigger" id="chatTrigger" type="button" title="Chat with Netbot" aria-label="Chat with Netbot">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path></svg>
+    </button>
+
+    <section class="chat-box" id="chatBox" aria-label="Netbot Scam Assistant">
+      <div class="chat-head">
+        <span>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M9.9 2.1 8.4 7.4 3.1 9l5.3 1.6 1.5 5.3 1.6-5.3L16.8 9l-5.3-1.6z"></path><path d="M19 12l-.9 3.1L15 16l3.1.9L19 20l.9-3.1L23 16l-3.1-.9z"></path></svg>
+          Netbot Scam Assistant
+        </span>
+        <button class="chat-close" id="chatClose" type="button" aria-label="Close chat">X</button>
       </div>
-
-      <!-- Scan result reports -->
-      <div id="scan-result-panel" class="hidden space-y-8 animate-fadeIn">
-        <div class="flex justify-between items-center gap-4 border-b border-neutral-100 dark:border-neutral-800 pb-4">
-          <div>
-            <span class="text-[10px] text-neutral-455 font-bold uppercase block">Simulation Audit Complete</span>
-            <h2 class="text-lg font-bold text-neutral-900 dark:text-white mt-0.5">Scam Verification Report</h2>
-          </div>
-          <button onclick="resetScan()" class="flex items-center gap-1.5 px-4 py-2 border border-neutral-200 hover:bg-neutral-50 text-neutral-600 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:text-white rounded-xl text-xs font-bold cursor-pointer transition-all">
-            <i data-lucide="refresh-cw" class="h-3.5 w-3.5"></i> Scan Another Item
-          </button>
-        </div>
-
-        <!-- Results Displays layout -->
-        <div id="results-display-area"></div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="message bot">Hi! I am Netbot, your scam protection assistant. Send me any suspicious message or link, or ask me cybersecurity questions!</div>
       </div>
-    </div>
-
-    <!-- ‚ïê‚ïê‚ïê REPORTS VIEW ‚ïê‚ïê‚ïê -->
-    <div id="view-reports" class="hidden mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-10 space-y-8 w-full flex-1">
-      <div class="text-center space-y-2">
-        <h1 class="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white sm:text-4xl">
-          Community Scam Reports
-        </h1>
-        <p class="text-xs text-neutral-500 max-w-md mx-auto">
-          AI-verified scam threats forwarded by users. Perform a scan on a message or link to warn the community.
-        </p>
-      </div>
-
-      <div class="bg-sky-500/5 dark:bg-sky-950/20 border border-sky-100/50 dark:border-neutral-800 rounded-2xl p-4 flex items-start gap-3 text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
-        <i data-lucide="info" class="h-5 w-5 text-sky-500 shrink-0 mt-0.5"></i>
-        <div>
-          <strong class="text-neutral-900 dark:text-white block font-bold mb-0.5">How to Report:</strong>
-          First run a safety audit in the <strong class="text-sky-600 dark:text-sky-400">Scam Scanner</strong>. When the analysis complete screen appears, click <strong class="text-amber-600 dark:text-amber-500">‚ö†Ô∏è Warn Community</strong> to publish the report here and help others avoid the threat.
-        </div>
-      </div>
-
-      <div id="reports-list-container" class="space-y-6">
-        <!-- Render reports dynamic list -->
-      </div>
-    </div>
-
-    <!-- ‚ïê‚ïê‚ïê DASHBOARD/HISTORY VIEW ‚ïê‚ïê‚ïê -->
-    <div id="view-dashboard" class="hidden mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 space-y-8 w-full flex-1">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 class="text-3xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
-            Security Scan History
-          </h1>
-          <p class="text-xs text-neutral-500 mt-1">
-            Review previous scam checks, audit details, and track your online security stats.
-          </p>
-        </div>
-        <button onclick="showView('scan')" class="flex items-center gap-1.5 px-4.5 py-2.5 bg-sky-600 hover:bg-sky-550 text-white rounded-xl text-xs font-semibold shadow-xs hover:scale-[1.01] transition-all cursor-pointer">
-          <i data-lucide="sparkles" class="h-4 w-4"></i> Run New Scan
+      <form class="chat-form" id="chatForm">
+        <input id="chatInput" type="text" placeholder="Ask Netbot about a message or security risk..." required>
+        <button type="submit" aria-label="Send message">
+          <svg class="icon" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg>
         </button>
-      </div>
+      </form>
+    </section>
 
-      <!-- Stats Counters -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="p-5 bg-white dark:bg-neutral-950 border border-neutral-200/50 dark:border-neutral-800 rounded-2xl shadow-xs">
-          <span class="text-[10px] text-neutral-400 font-bold uppercase tracking-wider block">Total Audits</span>
-          <span id="stats-total" class="text-3xl font-extrabold tracking-tight dark:text-white mt-1 block">0</span>
-        </div>
-        <div class="p-5 bg-white dark:bg-neutral-950 border border-neutral-200/50 dark:border-neutral-800 rounded-2xl shadow-xs">
-          <span class="text-[10px] text-neutral-400 font-bold uppercase tracking-wider block">Threats Prevented</span>
-          <span id="stats-threats" class="text-3xl font-extrabold tracking-tight text-rose-500 mt-1 block">0</span>
-        </div>
-        <div class="p-5 bg-white dark:bg-neutral-950 border border-neutral-200/50 dark:border-neutral-800 rounded-2xl shadow-xs">
-          <span class="text-[10px] text-neutral-400 font-bold uppercase tracking-wider block">Suspicious Checks</span>
-          <span id="stats-suspicious" class="text-3xl font-extrabold tracking-tight text-amber-500 mt-1 block">0</span>
-        </div>
-        <div class="p-5 bg-white dark:bg-neutral-950 border border-neutral-200/50 dark:border-neutral-800 rounded-2xl shadow-xs">
-          <span class="text-[10px] text-neutral-400 font-bold uppercase tracking-wider block">Average Risk Score</span>
-          <span id="stats-avg" class="text-3xl font-extrabold tracking-tight dark:text-white mt-1 block font-mono">0%</span>
+    <footer>
+      <div class="footer-inner">
+        <span>(c) 2026 SafeNet Scanner. Empowered by Cognitive Cyber Defense.</span>
+        <div class="footer-links">
+          <a href="https://reportfraud.ftc.gov" target="_blank" rel="noopener noreferrer">FTC Fraud Report</a>
+          <span aria-hidden="true">|</span>
+          <span>Speculative Security Indicator</span>
         </div>
       </div>
-
-      <!-- Scans List -->
-      <div id="scans-list-container" class="space-y-4"></div>
-    </div>
-
-    <!-- ‚ïê‚ïê‚ïê AUTH VIEW ‚ïê‚ïê‚ïê -->
-    <div id="view-auth" class="hidden mx-auto max-w-md px-4 py-16 w-full flex-1 flex flex-col justify-center">
-      <div class="bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-3xl p-8 space-y-6 shadow-sm">
-        <div class="text-center space-y-2">
-          <h2 class="text-2xl font-extrabold text-neutral-900 dark:text-white">Sign In to SafeNet</h2>
-          <p class="text-xs text-neutral-500">Access dynamic reports board features and sync history stats.</p>
-        </div>
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-400 uppercase mb-1">Email Address</label>
-            <input type="email" placeholder="you@example.com" class="w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl text-xs focus:outline-none focus:border-sky-500" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-neutral-700 dark:text-neutral-400 uppercase mb-1">Password</label>
-            <input type="password" placeholder="‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢‚Ä¢" class="w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl text-xs focus:outline-none focus:border-sky-500" />
-          </div>
-          <button onclick="loginUser()" class="w-full py-3 bg-sky-600 hover:bg-sky-550 text-white font-bold rounded-xl text-xs transition-all shadow-md shadow-sky-500/10">
-            Sign In
-          </button>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- ‚îÄ‚îÄ‚îÄ FLOATING NETBOT CHATBOT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
-  <button id="netbot-fab" onclick="toggleNetbotPanel()" class="fixed bottom-6 left-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-sky-600 text-white shadow-lg hover:bg-sky-550 transition-all hover:scale-105 cursor-pointer" title="Chat with Netbot">
-    <i data-lucide="message-square" class="h-5 w-5"></i>
-  </button>
-
-  <div id="netbot-panel" class="hidden fixed bottom-20 left-6 z-50 w-80 sm:w-96 h-[480px] bg-white dark:bg-neutral-950 border border-neutral-200/80 dark:border-neutral-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fadeIn text-xs">
-    <div class="bg-sky-600 px-4 py-3 flex items-center justify-between text-white">
-      <div class="flex items-center gap-1.5 font-bold">
-        <i data-lucide="sparkles" class="h-4.5 w-4.5"></i>
-        <span>Netbot Scam Assistant</span>
-      </div>
-      <button onclick="toggleNetbotPanel()" class="text-white/80 hover:text-white transition-colors cursor-pointer">
-        <i data-lucide="x" class="h-4 w-4"></i>
-      </button>
-    </div>
-    
-    <div id="netbot-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-neutral-50/50 dark:bg-neutral-900/50">
-      <div class="flex justify-start">
-        <div class="max-w-[80%] rounded-2xl px-3.5 py-2.5 leading-relaxed shadow-2xs bg-white dark:bg-neutral-800 text-neutral-800 dark:text-neutral-100 border border-neutral-200/60 dark:border-neutral-700 rounded-bl-none">
-          Hi! I am Netbot, your scam protection assistant. Send me any suspicious message or link, or ask me cybersecurity questions!
-        </div>
-      </div>
-    </div>
-
-    <form onsubmit="sendNetbotMsg(event)" class="p-3 border-t border-neutral-100 dark:border-neutral-800 flex gap-2 bg-white dark:bg-neutral-950">
-      <input type="text" id="netbot-input" placeholder="Ask Netbot about a message or security risk..." class="flex-1 px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-xl focus:outline-none focus:border-sky-500 text-xs text-neutral-900 dark:text-white" required />
-      <button type="submit" class="px-3 bg-sky-600 hover:bg-sky-550 text-white rounded-xl flex items-center justify-center cursor-pointer transition-all">
-        <i data-lucide="send" class="h-3.5 w-3.5"></i>
-      </button>
-    </form>
+    </footer>
   </div>
 
-  <!-- ‚îÄ‚îÄ‚îÄ FOOTER ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
-  <footer class="border-t border-neutral-200/50 bg-white dark:bg-neutral-950 py-6 dark:border-neutral-800/50 transition-all duration-300">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <span class="text-xs text-neutral-450 dark:text-neutral-500">
-        ¬© 2026 SafeNet Scanner. Empowered by Cognitive Cyber Defense.
-      </span>
-      <div class="flex gap-4 text-xs text-neutral-400 dark:text-neutral-500">
-        <a href="https://reportfraud.ftc.gov" target="_blank" rel="noopener noreferrer" class="hover:underline hover:text-sky-600">
-          FTC Fraud Report
-        </a>
-        <span>‚Ä¢</span>
-        <span>Speculative Security Indicator</span>
-      </div>
-    </div>
-  </footer>
-
-  <!-- ‚îÄ‚îÄ‚îÄ CLIENT APPLICATION SCRIPT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
   <script>
-    // State management
-    let activeView = 'home';
-    let scanTab = 'TEXT';
-    let scanHistory = JSON.parse(localStorage.getItem('safenet_history') || '[]');
-    let scamReports = JSON.parse(localStorage.getItem('safenet_reports') || '[]');
-    let currentScanData = null;
-    let selectedChoice = 0;
+    const menuButton = document.getElementById('menuButton');
+    const mobilePanel = document.getElementById('mobilePanel');
+    const menuIcon = document.getElementById('menuIcon');
+    const elderlyToggle = document.getElementById('elderlyToggle');
+    const elderlyLabel = document.getElementById('elderlyLabel');
+    const chatTrigger = document.getElementById('chatTrigger');
+    const chatBox = document.getElementById('chatBox');
+    const chatClose = document.getElementById('chatClose');
+    const chatForm = document.getElementById('chatForm');
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
 
-    // Set up Tesseract Worker path
-    const ocrWorkerPath = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+    function setMenu(open) {
+      mobilePanel.classList.toggle('open', open);
+      menuButton.setAttribute('aria-expanded', String(open));
+      menuButton.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      menuIcon.innerHTML = open
+        ? '<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>'
+        : '<path d="M3 12h18"></path><path d="M3 6h18"></path><path d="M3 18h18"></path>';
+    }
 
-    // Heuristics mapping
-    const slurPatterns = [
-      /\bn[i1][g9][g9][ae3]r?\b/i, /\bn[i1][g9]{2}[ae3]\b/i,
-      /\bfagg?[o0]t\b/i, /\bk[i1]ke\b/i, /\bch[i1]nk\b/i,
-      /\bsp[i1][ck]\b/i, /\bw[e3]tb[a4]ck\b/i, /\btowelhead\b/i,
-      /\bsand\s?n[i1]gg[ae]r\b/i, /\bcr[a4]ck[e3]r\b/i,
-      /\bth[e3]\s?j[e3]ws?\b/i, /\bj[e3]w[s]?[\s-]?lover\b/i,
-      /\btr[a4]nny\b/i, /\bretard\b/i
-    ];
+    function setElderlyMode(active) {
+      document.body.classList.toggle('elderly-mode', active);
+      elderlyToggle.classList.toggle('active', active);
+      elderlyLabel.textContent = active ? 'Elderly: ON' : 'Elderly Mode';
+      localStorage.setItem('safenet-elderly', String(active));
+    }
 
-    const threatKeywords = [
-      { word: 'kill you', score: 70, type: 'Violent Threat' },
-      { word: 'gonna kill', score: 70, type: 'Violent Threat' },
-      { word: 'i will kill', score: 75, type: 'Violent Threat' },
-      { word: 'shoot you', score: 70, type: 'Violent Threat' },
-      { word: 'beat you up', score: 55, type: 'Violent Threat' },
-      { word: 'find your address', score: 60, type: 'Doxxing Threat' },
-      { word: 'doxx', score: 65, type: 'Doxxing Threat' },
-      { word: 'swat you', score: 70, type: 'Doxxing Threat' }
-    ];
-
-    const scamKeywords = [
-      { word: 'crypto', score: 35, type: 'Investment Scam' },
-      { word: 'bitcoin', score: 35, type: 'Investment Scam' },
-      { word: 'lottery', score: 40, type: 'Fake Reward' },
-      { word: 'winner', score: 30, type: 'Fake Reward' },
-      { word: 'gift card', score: 35, type: 'Fake Reward' },
-      { word: 'irs', score: 45, type: 'Authority Impersonation' },
-      { word: 'tax refund', score: 40, type: 'Authority Impersonation' },
-      { word: 'verify your account', score: 40, type: 'Account Phishing' },
-      { word: 'suspicious activity', score: 30, type: 'Account Phishing' },
-      { word: 'card suspended', score: 40, type: 'Urgency' },
-      { word: 'unauthorized', score: 35, type: 'Fear-Mongering' },
-      { word: 'bank alert', score: 25, type: 'Impersonation' },
-      { word: 'congratulations', score: 20, type: 'Fake Reward' },
-      { word: 'urgent', score: 20, type: 'Urgency' },
-      { word: 'suspended', score: 30, type: 'Fear-Mongering' },
-      { word: 'security code', score: 30, type: 'Credential Phishing' },
-      { word: 'passcode', score: 30, type: 'Credential Phishing' },
-      { word: 'wire', score: 25, type: 'Financial Fraud' },
-      { word: 'package delivery failed', score: 35, type: 'Delivery Phishing' }
-    ];
-
-    // Initialize Lucide icons
-    window.addEventListener('DOMContentLoaded', () => {
-      lucide.createIcons();
-      updateDashboardStats();
-      renderReportsList();
+    menuButton.addEventListener('click', () => {
+      setMenu(!mobilePanel.classList.contains('open'));
     });
 
-    // View router
-    function showView(viewName) {
-      activeView = viewName;
-      
-      // Toggle display of view containers
-      ['home', 'scan', 'reports', 'dashboard', 'auth'].forEach(v => {
-        const panel = document.getElementById(`view-${v}`);
-        if (panel) {
-          panel.classList.toggle('hidden', v !== viewName);
-        }
-      });
-
-      // Toggle active states on navigation anchors
-      ['scan', 'reports', 'dashboard'].forEach(nav => {
-        const link = document.getElementById(`nav-${nav}`);
-        if (link) {
-          if (nav === viewName) {
-            link.className = "flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all bg-sky-50 text-sky-700 dark:bg-neutral-850 dark:text-sky-455";
-          } else {
-            link.className = "flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all text-neutral-600 hover:bg-neutral-50 hover:text-neutral-950 dark:text-neutral-400 dark:hover:bg-neutral-900 dark:hover:text-white";
-          }
-        }
-      });
-    }
-
-    // Scan tab selector
-    function switchScanTab(tabName) {
-      scanTab = tabName;
-      ['text', 'image', 'url'].forEach(tab => {
-        const btn = document.getElementById(`tab-btn-${tab.toLowerCase()}`);
-        const group = document.getElementById(`input-${tab.toLowerCase()}-group`);
-        
-        if (tab === tabName) {
-          btn.className = "flex-1 text-center py-2 px-3 text-xs font-bold rounded-lg flex items-center justify-center gap-1.5 cursor-pointer bg-white dark:bg-neutral-850 text-neutral-950 dark:text-white shadow-xs";
-          group.classList.remove('hidden');
-        } else {
-          btn.className = "flex-1 text-center py-2 px-3 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 cursor-pointer text-neutral-500 dark:text-neutral-400";
-          group.classList.add('hidden');
-        }
-      });
-    }
-
-    // Toggle Elderly Mode styles
-    function toggleElderlyMode() {
-      const body = document.documentElement;
-      const btn = document.getElementById('elderly-btn');
-      body.classList.toggle('elderly-mode');
-      
-      const active = body.classList.contains('elderly-mode');
-      btn.classList.toggle('bg-rose-50', active);
-      btn.classList.toggle('border-rose-200', active);
-      btn.classList.toggle('text-rose-700', active);
-      btn.querySelector('span').textContent = active ? 'Elderly: ON' : 'Elderly Mode';
-    }
-
-    // Image preview helper
-    function previewImage(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const preview = document.getElementById('scan-image-preview');
-          preview.src = e.target.result;
-          document.getElementById('scan-image-preview-wrap').classList.remove('hidden');
-        };
-        reader.readAsDataURL(file);
+    mobilePanel.addEventListener('click', event => {
+      if (event.target.tagName === 'A') {
+        setMenu(false);
       }
-    }
+    });
 
-    // Run scans
-    async function triggerScan() {
-      const errEl = document.getElementById('scan-error');
-      errEl.classList.add('hidden');
-      errEl.textContent = '';
+    elderlyToggle.addEventListener('click', () => {
+      setElderlyMode(!document.body.classList.contains('elderly-mode'));
+    });
 
-      let textInput = '';
-      if (scanTab === 'TEXT') {
-        textInput = document.getElementById('scan-text-input').value.trim();
-        if (!textInput) return showScanError('Please enter text to scan.');
-      } else if (scanTab === 'URL') {
-        textInput = document.getElementById('scan-url-input').value.trim();
-        if (!textInput) return showScanError('Please enter a website link.');
-      } else if (scanTab === 'IMAGE') {
-        const fileInput = document.getElementById('scan-image-input');
-        if (!fileInput.files[0]) return showScanError('Please choose a screenshot image.');
-      }
+    chatTrigger.addEventListener('click', () => {
+      chatBox.classList.add('open');
+      chatInput.focus();
+    });
 
-      setScanButtonLoading(true);
+    chatClose.addEventListener('click', () => {
+      chatBox.classList.remove('open');
+    });
 
-      try {
-        if (scanTab === 'IMAGE') {
-          // Perform local OCR text extraction
-          const fileInput = document.getElementById('scan-image-input');
-          const file = fileInput.files[0];
-          const result = await Tesseract.recognize(file, 'eng');
-          textInput = result.data.text?.trim() || '';
-          if (!textInput) throw new Error('Could not extract any readable text from the screenshot.');
-        }
-
-        // Run client audit logic
-        const analysis = runHeuristicAudit(textInput);
-        currentScanData = {
-          id: Date.now().toString(36),
-          type: scanTab,
-          input: textInput,
-          verdict: analysis.verdict,
-          riskScore: analysis.riskScore,
-          createdAt: new Date().toISOString(),
-          analysis: analysis
-        };
-
-        // Add to history stack
-        scanHistory.unshift(currentScanData);
-        localStorage.setItem('safenet_history', JSON.stringify(scanHistory));
-
-        // Render analysis displays
-        renderResultsReport(analysis);
-        updateDashboardStats();
-
-        // Swap wizard to results panel
-        document.getElementById('scan-setup-panel').classList.add('hidden');
-        document.getElementById('scan-result-panel').classList.remove('hidden');
-      } catch (err) {
-        showScanError(err.message || 'An error occurred during scan.');
-      } finally {
-        setScanButtonLoading(false);
-      }
-    }
-
-    function showScanError(msg) {
-      const el = document.getElementById('scan-error');
-      el.textContent = msg;
-      el.classList.remove('hidden');
-    }
-
-    function setScanButtonLoading(isLoading) {
-      const btn = document.getElementById('btn-run-scan');
-      if (isLoading) {
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner mr-1.5"></span> Analyzing Scan Vectors...';
-      } else {
-        btn.disabled = false;
-        btn.innerHTML = '<i data-lucide="sparkles" class="h-4.5 w-4.5"></i> Run Safety Scan';
-        lucide.createIcons();
-      }
-    }
-
-    function resetScan() {
-      document.getElementById('scan-text-input').value = '';
-      document.getElementById('scan-url-input').value = '';
-      document.getElementById('scan-image-input').value = '';
-      document.getElementById('scan-image-preview-wrap').classList.add('hidden');
-      document.getElementById('scan-image-preview').src = '';
-      document.getElementById('scan-error').classList.add('hidden');
-      
-      document.getElementById('scan-setup-panel').classList.remove('hidden');
-      document.getElementById('scan-result-panel').classList.add('hidden');
-    }
-
-    // Heuristics analyzer
-    function runHeuristicAudit(input) {
-      const norm = input.toLowerCase();
-      let score = 10;
-      const reasons = [];
-      const highlights = [];
-      const tactics = [];
-
-      // Check hate speech / slur occurrences
-      let hateSpeechDetected = false;
-      for (const pat of slurPatterns) {
-        if (pat.test(norm)) {
-          hateSpeechDetected = true;
-          score = Math.max(score, 35); // Re-balanced to SUSPICIOUS range (30-45)
-          const matched = norm.match(pat)?.[0] || 'offensive language';
-          reasons.push(`Contains offensive language or slur: "${matched}".`);
-          highlights.push(matched);
-          if (!tactics.includes('Hate Speech / Slur')) tactics.push('Hate Speech / Slur');
-        }
-      }
-
-      // Check direct violence and threats
-      for (const k of threatKeywords) {
-        if (norm.includes(k.word)) {
-          score = Math.max(score, k.score);
-          reasons.push(`Contains physical or personal threats: "${k.word}".`);
-          highlights.push(k.word);
-          if (!tactics.includes(k.type)) tactics.push(k.type);
-        }
-      }
-
-      // Check spam, phishing, and scam tactics
-      for (const k of scamKeywords) {
-        if (norm.includes(k.word)) {
-          score += k.score;
-          reasons.push(`Urges target towards potential: ${k.type} ("${k.word}").`);
-          highlights.push(k.word);
-          if (!tactics.includes(k.type)) tactics.push(k.type);
-        }
-      }
-
-      // Add flags for links and caps pressure
-      if (/(https?:\/\/|www\.)/i.test(norm)) {
-        score += 15;
-        reasons.push('Contains external site links request.');
-        if (!tactics.includes('Phishing Link')) tactics.push('Phishing Link');
-      }
-      if (/[A-Z]{4,}/.test(input)) {
-        score += 10;
-        reasons.push('Uses urgent all-caps words.');
-      }
-
-      // Cap scores correctly
-      score = Math.max(8, Math.min(99, score));
-      const verdict = score > 70 ? 'HIGH_RISK' : score > 30 ? 'SUSPICIOUS' : 'SAFE';
-
-      // Assemble mock simulated actions
-      const actions = verdict === 'HIGH_RISK' 
-        ? ['Do NOT tap any links.', 'Block this sender immediately.', 'Forward details to spam audits.']
-        : verdict === 'SUSPICIOUS'
-        ? ['Verify sender identity.', 'Never share security pins.', 'Proceed with caution.']
-        : ['No direct threats detected.', 'Practice generic online safety.'];
-
-      return {
-        verdict,
-        riskScore: score,
-        reasons: reasons.length ? reasons : ['No explicitly threatening scam patterns found.'],
-        highlights,
-        tactics: tactics.length ? tactics : ['Standard Traffic'],
-        actions,
-        simulatedOutcomes: [
-          {
-            choiceName: 'Trust & Interact',
-            description: 'Enter information, tap URL, or fulfill cash wire requests.',
-            scenarios: [
-              { type: 'BEST_CASE', title: 'Sender Stores Lead', impactData: 'Phone sold as active target.', impactFinancial: 'Future targeted spam logs.', impactEmotional: 'None.', severityScore: 20 },
-              { type: 'MOST_LIKELY', title: 'Data Theft Lockout', impactData: 'Username, password, and active sessions stolen.', impactFinancial: 'Asset access compromised.', impactEmotional: 'High frustration.', severityScore: 70 },
-              { type: 'WORST_CASE', title: 'Complete Asset Depletion', impactData: 'Identity profiles copied.', impactFinancial: 'Drained accounts and debt files.', impactEmotional: 'Severe panic.', severityScore: 95 }
-            ]
-          },
-          {
-            choiceName: 'Reply / Argue',
-            description: 'Reply STOP, or engage text directly.',
-            scenarios: [
-              { type: 'BEST_CASE', title: 'Sender Suspends Texting', impactData: 'Target details verified.', impactFinancial: 'None.', impactEmotional: 'None.', severityScore: 10 },
-              { type: 'MOST_LIKELY', title: 'Targeted Spammers Flood', impactData: 'Number catalogued as responsive.', impactFinancial: 'None.', impactEmotional: 'Increased spam checks.', severityScore: 35 },
-              { type: 'WORST_CASE', title: 'Voice Cloning Vectors', impactData: 'Speech recordings captured.', impactFinancial: 'Personal scams launched against family.', impactEmotional: 'High paranoia.', severityScore: 65 }
-            ]
-          },
-          {
-            choiceName: 'Block & Report',
-            description: 'Block communications and report to SafeNet.',
-            scenarios: [
-              { type: 'BEST_CASE', title: 'Zero Exposure', impactData: 'No details exposed.', impactFinancial: 'No risk.', impactEmotional: 'Relieved.', severityScore: 0 },
-              { type: 'MOST_LIKELY', title: 'Fails to Deliver', impactData: 'Communication blocked.', impactFinancial: 'No risk.', impactEmotional: 'Calm.', severityScore: 5 },
-              { type: 'WORST_CASE', title: 'Scammer Rotates Sender', impactData: 'Generates secondary burner account.', impactFinancial: 'No risk.', impactEmotional: 'Mild irritation.', severityScore: 15 }
-            ]
-          }
-        ]
-      };
-    }
-
-    // Render verification report UI
-    function renderResultsReport(analysis) {
-      const area = document.getElementById('results-display-area');
-      const gaugeStroke = analysis.riskScore < 30 ? '#10b981' : analysis.riskScore < 70 ? '#f59e0b' : '#ef4444';
-      const scoreColor = analysis.riskScore < 30 ? 'text-emerald-500' : analysis.riskScore < 70 ? 'text-amber-500' : 'text-rose-500';
-      const badgeCls = analysis.verdict === 'SAFE' ? 'verdict-safe' : analysis.verdict === 'SUSPICIOUS' ? 'verdict-suspicious' : 'verdict-high';
-
-      // SVG dash offset
-      const circ = 2 * Math.PI * 46;
-      const offset = circ * (1 - analysis.riskScore / 100);
-
-      let outcomesHtml = analysis.simulatedOutcomes.map((choice, cIdx) => `
-        <button onclick="selectChoiceTab(${cIdx})" id="outcome-btn-${cIdx}" class="flex-1 text-center py-2 px-3 text-xs font-semibold rounded-lg cursor-pointer ${cIdx === 0 ? 'bg-white dark:bg-neutral-850 text-neutral-950 dark:text-white shadow-xs font-bold' : 'text-neutral-500 dark:text-neutral-400'}">${choice.choiceName}</button>
-      `).join('');
-
-      let detailHtml = renderChoiceDetail(analysis.simulatedOutcomes[0]);
-
-      area.innerHTML = `
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          <!-- Gauge Card -->
-          <div class="bg-white dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-850 rounded-3xl p-6 flex flex-col items-center gap-6 shadow-xs">
-            <div class="text-center space-y-1">
-              <span class="text-[10px] text-neutral-455 font-bold uppercase tracking-wider block">Risk Threat Score</span>
-            </div>
-
-            <div class="relative w-40 h-40">
-              <svg viewBox="0 0 110 110" class="w-full h-full -rotate-90">
-                <circle cx="55" cy="55" r="46" fill="none" stroke="#f3f4f6" stroke-width="7" />
-                <circle cx="55" cy="55" r="46" fill="none" stroke="${gaugeStroke}" stroke-width="7" stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round" />
-              </svg>
-              <div class="absolute inset-0 flex flex-col items-center justify-center">
-                <span class="text-4xl font-black ${scoreColor} font-mono">${analysis.riskScore}%</span>
-                <span class="text-[9px] text-neutral-400 font-bold uppercase tracking-widest mt-1">Metrics</span>
-              </div>
-            </div>
-
-            <span class="px-4 py-1 text-xs font-extrabold rounded-full ${badgeCls} uppercase tracking-wider">${analysis.verdict}</span>
-          </div>
-
-          <!-- Reasons and Tactics -->
-          <div class="lg:col-span-2 bg-white dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-850 rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
-            <div class="space-y-4">
-              <h3 class="text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-                <i data-lucide="info" class="h-4.5 w-4.5 text-sky-500"></i> Analysis Findings
-              </h3>
-              <ul class="space-y-2.5 text-xs text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                ${analysis.reasons.map(r => `<li class="flex gap-2"><span class="text-sky-500 font-bold">‚Ä¢</span> ${r}</li>`).join('')}
-              </ul>
-            </div>
-
-            <hr class="border-neutral-100 dark:border-neutral-800" />
-
-            <div class="grid grid-cols-2 gap-4">
-              <div class="space-y-2">
-                <span class="text-[9px] text-neutral-455 font-bold uppercase tracking-wider block">Tactics Detected</span>
-                <div class="flex flex-wrap gap-1.5">
-                  ${analysis.tactics.map(t => `<span class="bg-neutral-100 dark:bg-neutral-850 text-neutral-600 dark:text-neutral-400 border border-neutral-200/30 px-2 py-0.5 rounded text-[10px] font-semibold">${t}</span>`).join('')}
-                </div>
-              </div>
-              <div class="space-y-2">
-                <span class="text-[9px] text-neutral-455 font-bold uppercase tracking-wider block">Flagged Key Terms</span>
-                <div class="flex flex-wrap gap-1.5">
-                  ${analysis.highlights.map(h => `<span class="bg-rose-50 dark:bg-rose-955/20 text-rose-600 border border-rose-100/30 px-2 py-0.5 rounded text-[10px] font-bold">"${h}"</span>`).join('') || '<span class="text-[10px] text-neutral-400 italic">None</span>'}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Simulator Outcomes -->
-        <div class="bg-white dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-850 rounded-3xl overflow-hidden shadow-xs">
-          <div class="bg-neutral-50 dark:bg-neutral-900 px-6 py-4 border-b border-neutral-100 dark:border-neutral-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h3 class="text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-              <i data-lucide="sparkles" class="h-4.5 w-4.5 text-sky-600"></i> Reaction Choice Simulator
-            </h3>
-            <div class="flex bg-neutral-200/50 dark:bg-neutral-950 p-0.5 rounded-lg w-full sm:w-auto min-w-[260px]">
-              ${outcomesHtml}
-            </div>
-          </div>
-
-          <div id="choice-simulator-body" class="p-6">
-            ${detailHtml}
-          </div>
-        </div>
-
-        <!-- Recommended Actions -->
-        <div class="bg-white dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-850 rounded-3xl p-6 sm:p-8 space-y-4 shadow-xs">
-          <h3 class="text-sm font-bold text-neutral-900 dark:text-white flex items-center gap-2">
-            <i data-lucide="shield" class="h-4.5 w-4.5 text-emerald-500"></i> Recommended Actions
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            ${analysis.actions.map(a => `<div class="bg-neutral-50 dark:bg-neutral-900 p-4 border border-neutral-200/40 dark:border-neutral-800 rounded-2xl text-xs font-semibold text-neutral-700 dark:text-neutral-350 leading-relaxed">${a}</div>`).join('')}
-          </div>
-        </div>
-
-        <!-- Community Post Warning -->
-        <div class="pt-2">
-          <button onclick="postCommunityReport()" class="w-full py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-md text-xs cursor-pointer flex items-center justify-center gap-2 transition-all">
-            <i data-lucide="alert-triangle" class="h-4 w-4"></i> Warn Community - Forward This Report
-          </button>
-        </div>
-      `;
-
-      lucide.createIcons();
-    }
-
-    function renderChoiceDetail(choice) {
-      const severityColor = s => s < 25 ? 'text-emerald-500' : s < 60 ? 'text-amber-500' : 'text-rose-500';
-      const severityBar = s => s < 25 ? 'bg-emerald-500' : s < 60 ? 'bg-amber-500' : 'bg-rose-500';
-
-      let cardsHtml = choice.scenarios.map(s => {
-        const typeLabel = s.type === 'BEST_CASE' ? 'Best Case' : s.type === 'MOST_LIKELY' ? 'Most Likely' : 'Worst Case';
-        const typeColor = s.type === 'BEST_CASE' ? 'text-emerald-600' : s.type === 'MOST_LIKELY' ? 'text-amber-600' : 'text-rose-600';
-        return `
-          <div class="bg-neutral-50 dark:bg-neutral-900 border border-neutral-200/50 dark:border-neutral-800 rounded-2xl p-4.5 space-y-4">
-            <div class="flex justify-between items-center">
-              <span class="text-[9px] font-bold ${typeColor} uppercase tracking-wider">${typeLabel}</span>
-              <span class="text-xs font-black ${severityColor(s.severityScore)} font-mono">${s.severityScore}/100</span>
-            </div>
-            
-            <h4 class="font-extrabold text-neutral-900 dark:text-white text-xs">${s.title}</h4>
-            
-            <div class="space-y-2 text-[10px]">
-              <div>
-                <strong class="text-neutral-450 block uppercase tracking-wider">Privacy & Data</strong>
-                <span class="text-neutral-600 dark:text-neutral-400 mt-0.5 block">${s.impactData}</span>
-              </div>
-              <div>
-                <strong class="text-neutral-450 block uppercase tracking-wider">Financial Risk</strong>
-                <span class="text-neutral-600 dark:text-neutral-400 mt-0.5 block">${s.impactFinancial}</span>
-              </div>
-              <div>
-                <strong class="text-neutral-450 block uppercase tracking-wider">Emotional Toll</strong>
-                <span class="text-neutral-600 dark:text-neutral-400 mt-0.5 block">${s.impactEmotional}</span>
-              </div>
-            </div>
-
-            <!-- Severity Track -->
-            <div class="relative w-full h-1.5 bg-neutral-200 dark:bg-neutral-850 rounded-full overflow-hidden mt-1">
-              <div class="absolute top-0 left-0 h-full ${severityBar(s.severityScore)}" style="width:${s.severityScore}%"></div>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      return `
-        <div class="space-y-4 animate-fadeIn">
-          <p class="text-xs text-neutral-500 leading-relaxed"><strong class="text-neutral-700 dark:text-neutral-300 font-bold block">User Reaction: ${choice.choiceName}</strong> ${choice.description}</p>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            ${cardsHtml}
-          </div>
-        </div>
-      `;
-    }
-
-    function selectChoiceTab(idx) {
-      if (!currentScanData) return;
-      selectedChoice = idx;
-      
-      // Toggle button active styling
-      [0, 1, 2].forEach(i => {
-        const btn = document.getElementById(`outcome-btn-${i}`);
-        if (i === idx) {
-          btn.className = "flex-1 text-center py-2 px-3 text-xs font-bold rounded-lg cursor-pointer bg-white dark:bg-neutral-850 text-neutral-950 dark:text-white shadow-xs";
-        } else {
-          btn.className = "flex-1 text-center py-2 px-3 text-xs font-semibold rounded-lg cursor-pointer text-neutral-500 dark:text-neutral-400";
-        }
-      });
-
-      // Update simulator body details
-      const choice = currentScanData.analysis.simulatedOutcomes[idx];
-      document.getElementById('choice-simulator-body').innerHTML = renderChoiceDetail(choice);
-    }
-
-    // Community Reports Posting
-    function postCommunityReport() {
-      if (!currentScanData) return;
-      const type = currentScanData.type.toUpperCase();
-      const source = type === 'URL' ? currentScanData.input : (currentScanData.input.length > 50 ? currentScanData.input.substring(0, 47) + '...' : currentScanData.input);
-      
-      const newReport = {
-        id: Date.now().toString(36),
-        scamType: currentScanData.analysis.verdict,
-        title: `üö® AI Threat Alert: ${currentScanData.analysis.verdict.replace('_', ' ')} (${currentScanData.analysis.riskScore}/100 Risk)`,
-        description: `Tactics Detected: ${currentScanData.analysis.tactics.join(', ') || 'None'}\n\nAnalysis Findings:\n${currentScanData.analysis.reasons.map(r => `‚Ä¢ ${r}`).join('\n')}\n\nContent:\n"${currentScanData.input}"`,
-        offendingSource: source,
-        reportedBy: 'SafeNet Community member',
-        reportedAt: new Date().toISOString()
-      };
-
-      scamReports.unshift(newReport);
-      localStorage.setItem('safenet_reports', JSON.stringify(scamReports));
-      renderReportsList();
-      alert('‚úÖ Post successfully published on Community board!');
-      showView('reports');
-    }
-
-    // Render reports list
-    function renderReportsList() {
-      const container = document.getElementById('reports-list-container');
-      if (scamReports.length === 0) {
-        container.innerHTML = `
-          <div class="text-center py-16 bg-white dark:bg-neutral-950 rounded-3xl border border-neutral-200 dark:border-neutral-800">
-            <p class="text-xs text-neutral-400 italic">No community reports submitted yet.</p>
-          </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = `
-        <div class="bg-white dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800 rounded-3xl overflow-hidden shadow-xs divide-y divide-neutral-100 dark:divide-neutral-800">
-          ${scamReports.map(rep => `
-            <div class="p-5 space-y-2 text-xs">
-              <div class="flex justify-between items-start gap-4">
-                <span class="text-[10px] font-bold bg-neutral-100 text-neutral-600 dark:bg-neutral-850 dark:text-neutral-400 px-2.5 py-0.5 rounded-md uppercase">
-                  ${rep.scamType}
-                </span>
-                <span class="text-[10px] text-neutral-400 font-semibold flex items-center gap-1">
-                  <i data-lucide="calendar" class="h-3.5 w-3.5"></i>
-                  ${new Date(rep.reportedAt).toLocaleDateString()}
-                </span>
-              </div>
-              <h3 class="font-extrabold text-neutral-900 dark:text-white text-sm">${rep.title}</h3>
-              <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed whitespace-pre-wrap">${rep.description}</p>
-              ${rep.offendingSource ? `
-                <div class="pt-2">
-                  <span class="text-[10px] text-rose-500 font-bold block uppercase tracking-wider">Scam Source / Sender:</span>
-                  <code class="text-[11px] font-mono bg-rose-50/50 text-rose-700 dark:bg-rose-955/20 dark:text-rose-455 px-2 py-0.5 rounded-md border border-rose-100/30 break-all inline-block">${rep.offendingSource}</code>
-                </div>
-              ` : ''}
-              <div class="pt-1.5 text-[10px] text-neutral-450 font-medium">Reported by: <strong>${rep.reportedBy}</strong></div>
-            </div>
-          `).join('')}
-        </div>
-      `;
-      lucide.createIcons();
-    }
-
-    // Dashboard history management
-    function updateDashboardStats() {
-      const statsTotal = document.getElementById('stats-total');
-      const statsThreats = document.getElementById('stats-threats');
-      const statsSuspicious = document.getElementById('stats-suspicious');
-      const statsAvg = document.getElementById('stats-avg');
-
-      const total = scanHistory.length;
-      const threats = scanHistory.filter(s => s.verdict === 'HIGH_RISK').length;
-      const suspicious = scanHistory.filter(s => s.verdict === 'SUSPICIOUS').length;
-      const avg = total > 0 ? Math.round(scanHistory.reduce((sum, s) => sum + s.riskScore, 0) / total) : 0;
-
-      statsTotal.textContent = total;
-      statsThreats.textContent = threats;
-      statsSuspicious.textContent = suspicious;
-      statsAvg.textContent = `${avg}%`;
-
-      const listContainer = document.getElementById('scans-list-container');
-      if (total === 0) {
-        listContainer.innerHTML = `
-          <div class="text-center py-20 bg-white dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800 rounded-3xl space-y-3">
-            <i data-lucide="shield" class="h-10 w-10 text-neutral-300 mx-auto"></i>
-            <h3 class="font-bold text-neutral-800 dark:text-white text-base">No scan history recorded</h3>
-            <p class="text-xs text-neutral-500 max-w-xs mx-auto">Run scans in the Scam Scanner to securely sync and store logs here.</p>
-            <button onclick="showView('scan')" class="inline-flex items-center gap-1 px-4 py-2 bg-sky-600 text-white rounded-xl text-xs font-semibold cursor-pointer">Scan First Item</button>
-          </div>
-        `;
-      } else {
-        listContainer.innerHTML = `
-          <div class="bg-white dark:bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800 rounded-3xl overflow-hidden shadow-xs divide-y divide-neutral-100 dark:divide-neutral-800">
-            ${scanHistory.map(scan => {
-              let iconHtml = scan.verdict === 'SAFE' 
-                ? '<i data-lucide="shield-check" class="h-5 w-5 text-emerald-500"></i>'
-                : scan.verdict === 'SUSPICIOUS'
-                ? '<i data-lucide="alert-triangle" class="h-5 w-5 text-amber-500"></i>'
-                : '<i data-lucide="shield-alert" class="h-5 w-5 text-rose-500"></i>';
-              
-              let scoreColor = scan.verdict === 'SAFE' ? 'text-emerald-500' : scan.verdict === 'SUSPICIOUS' ? 'text-amber-500' : 'text-rose-500';
-
-              return `
-                <div class="p-5 flex items-center justify-between gap-4">
-                  <div class="flex items-center gap-4 min-w-[70%]">
-                    ${iconHtml}
-                    <div class="space-y-0.5 truncate">
-                      <span class="text-[10px] font-bold text-neutral-450 uppercase tracking-wider block">${scan.type} ‚Ä¢ ${new Date(scan.createdAt).toLocaleDateString()}</span>
-                      <h4 class="text-xs font-bold text-neutral-900 dark:text-white truncate">${scan.input}</h4>
-                    </div>
-                  </div>
-                  <div class="text-right shrink-0">
-                    <span class="text-[10px] text-neutral-400 font-bold block uppercase">Risk Profile</span>
-                    <span class="text-xs font-bold ${scoreColor}">${scan.riskScore}% ${scan.verdict.replace('_', ' ')}</span>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        `;
-      }
-      lucide.createIcons();
-    }
-
-    // Netbot chatbot helpers
-    function toggleNetbotPanel() {
-      document.getElementById('netbot-panel').classList.toggle('hidden');
-    }
-
-    async function sendNetbotMsg(event) {
+    chatForm.addEventListener('submit', event => {
       event.preventDefault();
-      const inputEl = document.getElementById('netbot-input');
-      const container = document.getElementById('netbot-messages');
-      const text = inputEl.value.trim();
+      const text = chatInput.value.trim();
       if (!text) return;
 
-      inputEl.value = '';
+      const userMessage = document.createElement('div');
+      userMessage.className = 'message user';
+      userMessage.textContent = text;
+      chatMessages.appendChild(userMessage);
 
-      // User speech bubble
-      container.innerHTML += `
-        <div class="flex justify-end animate-fadeIn">
-          <div class="max-w-[80%] rounded-2xl px-3.5 py-2.5 leading-relaxed shadow-2xs bg-sky-600 text-white rounded-br-none">
-            ${text}
-          </div>
-        </div>
-      `;
-      container.scrollTop = container.scrollHeight;
+      const botMessage = document.createElement('div');
+      botMessage.className = 'message bot';
+      botMessage.textContent = 'Quick safety check: do not click links, send money, or share codes until you verify the sender through an official website or phone number.';
+      chatMessages.appendChild(botMessage);
 
-      // Netbot response
-      setTimeout(() => {
-        let reply = "Netbot is offline. Sync your OpenRouter AI key under settings to chat directly.";
-        
-        // Custom simple rules
-        const norm = text.toLowerCase();
-        if (norm.includes('hello') || norm.includes('hi')) {
-          reply = "Hello there! I am Netbot. How can I help secure your communications today?";
-        } else if (norm.includes('slur') || norm.includes('offensive')) {
-          reply = "SafeNet tags lone slurs or offensive messages inside the SUSPICIOUS range (30-45 risk) because they contain hostile content but lack active threat vectors like link click phishing or banking scams.";
-        } else if (norm.includes('scam') || norm.includes('phish')) {
-          reply = "Scam messages usually try to impersonate authoritative organizations (like the IRS or banks) and try to push you into tapping links or wiring money under urgent timelines.";
-        }
+      chatInput.value = '';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
 
-        container.innerHTML += `
-          <div class="flex justify-start animate-fadeIn">
-            <div class="max-w-[80%] rounded-2xl px-3.5 py-2.5 leading-relaxed shadow-2xs bg-white dark:bg-neutral-850 text-neutral-800 dark:text-neutral-100 border border-neutral-200/60 dark:border-neutral-700 rounded-bl-none">
-              ${reply}
-            </div>
-          </div>
-        `;
-        container.scrollTop = container.scrollHeight;
-      }, 500);
-    }
-
-    function loginUser() {
-      alert('‚úÖ Successfully signed in to SafeNet account!');
-      showView('dashboard');
-    }
+    setElderlyMode(localStorage.getItem('safenet-elderly') === 'true');
   </script>
 </body>
 </html>
