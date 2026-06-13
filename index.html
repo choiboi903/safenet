@@ -1,1422 +1,2874 @@
 <!DOCTYPE html>
-<html lang="en" id="html-root">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SafeNet - AI Scam Protection</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-
-  <style>
-    /* ‚îÄ‚îÄ‚îÄ RESET & BASE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #f8fafc;
-      --surface: #ffffff;
-      --card: #ffffff;
-      --card-hover: #f1f5f9;
-      --border: #e2e8f0;
-      --border-strong: #cbd5e1;
-      --primary: #0284c7;
-      --primary-glow: rgba(2, 132, 199, 0.15);
-      --blue: #3b82f6;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --danger-glow: rgba(239, 68, 68, 0.1);
-      --text: #0f172a;
-      --text-2: #475569;
-      --text-3: #94a3b8;
-      --radius: 16px;
-      --radius-lg: 22px;
-      --radius-xl: 28px;
-    }
-
-    html { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-    body { min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); color: var(--text); }
-    button { font-family: inherit; cursor: pointer; border: none; outline: none; }
-    input, textarea, select { font-family: inherit; outline: none; border: none; }
-    a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; }
-
-    /* ‚îÄ‚îÄ‚îÄ ELDERLY MODE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    html.elderly p, html.elderly li, html.elderly span.em-text { font-size: 1.05rem !important; line-height: 1.8 !important; }
-    html.elderly label { font-size: 1rem !important; }
-    html.elderly h1 { font-size: 2.2rem !important; }
-    html.elderly h2 { font-size: 1.75rem !important; }
-    html.elderly h3 { font-size: 1.4rem !important; }
-    html.elderly h4 { font-size: 1.2rem !important; }
-    html.elderly input, html.elderly textarea, html.elderly select { font-size: 1.05rem !important; padding: 0.75rem 1rem !important; }
-    html.elderly .small-label { font-size: 0.8rem !important; }
-    html.elderly button[data-primary] { font-size: 1.1rem !important; padding: 0.9rem 1.5rem !important; }
-
-    /* ‚îÄ‚îÄ‚îÄ NETBOT CHATBOT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    #netbot-fab {
-      position: fixed; bottom: 1.5rem; left: 1.5rem; z-index: 200;
-      width: 52px; height: 52px; border-radius: 16px;
-      background: linear-gradient(135deg, #0284c7, #3b82f6);
-      color: white; font-weight: 900; font-size: 1.1rem;
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 8px 24px rgba(2,132,199,0.35);
-      border: none; cursor: pointer; transition: all 0.2s;
-      font-family: 'Inter', sans-serif;
-    }
-    #netbot-fab:hover { transform: scale(1.08) translateY(-2px); box-shadow: 0 12px 30px rgba(2,132,199,0.45); }
-    #netbot-fab .nb-dot {
-      position: absolute; top: -3px; right: -3px;
-      width: 10px; height: 10px; background: #10b981;
-      border-radius: 50%; border: 2px solid white;
-    }
-    #netbot-panel {
-      display: none; position: fixed; bottom: 5.5rem; left: 1.5rem; z-index: 199;
-      width: 340px; max-height: 520px;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-xl); box-shadow: 0 20px 60px rgba(0,0,0,0.12);
-      flex-direction: column; overflow: hidden;
-      animation: nbSlideIn 0.2s ease;
-    }
-    #netbot-panel.open { display: flex; }
-    @keyframes nbSlideIn { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: none; } }
-    .nb-header {
-      padding: 1rem 1.1rem; background: linear-gradient(135deg, #0284c7, #3b82f6);
-      color: white; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
-    }
-    .nb-header-left { display: flex; align-items: center; gap: 0.6rem; }
-    .nb-avatar {
-      width: 34px; height: 34px; border-radius: 10px;
-      background: rgba(255,255,255,0.2); display: flex; align-items: center;
-      justify-content: center; font-weight: 900; font-size: 0.9rem;
-    }
-    .nb-title { font-weight: 800; font-size: 0.9rem; }
-    .nb-subtitle { font-size: 0.7rem; opacity: 0.85; margin-top: 1px; }
-    .nb-close {
-      background: rgba(255,255,255,0.15); border: none; color: white;
-      width: 28px; height: 28px; border-radius: 8px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; font-size: 1rem;
-      transition: background 0.15s;
-    }
-    .nb-close:hover { background: rgba(255,255,255,0.28); }
-    .nb-messages {
-      flex: 1; overflow-y: auto; padding: 1rem; display: flex;
-      flex-direction: column; gap: 0.6rem;
-    }
-    .nb-msg { max-width: 88%; display: flex; flex-direction: column; gap: 2px; }
-    .nb-msg.bot { align-self: flex-start; }
-    .nb-msg.user { align-self: flex-end; }
-    .nb-bubble {
-      padding: 0.55rem 0.85rem; border-radius: 14px; font-size: 0.82rem; line-height: 1.55;
-    }
-    .nb-msg.bot .nb-bubble { background: #f1f5f9; color: var(--text); border-radius: 4px 14px 14px 14px; }
-    .nb-msg.user .nb-bubble { background: linear-gradient(135deg,#0284c7,#3b82f6); color: white; border-radius: 14px 4px 14px 14px; }
-    .nb-typing { display: flex; gap: 4px; align-items: center; padding: 0.55rem 0.85rem; }
-    .nb-typing span { width: 6px; height: 6px; background: var(--text-3); border-radius: 50%; animation: nbDot 1.2s infinite; }
-    .nb-typing span:nth-child(2) { animation-delay: 0.2s; }
-    .nb-typing span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes nbDot { 0%,80%,100% { opacity: 0.3; transform: scale(0.7); } 40% { opacity: 1; transform: scale(1); } }
-    .nb-footer {
-      padding: 0.75rem; border-top: 1px solid var(--border);
-      display: flex; gap: 0.5rem; flex-shrink: 0; background: var(--surface);
-    }
-    .nb-input {
-      flex: 1; background: #f8fafc; border: 1px solid var(--border);
-      border-radius: 10px; padding: 0.55rem 0.8rem;
-      font-size: 0.82rem; color: var(--text); resize: none;
-      transition: border-color 0.15s; font-family: inherit;
-    }
-    .nb-input:focus { border-color: var(--primary); outline: none; }
-    .nb-send {
-      width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
-      background: linear-gradient(135deg,#0284c7,#3b82f6); border: none;
-      color: white; cursor: pointer; display: flex; align-items: center;
-      justify-content: center; font-size: 0.9rem; transition: all 0.15s;
-    }
-    .nb-send:hover { opacity: 0.88; transform: scale(1.05); }
-    .nb-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-    /* ‚îÄ‚îÄ‚îÄ SCROLLBAR ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
-
-    /* ‚îÄ‚îÄ‚îÄ NAVBAR ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    #navbar {
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 1.5rem; height: 60px;
-      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    }
-    .nav-logo { display: flex; align-items: center; gap: 0.6rem; font-weight: 800; font-size: 1.1rem; }
-    .nav-logo .logo-icon {
-      width: 34px; height: 34px; border-radius: 10px;
-      background: linear-gradient(135deg, #0284c7, #3b82f6);
-      display: flex; align-items: center; justify-content: center;
-      color: white; font-size: 1rem; box-shadow: 0 4px 12px var(--primary-glow);
-    }
-    .nav-links { display: flex; align-items: center; gap: 4px; }
-    .nav-link {
-      padding: 0.4rem 0.85rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
-      color: var(--text-2); transition: all 0.15s; background: none;
-    }
-    .nav-link:hover { color: var(--text); background: var(--card-hover); }
-    .nav-link.active { color: #0284c7; background: #e0f2fe; border: 1px solid #bae6fd; }
-    
-    .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
-    .btn-icon {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: var(--surface); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; color: var(--text-2); transition: all 0.15s;
-    }
-    .btn-icon:hover { color: var(--text); border-color: var(--border-strong); background: var(--card-hover); }
-    .btn-elderly {
-      padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
-      background: var(--surface); border: 1px solid var(--border);
-      color: var(--text-2); display: flex; align-items: center; gap: 0.4rem; transition: all 0.15s;
-    }
-    .btn-elderly:hover { background: var(--card-hover); color: var(--text); }
-    .btn-elderly.on { background: #ffe4e6; border-color: #fecdd3; color: #be123c; }
-
-    /* ‚îÄ‚îÄ‚îÄ MAIN CONTENT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    #main { flex: 1; max-width: 900px; width: 100%; margin: 0 auto; padding: 2rem 1.5rem; }
-
-    /* ‚îÄ‚îÄ‚îÄ TABS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .tab-pane { display: none; }
-    .tab-pane.active { display: block; animation: fadeIn 0.2s ease; }
-
-    /* ‚îÄ‚îÄ‚îÄ CARDS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .card {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-xl); padding: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-    .card-lg { padding: 2rem; }
-
-    /* ‚îÄ‚îÄ‚îÄ SCAN TYPE TABS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .seg-control {
-      display: flex; background: #f1f5f9; border: 1px solid var(--border);
-      border-radius: 12px; padding: 3px; gap: 2px;
-    }
-    .seg-btn {
-      flex: 1; padding: 0.45rem 0.75rem; border-radius: 9px;
-      font-size: 0.78rem; font-weight: 600; color: var(--text-2);
-      background: none; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 0.4rem;
-    }
-    .seg-btn:hover { color: var(--text); }
-    .seg-btn.active { background: var(--surface); color: var(--text); border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-
-    /* ‚îÄ‚îÄ‚îÄ FORM ELEMENTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .form-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-2); margin-bottom: 0.4rem; display: block; }
-    .form-input {
-      width: 100%; background: #f8fafc; border: 1px solid var(--border);
-      border-radius: 12px; padding: 0.65rem 0.9rem; color: var(--text); font-size: 0.875rem;
-      transition: border-color 0.15s, box-shadow 0.15s; resize: none;
-    }
-    .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); background: var(--surface); }
-    .form-input::placeholder { color: var(--text-3); }
-
-    /* ‚îÄ‚îÄ‚îÄ BUTTONS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .btn-primary {
-      width: 100%; padding: 0.8rem 1.25rem; border-radius: 12px;
-      background: linear-gradient(135deg, var(--primary), var(--blue));
-      color: white; font-weight: 700; font-size: 0.875rem;
-      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-      transition: all 0.2s; box-shadow: 0 4px 12px var(--primary-glow);
-    }
-    .btn-primary:hover { opacity: 0.95; transform: translateY(-1px); }
-    .btn-primary:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
-    .btn-ghost {
-      padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.8rem; font-weight: 600;
-      background: var(--surface); border: 1px solid var(--border); color: var(--text-2); transition: all 0.15s;
-    }
-    .btn-ghost:hover { color: var(--text); border-color: var(--border-strong); background: var(--card-hover); }
-    .btn-danger {
-      width: 100%; padding: 0.8rem; border-radius: 12px;
-      background: var(--danger); color: white; font-weight: 700; font-size: 0.9rem;
-      display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: all 0.15s;
-    }
-    .btn-danger:hover { background: #dc2626; }
-
-    /* ‚îÄ‚îÄ‚îÄ IMAGE UPLOAD ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .upload-zone {
-      border: 2px dashed var(--border); border-radius: 14px; padding: 2.5rem 1rem;
-      text-align: center; cursor: pointer; transition: all 0.15s; position: relative; background: #f8fafc;
-    }
-    .upload-zone:hover { border-color: var(--primary); background: #f0f9ff; }
-    .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-    .upload-zone .upload-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-    .upload-preview { border-radius: 12px; overflow: hidden; max-height: 200px; display: flex; align-items: center; justify-content: center; background: #f8fafc; border: 1px solid var(--border); margin-top: 0.75rem; }
-    .upload-preview img { max-height: 200px; object-fit: contain; }
-
-    /* ‚îÄ‚îÄ‚îÄ RESULTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    #results { display: none; margin-top: 1.5rem; }
-    #results.visible { display: block; animation: fadeIn 0.3s ease; }
-
-    .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; }
-    .result-header h2 { font-size: 1rem; font-weight: 700; }
-
-    .result-grid { display: grid; grid-template-columns: 180px 1fr; gap: 1rem; margin-bottom: 1rem; }
-    @media(max-width: 600px) { .result-grid { grid-template-columns: 1fr; } }
-
-    /* Risk gauge */
-    .gauge-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .gauge-wrap { position: relative; width: 110px; height: 110px; }
-    .gauge-wrap svg { width: 100%; height: 100%; }
-    .gauge-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .gauge-score { font-size: 1.6rem; font-weight: 900; font-family: 'JetBrains Mono', monospace; line-height: 1; }
-    .gauge-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-2); margin-top: 2px; }
-    .verdict-badge { padding: 0.25rem 0.85rem; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
-    .verdict-safe { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
-    .verdict-suspicious { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
-    .verdict-high { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-
-    /* Analysis panel */
-    .analysis-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .analysis-card h4 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-2); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem; }
-    .reason-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
-    .reason-list li { font-size: 0.82rem; color: var(--text-2); display: flex; gap: 0.5rem; line-height: 1.5; }
-    .reason-list li::before { content: '‚Ä¢'; color: var(--primary); flex-shrink: 0; font-weight: 900; }
-    .badge-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .badge { padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.7rem; font-weight: 700; }
-    .badge-tactic { background: #f1f5f9; color: var(--text-2); border: 1px solid var(--border); }
-    .badge-flag { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
-
-    /* Choice simulator */
-    .choice-sim { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .choice-sim-header { padding: 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; background: #f8fafc; }
-    .choice-sim-header h3 { font-size: 0.875rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
-    .choice-sim-body { padding: 1.25rem; }
-    .choice-desc { font-size: 0.8rem; color: var(--text-2); margin-bottom: 1rem; line-height: 1.55; }
-    .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
-    @media(max-width: 600px) { .scenario-grid { grid-template-columns: 1fr; } }
-    .scenario-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem; }
-    .scenario-type { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem; }
-    .type-best { color: #059669; }
-    .type-likely { color: #d97706; }
-    .type-worst { color: #dc2626; }
-    .scenario-title { font-size: 0.78rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; line-height: 1.3; }
-    .scenario-impact { font-size: 0.73rem; color: var(--text-2); line-height: 1.5; margin-bottom: 0.3rem; }
-    .scenario-impact strong { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-2); display: block; margin-bottom: 0.1rem; }
-    .severity-bar { margin-top: 0.6rem; }
-    .severity-track { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-    .severity-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
-
-    /* Actions */
-    .actions-card { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: var(--radius-lg); padding: 1.1rem; }
-    .actions-card h4 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: #0369a1; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; }
-    .action-list { display: flex; flex-direction: column; gap: 0.45rem; }
-    .action-item { font-size: 0.82rem; color: var(--text-2); display: flex; gap: 0.5rem; align-items: flex-start; }
-    .action-item::before { content: '‚úî'; color: var(--primary); font-weight: 900; flex-shrink: 0; font-size: 0.75rem; margin-top: 1px; }
-
-    /* ‚îÄ‚îÄ‚îÄ HISTORY ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .history-item {
-      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 0.9rem 1.1rem; display: flex; align-items: center; gap: 1rem;
-      cursor: pointer; transition: all 0.15s; margin-bottom: 0.5rem;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-    }
-    .history-item:hover { border-color: var(--border-strong); background: var(--card-hover); }
-    .history-verdict-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-    .history-info { flex: 1; min-width: 0; }
-    .history-input { font-size: 0.82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
-    .history-meta { font-size: 0.7rem; color: var(--text-2); margin-top: 2px; }
-    .history-score { font-size: 0.78rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
-
-    /* ‚îÄ‚îÄ‚îÄ REPORTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .report-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; margin-bottom: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .report-type-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; background: #f1f5f9; border: 1px solid var(--border); color: var(--text-2); padding: 0.15rem 0.55rem; border-radius: 5px; }
-    .report-title { font-size: 0.9rem; font-weight: 700; margin: 0.4rem 0 0.3rem; color: var(--text); }
-    .report-desc { font-size: 0.8rem; color: var(--text-2); line-height: 1.55; }
-    .report-source { font-size: 0.72rem; color: #b91c1c; font-family: 'JetBrains Mono', monospace; margin-top: 0.5rem; padding: 0.25rem 0.5rem; background: #fee2e2; border-radius: 6px; border: 1px solid #fecaca; display: inline-block; word-break: break-all; }
-
-    /* ‚îÄ‚îÄ‚îÄ EDUCATION ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .lesson-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .lesson-cat { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: #0284c7; background: #e0f2fe; padding: 0.15rem 0.55rem; border-radius: 5px; display: inline-block; margin-bottom: 0.5rem; }
-    .lesson-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text); }
-    .lesson-desc { font-size: 0.82rem; color: var(--text-2); line-height: 1.6; }
-
-    /* ‚îÄ‚îÄ‚îÄ MODALS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; z-index: 100;
-      background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px);
-      align-items: center; justify-content: center; padding: 1rem;
-    }
-    .modal-overlay.open { display: flex; animation: fadeIn 0.15s ease; }
-    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 2rem; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
-    .modal h2 { font-size: 1.2rem; font-weight: 800; margin: 0.75rem 0 0.5rem; color: var(--text); }
-    .modal p { font-size: 0.85rem; color: var(--text-2); line-height: 1.6; margin-bottom: 1.25rem; }
-    .modal-icon { width: 64px; height: 64px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 0.25rem; }
-    .modal-stack { display: flex; flex-direction: column; gap: 0.6rem; }
-
-    /* Settings modal */
-    .settings-modal { max-width: 360px; text-align: left; }
-    .settings-modal h2 { text-align: center; }
-    .settings-modal p { text-align: center; }
-
-    /* ‚îÄ‚îÄ‚îÄ ALERT BANNERS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .alert { padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.82rem; line-height: 1.5; margin-bottom: 0.75rem; }
-    .alert-error { background: #fee2e2; border: 1px solid #fecaca; color: #991b1b; }
-    .alert-success { background: #d1fae5; border: 1px solid #a7f3d0; color: #065f46; }
-
-    /* ‚îÄ‚îÄ‚îÄ LOADING ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .loading-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1rem; gap: 0.75rem; }
-    .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
-    .loading-wrap p { font-size: 0.82rem; color: var(--text-2); font-weight: 600; }
-
-    /* ‚îÄ‚îÄ‚îÄ EMPTY STATE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .empty { text-align: center; padding: 3rem 1rem; color: var(--text-3); }
-    .empty .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
-    .empty h3 { font-size: 0.95rem; font-weight: 700; color: var(--text-2); margin-bottom: 0.35rem; }
-    .empty p { font-size: 0.82rem; line-height: 1.55; color: var(--text-2); }
-
-    /* ‚îÄ‚îÄ‚îÄ PAGE HEADER ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .page-header { margin-bottom: 1.5rem; }
-    .page-header h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.25rem; color: var(--text); }
-    .page-header p { font-size: 0.85rem; color: var(--text-2); }
-
-    /* ‚îÄ‚îÄ‚îÄ UTILITY ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .space-y > * + * { margin-top: 0.75rem; }
-    .space-y-sm > * + * { margin-top: 0.5rem; }
-    .flex { display: flex; }
-    .flex-between { display: flex; align-items: center; justify-content: space-between; }
-    .gap-sm { gap: 0.5rem; }
-    .text-muted { color: var(--text-2); font-size: 0.78rem; }
-    .text-sm { font-size: 0.82rem; }
-    .font-bold { font-weight: 700; }
-    .mt-1 { margin-top: 0.5rem; }
-    .mb-1 { margin-bottom: 0.5rem; }
-    .mb-2 { margin-bottom: 1rem; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
-    @media(max-width: 640px) { .grid-3 { grid-template-columns: 1fr; } }
-    .divider { border: none; border-top: 1px solid var(--border); margin: 1rem 0; }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
-</head>
-<body>
-
-<!-- ‚îÄ‚îÄ‚îÄ NAVBAR ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
-<nav id="navbar">
-  <div class="nav-logo">
-    <div class="logo-icon">üõ°Ô∏è</div>
-    SafeNet
-  </div>
-  <div class="nav-links">
-    <button class="nav-link active" onclick="showTab('scanner')">üîç Scanner</button>
-    <button class="nav-link" onclick="showTab('history')">üìã History</button>
-    <button class="nav-link" onclick="showTab('reports')">üö® Reports</button>
-  </div>
-  <div class="nav-actions">
-    <button class="btn-elderly" id="elderly-btn" onclick="handleElderlyClick()">‚ù§Ô∏è Elderly Mode</button>
-    <button class="btn-icon" onclick="openSettings()" title="Settings">‚öôÔ∏è</button>
-  </div>
-</nav>
-
-<!-- ‚îÄ‚îÄ‚îÄ ELDERLY MODE CONFIRM MODAL ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
-<div class="modal-overlay" id="elderly-modal">
-  <div class="modal">
-    <div class="modal-icon" style="background:#ffe4e6; border:1px solid #fecdd3;">‚ù§Ô∏è</div>
-    <h2>Enable Elderly-Friendly Mode?</h2>
-    <p>This makes all text larger and easier to read, increases form field sizes, and improves overall readability for comfortable use.</p>
-    <div class="modal-stack">
-      <button class="btn-danger" style="background:#e11d48;" onclick="confirmElderly()">‚ù§Ô∏è Yes, enable it</button>
-      <button class="btn-ghost" style="width:100%; justify-content:center;" onclick="closeModal('elderly-modal')">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- ‚îÄ‚îÄ‚îÄ SETTINGS MODAL ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
-<div class="modal-overlay" id="settings-modal">
-  <div class="modal settings-modal">
-    <div class="modal-icon" style="background:#e0f2fe; border:1px solid #bae6fd;">‚öôÔ∏è</div>
-    <h2>AI Settings</h2>
-    <p>Enter your OpenRouter API key to enable live AI scam analysis.</p>
-    <div class="space-y">
-      <div>
-        <label class="form-label">OpenRouter API Key</label>
-        <input type="password" class="form-input" id="settings-key" placeholder="sk-or-v1-..." />
-      </div>
-      <button class="btn-primary" data-primary onclick="saveSettings()">üíæ Save & Activate</button>
-      <button class="btn-ghost" style="width:100%; justify-content:center;" onclick="closeModal('settings-modal')">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- ‚îÄ‚îÄ‚îÄ HISTORY DETAIL MODAL ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
-<div class="modal-overlay" id="history-detail-modal" style="align-items:flex-start; padding-top:2rem; overflow-y:auto;">
-  <div id="history-detail-content" style="background:var(--surface); border:1px solid var(--border-strong); border-radius:var(--radius-xl); padding:1.5rem; max-width:860px; width:100%; margin: 0 auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
-  </div>
-</div>
-
-<!-- ‚îÄ‚îÄ‚îÄ WARN COMMUNITY CONFIRM MODAL ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
-<div class="modal-overlay" id="warn-modal">
-  <div class="modal">
-    <div class="modal-icon" style="background:#fef3c7; border:1px solid #fde68a;">‚ö†Ô∏è</div>
-    <h2>Warn the Community?</h2>
-    <p>This will forward the AI scan report to the Community Reports page so others can see this threat. The scanned content preview and risk details will be visible to anyone viewing reports.</p>
-    <div class="modal-stack">
-      <button onclick="confirmWarnCommunity()" style="width:100%;padding:0.8rem;border-radius:12px;background:#fef3c7;border:1px solid #fde68a;color:#b56205;font-weight:700;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
-        ‚ö†Ô∏è Yes, warn the community
-      </button>
-      <button class="btn-ghost" style="width:100%;justify-content:center;" onclick="closeModal('warn-modal')">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- ‚îÄ‚îÄ‚îÄ MAIN ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
-<div id="main">
-
-  <!-- ‚ïê‚ïê‚ïê SCANNER TAB ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê -->
-  <div class="tab-pane active" id="tab-scanner">
-    <div class="page-header">
-      <h1>AI Scam Protection Scanner</h1>
-      <p>Paste a message, URL, or upload a screenshot to instantly detect scams and simulate outcomes.</p>
-    </div>
-
-    <!-- Scan type selector -->
-    <div class="seg-control mb-2" style="max-width:380px;">
-      <button class="seg-btn active" id="seg-text" onclick="switchScanType('text')">‚úâÔ∏è Message</button>
-      <button class="seg-btn" id="seg-url" onclick="switchScanType('url')">üåê Website URL</button>
-      <button class="seg-btn" id="seg-image" onclick="switchScanType('image')">üì∏ Screenshot</button>
-    </div>
-
-    <!-- Alert -->
-    <div id="scan-error" class="alert alert-error" style="display:none;"></div>
-
-    <!-- TEXT input -->
-    <div id="input-text" class="card space-y">
-      <div>
-        <label class="form-label">Paste Message Text</label>
-        <textarea id="text-input" class="form-input" rows="6" placeholder="Paste email content, SMS, DM, or any suspicious message here..."></textarea>
-      </div>
-      <button class="btn-primary" data-primary id="scan-btn-text" onclick="runScan('text')">
-        ‚ú® Analyze Message
-      </button>
-    </div>
-
-    <!-- URL input -->
-    <div id="input-url" class="card space-y" style="display:none;">
-      <div>
-        <label class="form-label">Paste Website URL</label>
-        <input type="text" id="url-input" class="form-input" placeholder="https://suspicious-site.xyz/verify" />
-      </div>
-      <button class="btn-primary" data-primary id="scan-btn-url" onclick="runScan('url')">
-        üåê Analyze URL
-      </button>
-    </div>
-
-    <!-- IMAGE input -->
-    <div id="input-image" class="card space-y" style="display:none;">
-      <div>
-        <label class="form-label">Upload Screenshot</label>
-        <div class="upload-zone" id="upload-zone">
-          <input type="file" accept="image/*" id="image-input" onchange="handleImageUpload(event)" />
-          <div class="upload-icon">üñºÔ∏è</div>
-          <p style="font-size:0.82rem; color:var(--text-2);">Click to upload or drag and drop</p>
-          <p style="font-size:0.72rem; color:var(--text-3); margin-top:0.25rem;">PNG, JPG, WEBP up to 5MB</p>
-        </div>
-        <div id="image-preview-wrap" class="upload-preview" style="display:none;">
-          <img id="image-preview" src="" alt="Preview" />
-        </div>
-      </div>
-      <button class="btn-primary" data-primary id="scan-btn-image" onclick="runScan('image')">
-        üì∏ Extract & Analyze
-      </button>
-    </div>
-
-    <!-- Results area -->
-    <div id="results">
-      <div class="result-header">
-        <div>
-          <div class="text-muted" style="font-weight:700; text-transform:uppercase; letter-spacing:0.06em; font-size:0.65rem;">Scan Complete</div>
-          <h2>Scam Analysis Report</h2>
-        </div>
-        <button class="btn-ghost" onclick="resetScan()">‚Ü© Scan Another</button>
-      </div>
-
-      <!-- Risk gauge + analysis -->
-      <div class="result-grid mb-1">
-        <div class="gauge-card">
-          <div class="text-muted" style="font-size:0.65rem; font-weight:700; text-transform:uppercase;">Risk Score</div>
-          <div class="gauge-wrap">
-            <svg viewBox="0 0 110 110" style="transform:rotate(-90deg);">
-              <circle cx="55" cy="55" r="46" fill="none" stroke="var(--border)" stroke-width="8"/>
-              <circle id="gauge-arc" cx="55" cy="55" r="46" fill="none" stroke="#0284c7" stroke-width="8"
-                stroke-dasharray="289.0" stroke-dashoffset="289.0" stroke-linecap="round"
-                style="transition: stroke-dashoffset 0.8s ease, stroke 0.4s;"/>
-            </svg>
-            <div class="gauge-center">
-              <div class="gauge-score" id="gauge-score">0</div>
-              <div class="gauge-label">/ 100</div>
-            </div>
-          </div>
-          <div id="verdict-badge" class="verdict-badge verdict-safe">SAFE</div>
-        </div>
-
-        <div class="analysis-card">
-          <h4>üîé Analysis Findings</h4>
-          <ul class="reason-list" id="reason-list"></ul>
-          <div class="flex-between" style="gap:1rem; flex-wrap:wrap;">
-            <div>
-              <div class="text-muted mb-1" style="font-size:0.65rem; font-weight:700; text-transform:uppercase;">Tactics Detected</div>
-              <div class="badge-row" id="tactics-row"></div>
-            </div>
-            <div>
-              <div class="text-muted mb-1" style="font-size:0.65rem; font-weight:700; text-transform:uppercase;">Flagged Terms</div>
-              <div class="badge-row" id="flags-row"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Choice simulator -->
-      <div class="choice-sim mb-1">
-        <div class="choice-sim-header">
-          <h3>‚ú® Reaction Choice Simulator</h3>
-          <div class="seg-control" id="choice-tabs" style="max-width:260px;"></div>
-        </div>
-        <div class="choice-sim-body">
-          <p class="choice-desc" id="choice-desc"></p>
-          <div class="scenario-grid" id="scenario-grid"></div>
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="actions-card">
-        <h4>üõ°Ô∏è Recommended Actions</h4>
-        <div class="action-list" id="actions-list"></div>
-      </div>
-
-      <!-- Warn Community button -->
-      <div id="warn-btn-wrap" style="margin-top:0.75rem;display:none;">
-        <button onclick="promptWarnCommunity()" style="width:100%;padding:0.8rem 1.25rem;border-radius:12px;background:#fef3c7;border:1px solid #fde68a;color:#b56205;font-weight:700;font-size:0.875rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='#fde68a'" onmouseout="this.style.background='#fef3c7'">
-          Warn Community - Forward This Report
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ‚ïê‚ïê‚ïê HISTORY TAB ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê -->
-  <div class="tab-pane" id="tab-history">
-    <div class="flex-between mb-2">
-      <div class="page-header" style="margin-bottom:0;">
-        <h1>Scan History</h1>
-        <p>All your previous scans saved locally on this device.</p>
-      </div>
-      <button class="btn-ghost" onclick="clearHistory()" style="flex-shrink:0;">üóëÔ∏è Clear All</button>
-    </div>
-
-    <!-- Stats bar -->
-    <div class="grid-3 mb-2" id="history-stats"></div>
-
-    <!-- List -->
-    <div id="history-list"></div>
-  </div>
-
-  <!-- ‚ïê‚ïê‚ïê REPORTS TAB ‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê‚ïê -->
-  <div class="tab-pane" id="tab-reports">
-    <div class="flex-between mb-2" style="flex-wrap:wrap;gap:0.75rem;">
-      <div class="page-header" style="margin-bottom:0;">
-        <h1>Community Reports</h1>
-        <p>AI-verified scam reports forwarded by users. Run a scan to contribute.</p>
-      </div>
-    </div>
-
-    <!-- How it works notice -->
-    <div style="background:#e0f2fe;border:1px solid #bae6fd;border-radius:14px;padding:0.9rem 1.1rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:0.75rem;">
-      <span style="font-size:1.1rem;flex-shrink:0;">üí°</span>
-      <p style="font-size:0.8rem;color:var(--text-2);line-height:1.6;margin:0;">
-        <strong style="color:var(--text);">How to report:</strong> Run a scan on a suspicious message or URL. When the results appear, click the <strong style="color:#b56205;">‚ö†Ô∏è Warn Community</strong> button to forward the AI report here so others can see it.
-      </p>
-    </div>
-
-    <div id="reports-list"></div>
-  </div>
-
-</div><!-- /#main -->
-
-<!-- ‚îÄ‚îÄ‚îÄ NETBOT CHATBOT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
-<button id="netbot-fab" onclick="toggleNetbot()" title="Open Netbot AI">
-  N
-  <span class="nb-dot"></span>
-</button>
-
-<div id="netbot-panel">
-  <div class="nb-header">
-    <div class="nb-header-left">
-      <div class="nb-avatar">N</div>
-      <div>
-        <div class="nb-title">Netbot</div>
-        <div class="nb-subtitle">AI Assistant - Ask me anything</div>
-      </div>
-    </div>
-    <button class="nb-close" onclick="toggleNetbot()">x</button>
-  </div>
-  <div class="nb-messages" id="nb-messages">
-    <div class="nb-msg bot">
-      <div class="nb-bubble">Hi! I'm Netbot, your AI assistant. Ask me anything about scams, cybersecurity, or anything else!</div>
-    </div>
-  </div>
-  <div class="nb-footer">
-    <textarea class="nb-input" id="nb-input" rows="1" placeholder="Ask Netbot anything..." onkeydown="nbKeydown(event)"></textarea>
-    <button class="nb-send" id="nb-send-btn" onclick="nbSend()">&#9658;</button>
-  </div>
-</div>
-
-<script>
-// ‚îÄ‚îÄ‚îÄ CONSTANTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-
-const TEXT_SYSTEM_PROMPT = `You are an expert cybersecurity analyst and scam prevention assistant.
-Analyze the provided message content (SMS, email, social DM, or chat) and evaluate whether it is a scam, phishing attempt, malicious communication, harassment, hate speech, or containing abusive language/racial slurs.
-
-Check for these indicators:
-- Urgency / fear / pressure language
-- Impersonation of brands, banks, government agencies, or known contacts
-- Requests for passwords, OTPs, card numbers, or wire transfers
-- Suspicious links (shortened URLs, domain mismatches, unusual TLDs)
-- Lottery/prize/investment scam patterns
-- Grammar inconsistencies or unusual phrasing
-- Abusive language, hate speech, racial slurs, threats of violence, or harassment
-
-SCORING RULES - score by context and combination, not flat values:
-- Single racial slur or offensive word, no other threat or scam content: riskScore 30-45, verdict SUSPICIOUS. Offensive but not an active danger or scam.
-- Racial slur + direct personal threat (e.g. "I will kill you"): riskScore 55-70, verdict HIGH_RISK.
-- Racial slur + threat + financial scam OR doxxing/SWAT threat: riskScore 75-92, verdict HIGH_RISK.
-- Full financial scam with urgency, impersonation, and phishing links: riskScore 80-95, verdict HIGH_RISK.
-- Mild profanity or casual insult with no threat/scam: riskScore 10-25, verdict SAFE.
-- Normal conversation: riskScore 5-15, verdict SAFE.
-- IMPORTANT: Do NOT give a score above 50 for a message that is only a single slur with no threat, no scam, and no victim targeting.
-
-Simulate 3 user responses:
-1. "Trust & Interact" - click link, call number, share info, send money
-2. "Reply / Argue" - reply STOP, engage the sender
-3. "Block & Report" - block, delete, report
-
-For each response provide 3 scenarios (BEST_CASE, MOST_LIKELY, WORST_CASE) with realistic Data/Privacy impact, Financial impact, Emotional impact, and a severity score 0-100.
-
-Return ONLY valid JSON (no markdown, no code fences):
-{"riskScore":<0-100>,"verdict":"SAFE"|"SUSPICIOUS"|"HIGH_RISK","reasons":[...],"highlights":[...],"tactics":[...],"actions":[...],"simulatedOutcomes":[{"choiceName":"...","description":"...","scenarios":[{"type":"BEST_CASE"|"MOST_LIKELY"|"WORST_CASE","title":"...","impactData":"...","impactFinancial":"...","impactEmotional":"...","severityScore":<0-100>}]}]}`;
-
-const URL_SYSTEM_PROMPT = `You are a world-class web security expert and URL forensics analyst. Analyze the provided URL deeply.
-
-Check ALL of:
-1. DOMAIN: Is it a real brand domain or impersonation? (amazon.evil.com ‚Äî real domain is evil.com, not amazon)
-2. TLD RISK: .com/.org/.gov = trusted; .xyz/.top/.tk/.ml/.gq/.cf/.buzz/.click/.loan/.zip = HIGH risk
-3. PROTOCOL: HTTP (not HTTPS) = red flag. HTTPS alone does NOT mean safe.
-4. PATH: /verify /login /secure /confirm /reset combined with brand names = phishing
-5. BRAND IMPERSONATION: paypal-secure.xyz, apple-login.com, irs-refund.net
-6. LEGITIMACY: If it's clearly google.com, amazon.com etc ‚Äî say so and give LOW score. Don't false-positive on real sites.
-
-Simulate 3 user responses:
-1. "Visit the Website" ‚Äî open the URL
-2. "Search Instead" ‚Äî search Google for the brand name instead
-3. "Block & Report URL" ‚Äî avoid and report
-
-For each provide 3 scenarios (BEST_CASE, MOST_LIKELY, WORST_CASE) with Data/Privacy, Financial, Emotional impacts and severity score 0-100.
-
-Return ONLY valid JSON (no markdown):
-{"riskScore":<0-100>,"verdict":"SAFE"|"SUSPICIOUS"|"HIGH_RISK","reasons":[...],"highlights":[...],"tactics":[...],"actions":[...],"simulatedOutcomes":[{"choiceName":"...","description":"...","scenarios":[{"type":"BEST_CASE"|"MOST_LIKELY"|"WORST_CASE","title":"...","impactData":"...","impactFinancial":"...","impactEmotional":"...","severityScore":<0-100>}]}]}`;
-
-// ‚îÄ‚îÄ‚îÄ STATE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-let currentScanType = 'text';
-let currentScanInput = '';
-let currentResult = null;
-let selectedChoiceIdx = 0;
-let imageDataUrl = null;
-
-// ‚îÄ‚îÄ‚îÄ STORAGE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-const storage = {
-  getHistory() { try { return JSON.parse(localStorage.getItem('sn-history') || '[]'); } catch { return []; } },
-  addHistory(item) {
-    const h = this.getHistory();
-    h.unshift({ ...item, id: Date.now().toString(36), date: new Date().toISOString() });
-    localStorage.setItem('sn-history', JSON.stringify(h.slice(0, 100)));
-  },
-  clearHistory() { localStorage.removeItem('sn-history'); },
-  async getReports() {
-    if (window.location.protocol.startsWith('http')) {
-      try {
-        const res = await fetch('/api/reports');
-        if (res.ok) return await res.json();
-      } catch (e) {
-        console.warn('Failed to fetch reports from API, falling back to localStorage', e);
+<html lang="en" class="__variable_246ccd __variable_c29908 h-full antialiased">
+  <head>
+    <meta charSet="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="/_next/static/css/app/layout.css?v=1781325684896" data-precedence="next_static/css/app/layout.css"/>
+    <link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/webpack.js?v=1781325684896"/>
+    <meta name="next-size-adjust" content=""/>
+    <title>
+      SafeNet | AI Scam &amp; Phishing Protection
+    </title>
+    <meta name="description" content="Instantly check if a message, URL, or screenshot is a scam. Explore simulated reaction outcomes and protect yourself online."/>
+    <link rel="icon" href="/favicon.ico?603d046c9a6fdfbb" type="image/x-icon" sizes="16x16"/>
+    <style>
+      /*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[15].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[15].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"src/app/layout.tsx","import":"Geist","arguments":[{"variable":"--font-geist-sans","subsets":["latin"]}],"variableName":"geistSans"} ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(/_next/static/media/f639721981034f88-s.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(/_next/static/media/9766a7e9e2e0ad5a-s.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(/_next/static/media/b66cf8e69499582a-s.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(/_next/static/media/aa016aab0e6d1295-s.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(/_next/static/media/22a5144ee8d83bca-s.p.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}@font-face {font-family: 'Geist Fallback';src: local("Arial");ascent-override: 95.94%;descent-override: 28.16%;line-gap-override: 0.00%;size-adjust: 104.76%
+}.__className_246ccd {font-family: 'Geist', 'Geist Fallback';font-style: normal
+}.__variable_246ccd {--font-geist-sans: 'Geist', 'Geist Fallback'
+}
+
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[15].oneOf[2].use[1]!./node_modules/next/dist/build/webpack/loaders/next-font-loader/index.js??ruleSet[1].rules[15].oneOf[2].use[2]!./node_modules/next/font/google/target.css?{"path":"src/app/layout.tsx","import":"Geist_Mono","arguments":[{"variable":"--font-geist-mono","subsets":["latin"]}],"variableName":"geistMono"} ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(/_next/static/media/013b72fa676f92e0-s.woff2) format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(/_next/static/media/b9408752a0c24fb9-s.woff2) format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* symbols2 */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(/_next/static/media/65f03d54ccadf4a8-s.woff2) format('woff2');
+  unicode-range: U+2000-2001, U+2004-2008, U+200A, U+23B8-23BD, U+2500-259F;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(/_next/static/media/e038a29029a234f2-s.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(/_next/static/media/2b5b02fc7e511755-s.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(/_next/static/media/7d4881bb7e1bf84d-s.p.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}@font-face {font-family: 'Geist Mono Fallback';src: local("Arial");ascent-override: 74.67%;descent-override: 21.92%;line-gap-override: 0.00%;size-adjust: 134.59%
+}.__className_c29908 {font-family: 'Geist Mono', 'Geist Mono Fallback';font-style: normal
+}.__variable_c29908 {--font-geist-mono: 'Geist Mono', 'Geist Mono Fallback'
+}
+
+/*!*****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[15].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[15].oneOf[10].use[3]!./src/app/globals.css ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************/
+/*! tailwindcss v4.3.0 | MIT License | https://tailwindcss.com */
+@layer properties;
+@layer theme, base, components, utilities;
+@layer theme {
+  :root, :host {
+    --color-amber-50: oklch(98.7% 0.022 95.277);
+    --color-amber-100: oklch(96.2% 0.059 95.617);
+    --color-amber-200: oklch(92.4% 0.12 95.746);
+    --color-amber-400: oklch(82.8% 0.189 84.429);
+    --color-amber-500: oklch(76.9% 0.188 70.08);
+    --color-amber-600: oklch(66.6% 0.179 58.318);
+    --color-amber-700: oklch(55.5% 0.163 48.998);
+    --color-amber-900: oklch(41.4% 0.112 45.904);
+    --color-amber-950: oklch(27.9% 0.077 45.635);
+    --color-emerald-50: oklch(97.9% 0.021 166.113);
+    --color-emerald-100: oklch(95% 0.052 163.051);
+    --color-emerald-200: oklch(90.5% 0.093 164.15);
+    --color-emerald-400: oklch(76.5% 0.177 163.223);
+    --color-emerald-500: oklch(69.6% 0.17 162.48);
+    --color-emerald-700: oklch(50.8% 0.118 165.612);
+    --color-emerald-800: oklch(43.2% 0.095 166.913);
+    --color-emerald-900: oklch(37.8% 0.077 168.94);
+    --color-emerald-950: oklch(26.2% 0.051 172.552);
+    --color-sky-50: oklch(97.7% 0.013 236.62);
+    --color-sky-100: oklch(95.1% 0.026 236.824);
+    --color-sky-200: oklch(90.1% 0.058 230.902);
+    --color-sky-400: oklch(74.6% 0.16 232.661);
+    --color-sky-500: oklch(68.5% 0.169 237.323);
+    --color-sky-600: oklch(58.8% 0.158 241.966);
+    --color-sky-700: oklch(50% 0.134 242.749);
+    --color-sky-800: oklch(44.3% 0.11 240.79);
+    --color-sky-900: oklch(39.1% 0.09 240.876);
+    --color-sky-950: oklch(29.3% 0.066 243.157);
+    --color-indigo-50: oklch(96.2% 0.018 272.314);
+    --color-indigo-200: oklch(87% 0.065 274.039);
+    --color-indigo-400: oklch(67.3% 0.182 276.935);
+    --color-indigo-600: oklch(51.1% 0.262 276.966);
+    --color-indigo-950: oklch(25.7% 0.09 281.288);
+    --color-rose-50: oklch(96.9% 0.015 12.422);
+    --color-rose-100: oklch(94.1% 0.03 12.58);
+    --color-rose-200: oklch(89.2% 0.058 10.001);
+    --color-rose-400: oklch(71.2% 0.194 13.428);
+    --color-rose-500: oklch(64.5% 0.246 16.439);
+    --color-rose-600: oklch(58.6% 0.253 17.585);
+    --color-rose-700: oklch(51.4% 0.222 16.935);
+    --color-rose-800: oklch(45.5% 0.188 13.697);
+    --color-rose-900: oklch(41% 0.159 10.272);
+    --color-rose-950: oklch(27.1% 0.105 12.094);
+    --color-neutral-50: oklch(98.5% 0 0);
+    --color-neutral-100: oklch(97% 0 0);
+    --color-neutral-200: oklch(92.2% 0 0);
+    --color-neutral-300: oklch(87% 0 0);
+    --color-neutral-400: oklch(70.8% 0 0);
+    --color-neutral-500: oklch(55.6% 0 0);
+    --color-neutral-600: oklch(43.9% 0 0);
+    --color-neutral-700: oklch(37.1% 0 0);
+    --color-neutral-800: oklch(26.9% 0 0);
+    --color-neutral-900: oklch(20.5% 0 0);
+    --color-neutral-950: oklch(14.5% 0 0);
+    --color-black: #000;
+    --color-white: #fff;
+    --spacing: 0.25rem;
+    --container-xs: 20rem;
+    --container-sm: 24rem;
+    --container-md: 28rem;
+    --container-2xl: 42rem;
+    --container-4xl: 56rem;
+    --container-7xl: 80rem;
+    --text-xs: 0.75rem;
+    --text-xs--line-height: calc(1 / 0.75);
+    --text-sm: 0.875rem;
+    --text-sm--line-height: calc(1.25 / 0.875);
+    --text-base: 1rem;
+    --text-base--line-height: calc(1.5 / 1);
+    --text-lg: 1.125rem;
+    --text-lg--line-height: calc(1.75 / 1.125);
+    --text-xl: 1.25rem;
+    --text-xl--line-height: calc(1.75 / 1.25);
+    --text-3xl: 1.875rem;
+    --text-3xl--line-height: calc(2.25 / 1.875);
+    --text-4xl: 2.25rem;
+    --text-4xl--line-height: calc(2.5 / 2.25);
+    --text-6xl: 3.75rem;
+    --text-6xl--line-height: 1;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    --tracking-tight: -0.025em;
+    --tracking-wide: 0.025em;
+    --tracking-wider: 0.05em;
+    --leading-relaxed: 1.625;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --animate-spin: spin 1s linear infinite;
+    --animate-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    --blur-md: 12px;
+    --blur-3xl: 64px;
+    --default-transition-duration: 150ms;
+    --default-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    --default-font-family: var(--font-geist-sans);
+    --default-mono-font-family: var(--font-geist-mono);
+  }
+}
+@layer base {
+  *, ::after, ::before, ::backdrop, ::file-selector-button {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+  }
+  html, :host {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+    font-feature-settings: var(--default-font-feature-settings, normal);
+    font-variation-settings: var(--default-font-variation-settings, normal);
+    -webkit-tap-highlight-color: transparent;
+  }
+  hr {
+    height: 0;
+    color: inherit;
+    border-top-width: 1px;
+  }
+  abbr:where([title]) {
+    -webkit-text-decoration: underline dotted;
+    text-decoration: underline dotted;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+  a {
+    color: inherit;
+    -webkit-text-decoration: inherit;
+    text-decoration: inherit;
+  }
+  b, strong {
+    font-weight: bolder;
+  }
+  code, kbd, samp, pre {
+    font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+    font-feature-settings: var(--default-mono-font-feature-settings, normal);
+    font-variation-settings: var(--default-mono-font-variation-settings, normal);
+    font-size: 1em;
+  }
+  small {
+    font-size: 80%;
+  }
+  sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+  }
+  sub {
+    bottom: -0.25em;
+  }
+  sup {
+    top: -0.5em;
+  }
+  table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+  }
+  :-moz-focusring {
+    outline: auto;
+  }
+  progress {
+    vertical-align: baseline;
+  }
+  summary {
+    display: list-item;
+  }
+  ol, ul, menu {
+    list-style: none;
+  }
+  img, svg, video, canvas, audio, iframe, embed, object {
+    display: block;
+    vertical-align: middle;
+  }
+  img, video {
+    max-width: 100%;
+    height: auto;
+  }
+  button, input, select, optgroup, textarea, ::file-selector-button {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    border-radius: 0;
+    background-color: transparent;
+    opacity: 1;
+  }
+  :where(select:is([multiple], [size])) optgroup {
+    font-weight: bolder;
+  }
+  :where(select:is([multiple], [size])) optgroup option {
+    padding-inline-start: 20px;
+  }
+  ::file-selector-button {
+    margin-inline-end: 4px;
+  }
+  ::placeholder {
+    opacity: 1;
+  }
+  @supports (not (-webkit-appearance: -apple-pay-button))  or (contain-intrinsic-size: 1px) {
+    ::placeholder {
+      color: currentcolor;
+      @supports (color: color-mix(in lab, red, red)) {
+        color: color-mix(in oklab, currentcolor 50%, transparent);
       }
     }
-    try { return JSON.parse(localStorage.getItem('sn-reports') || '[]'); } catch { return []; }
-  },
-  async addReport(item) {
-    if (window.location.protocol.startsWith('http')) {
-      try {
-        const res = await fetch('/api/reports', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(item)
-        });
-        if (res.ok) return await res.json();
-      } catch (e) {
-        console.warn('Failed to post report to API, falling back to localStorage', e);
+  }
+  textarea {
+    resize: vertical;
+  }
+  ::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+  ::-webkit-date-and-time-value {
+    min-height: 1lh;
+    text-align: inherit;
+  }
+  ::-webkit-datetime-edit {
+    display: inline-flex;
+  }
+  ::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+  }
+  ::-webkit-datetime-edit, ::-webkit-datetime-edit-year-field, ::-webkit-datetime-edit-month-field, ::-webkit-datetime-edit-day-field, ::-webkit-datetime-edit-hour-field, ::-webkit-datetime-edit-minute-field, ::-webkit-datetime-edit-second-field, ::-webkit-datetime-edit-millisecond-field, ::-webkit-datetime-edit-meridiem-field {
+    padding-block: 0;
+  }
+  ::-webkit-calendar-picker-indicator {
+    line-height: 1;
+  }
+  :-moz-ui-invalid {
+    box-shadow: none;
+  }
+  button, input:where([type="button"], [type="reset"], [type="submit"]), ::file-selector-button {
+    appearance: button;
+  }
+  ::-webkit-inner-spin-button, ::-webkit-outer-spin-button {
+    height: auto;
+  }
+  [hidden]:where(:not([hidden="until-found"])) {
+    display: none !important;
+  }
+}
+@layer utilities {
+  .absolute {
+    position: absolute;
+  }
+  .fixed {
+    position: fixed;
+  }
+  .relative {
+    position: relative;
+  }
+  .sticky {
+    position: sticky;
+  }
+  .inset-x-0 {
+    inset-inline: calc(var(--spacing) * 0);
+  }
+  .inset-y-0 {
+    inset-block: calc(var(--spacing) * 0);
+  }
+  .-top-40 {
+    top: calc(var(--spacing) * -40);
+  }
+  .top-0 {
+    top: calc(var(--spacing) * 0);
+  }
+  .bottom-6 {
+    bottom: calc(var(--spacing) * 6);
+  }
+  .bottom-20 {
+    bottom: calc(var(--spacing) * 20);
+  }
+  .left-0 {
+    left: calc(var(--spacing) * 0);
+  }
+  .left-6 {
+    left: calc(var(--spacing) * 6);
+  }
+  .left-\[calc\(50\%-11rem\)\] {
+    left: calc(50% - 11rem);
+  }
+  .isolate {
+    isolation: isolate;
+  }
+  .-z-10 {
+    z-index: calc(10 * -1);
+  }
+  .z-40 {
+    z-index: 40;
+  }
+  .z-50 {
+    z-index: 50;
+  }
+  .mx-4 {
+    margin-inline: calc(var(--spacing) * 4);
+  }
+  .mx-auto {
+    margin-inline: auto;
+  }
+  .my-1 {
+    margin-block: calc(var(--spacing) * 1);
+  }
+  .-mt-1 {
+    margin-top: calc(var(--spacing) * -1);
+  }
+  .mt-0\.5 {
+    margin-top: calc(var(--spacing) * 0.5);
+  }
+  .mt-1 {
+    margin-top: calc(var(--spacing) * 1);
+  }
+  .mt-2 {
+    margin-top: calc(var(--spacing) * 2);
+  }
+  .mt-3 {
+    margin-top: calc(var(--spacing) * 3);
+  }
+  .mt-4 {
+    margin-top: calc(var(--spacing) * 4);
+  }
+  .mr-1 {
+    margin-right: calc(var(--spacing) * 1);
+  }
+  .mb-0\.5 {
+    margin-bottom: calc(var(--spacing) * 0.5);
+  }
+  .mb-1 {
+    margin-bottom: calc(var(--spacing) * 1);
+  }
+  .mb-2 {
+    margin-bottom: calc(var(--spacing) * 2);
+  }
+  .mb-4 {
+    margin-bottom: calc(var(--spacing) * 4);
+  }
+  .ml-auto {
+    margin-left: auto;
+  }
+  .block {
+    display: block;
+  }
+  .flex {
+    display: flex;
+  }
+  .grid {
+    display: grid;
+  }
+  .hidden {
+    display: none;
+  }
+  .inline {
+    display: inline;
+  }
+  .inline-block {
+    display: inline-block;
+  }
+  .inline-flex {
+    display: inline-flex;
+  }
+  .aspect-1155\/678 {
+    aspect-ratio: 1155/678;
+  }
+  .h-3\.5 {
+    height: calc(var(--spacing) * 3.5);
+  }
+  .h-4 {
+    height: calc(var(--spacing) * 4);
+  }
+  .h-4\.5 {
+    height: calc(var(--spacing) * 4.5);
+  }
+  .h-5 {
+    height: calc(var(--spacing) * 5);
+  }
+  .h-5\.5 {
+    height: calc(var(--spacing) * 5.5);
+  }
+  .h-6 {
+    height: calc(var(--spacing) * 6);
+  }
+  .h-8 {
+    height: calc(var(--spacing) * 8);
+  }
+  .h-9 {
+    height: calc(var(--spacing) * 9);
+  }
+  .h-10 {
+    height: calc(var(--spacing) * 10);
+  }
+  .h-12 {
+    height: calc(var(--spacing) * 12);
+  }
+  .h-16 {
+    height: calc(var(--spacing) * 16);
+  }
+  .h-20 {
+    height: calc(var(--spacing) * 20);
+  }
+  .h-24 {
+    height: calc(var(--spacing) * 24);
+  }
+  .h-40 {
+    height: calc(var(--spacing) * 40);
+  }
+  .h-\[480px\] {
+    height: 480px;
+  }
+  .h-full {
+    height: 100%;
+  }
+  .max-h-56 {
+    max-height: calc(var(--spacing) * 56);
+  }
+  .min-h-full {
+    min-height: 100%;
+  }
+  .w-3\.5 {
+    width: calc(var(--spacing) * 3.5);
+  }
+  .w-4 {
+    width: calc(var(--spacing) * 4);
+  }
+  .w-4\.5 {
+    width: calc(var(--spacing) * 4.5);
+  }
+  .w-5 {
+    width: calc(var(--spacing) * 5);
+  }
+  .w-5\.5 {
+    width: calc(var(--spacing) * 5.5);
+  }
+  .w-6 {
+    width: calc(var(--spacing) * 6);
+  }
+  .w-8 {
+    width: calc(var(--spacing) * 8);
+  }
+  .w-9 {
+    width: calc(var(--spacing) * 9);
+  }
+  .w-10 {
+    width: calc(var(--spacing) * 10);
+  }
+  .w-12 {
+    width: calc(var(--spacing) * 12);
+  }
+  .w-16 {
+    width: calc(var(--spacing) * 16);
+  }
+  .w-20 {
+    width: calc(var(--spacing) * 20);
+  }
+  .w-24 {
+    width: calc(var(--spacing) * 24);
+  }
+  .w-80 {
+    width: calc(var(--spacing) * 80);
+  }
+  .w-\[36rem\] {
+    width: 36rem;
+  }
+  .w-full {
+    width: 100%;
+  }
+  .max-w-2xl {
+    max-width: var(--container-2xl);
+  }
+  .max-w-4xl {
+    max-width: var(--container-4xl);
+  }
+  .max-w-7xl {
+    max-width: var(--container-7xl);
+  }
+  .max-w-\[80\%\] {
+    max-width: 80%;
+  }
+  .max-w-md {
+    max-width: var(--container-md);
+  }
+  .max-w-sm {
+    max-width: var(--container-sm);
+  }
+  .max-w-xs {
+    max-width: var(--container-xs);
+  }
+  .min-w-\[70\%\] {
+    min-width: 70%;
+  }
+  .min-w-\[130px\] {
+    min-width: 130px;
+  }
+  .flex-1 {
+    flex: 1;
+  }
+  .shrink-0 {
+    flex-shrink: 0;
+  }
+  .-translate-x-1\/2 {
+    --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+  .-rotate-90 {
+    rotate: calc(90deg * -1);
+  }
+  .rotate-\[30deg\] {
+    rotate: 30deg;
+  }
+  .transform {
+    transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
+  }
+  .transform-gpu {
+    transform: translateZ(0) var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
+  }
+  .animate-pulse {
+    animation: var(--animate-pulse);
+  }
+  .animate-spin {
+    animation: var(--animate-spin);
+  }
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  .resize-none {
+    resize: none;
+  }
+  .grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .flex-col {
+    flex-direction: column;
+  }
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+  .items-center {
+    align-items: center;
+  }
+  .items-start {
+    align-items: flex-start;
+  }
+  .justify-between {
+    justify-content: space-between;
+  }
+  .justify-center {
+    justify-content: center;
+  }
+  .justify-end {
+    justify-content: flex-end;
+  }
+  .justify-start {
+    justify-content: flex-start;
+  }
+  .gap-1 {
+    gap: calc(var(--spacing) * 1);
+  }
+  .gap-1\.5 {
+    gap: calc(var(--spacing) * 1.5);
+  }
+  .gap-2 {
+    gap: calc(var(--spacing) * 2);
+  }
+  .gap-2\.5 {
+    gap: calc(var(--spacing) * 2.5);
+  }
+  .gap-3 {
+    gap: calc(var(--spacing) * 3);
+  }
+  .gap-4 {
+    gap: calc(var(--spacing) * 4);
+  }
+  .gap-5 {
+    gap: calc(var(--spacing) * 5);
+  }
+  .gap-6 {
+    gap: calc(var(--spacing) * 6);
+  }
+  .gap-8 {
+    gap: calc(var(--spacing) * 8);
+  }
+  .space-y-0\.5 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 0.5) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 0.5) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .space-y-1\.5 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 1.5) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 1.5) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .space-y-2 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .space-y-2\.5 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 2.5) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 2.5) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .space-y-3 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 3) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 3) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .space-y-4 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 4) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 4) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .space-y-6 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 6) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 6) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .space-y-8 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 8) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 8) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .space-y-12 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 12) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 12) * calc(1 - var(--tw-space-y-reverse)));
+    }
+  }
+  .divide-y {
+    :where(& > :not(:last-child)) {
+      --tw-divide-y-reverse: 0;
+      border-bottom-style: var(--tw-border-style);
+      border-top-style: var(--tw-border-style);
+      border-top-width: calc(1px * var(--tw-divide-y-reverse));
+      border-bottom-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));
+    }
+  }
+  .divide-neutral-100 {
+    :where(& > :not(:last-child)) {
+      border-color: var(--color-neutral-100);
+    }
+  }
+  .truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .overflow-hidden {
+    overflow: hidden;
+  }
+  .overflow-y-auto {
+    overflow-y: auto;
+  }
+  .rounded-2xl {
+    border-radius: var(--radius-2xl);
+  }
+  .rounded-3xl {
+    border-radius: var(--radius-3xl);
+  }
+  .rounded-full {
+    border-radius: calc(infinity * 1px);
+  }
+  .rounded-lg {
+    border-radius: var(--radius-lg);
+  }
+  .rounded-md {
+    border-radius: var(--radius-md);
+  }
+  .rounded-xl {
+    border-radius: var(--radius-xl);
+  }
+  .rounded-br-none {
+    border-bottom-right-radius: 0;
+  }
+  .rounded-bl-none {
+    border-bottom-left-radius: 0;
+  }
+  .border {
+    border-style: var(--tw-border-style);
+    border-width: 1px;
+  }
+  .border-2 {
+    border-style: var(--tw-border-style);
+    border-width: 2px;
+  }
+  .border-t {
+    border-top-style: var(--tw-border-style);
+    border-top-width: 1px;
+  }
+  .border-b {
+    border-bottom-style: var(--tw-border-style);
+    border-bottom-width: 1px;
+  }
+  .border-dashed {
+    --tw-border-style: dashed;
+    border-style: dashed;
+  }
+  .border-amber-100\/50 {
+    border-color: color-mix(in srgb, oklch(96.2% 0.059 95.617) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-amber-100) 50%, transparent);
+    }
+  }
+  .border-amber-200\/50 {
+    border-color: color-mix(in srgb, oklch(92.4% 0.12 95.746) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-amber-200) 50%, transparent);
+    }
+  }
+  .border-amber-500\/30 {
+    border-color: color-mix(in srgb, oklch(76.9% 0.188 70.08) 30%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-amber-500) 30%, transparent);
+    }
+  }
+  .border-emerald-100 {
+    border-color: var(--color-emerald-100);
+  }
+  .border-emerald-200\/50 {
+    border-color: color-mix(in srgb, oklch(90.5% 0.093 164.15) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-emerald-200) 50%, transparent);
+    }
+  }
+  .border-neutral-100 {
+    border-color: var(--color-neutral-100);
+  }
+  .border-neutral-200 {
+    border-color: var(--color-neutral-200);
+  }
+  .border-neutral-200\/40 {
+    border-color: color-mix(in srgb, oklch(92.2% 0 0) 40%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-neutral-200) 40%, transparent);
+    }
+  }
+  .border-neutral-200\/50 {
+    border-color: color-mix(in srgb, oklch(92.2% 0 0) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-neutral-200) 50%, transparent);
+    }
+  }
+  .border-neutral-200\/60 {
+    border-color: color-mix(in srgb, oklch(92.2% 0 0) 60%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-neutral-200) 60%, transparent);
+    }
+  }
+  .border-neutral-200\/80 {
+    border-color: color-mix(in srgb, oklch(92.2% 0 0) 80%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-neutral-200) 80%, transparent);
+    }
+  }
+  .border-neutral-300 {
+    border-color: var(--color-neutral-300);
+  }
+  .border-rose-100 {
+    border-color: var(--color-rose-100);
+  }
+  .border-rose-100\/30 {
+    border-color: color-mix(in srgb, oklch(94.1% 0.03 12.58) 30%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-rose-100) 30%, transparent);
+    }
+  }
+  .border-rose-200 {
+    border-color: var(--color-rose-200);
+  }
+  .border-rose-200\/50 {
+    border-color: color-mix(in srgb, oklch(89.2% 0.058 10.001) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-rose-200) 50%, transparent);
+    }
+  }
+  .border-sky-100 {
+    border-color: var(--color-sky-100);
+  }
+  .border-sky-100\/30 {
+    border-color: color-mix(in srgb, oklch(95.1% 0.026 236.824) 30%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-sky-100) 30%, transparent);
+    }
+  }
+  .border-sky-100\/50 {
+    border-color: color-mix(in srgb, oklch(95.1% 0.026 236.824) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      border-color: color-mix(in oklab, var(--color-sky-100) 50%, transparent);
+    }
+  }
+  .bg-amber-50 {
+    background-color: var(--color-amber-50);
+  }
+  .bg-amber-50\/40 {
+    background-color: color-mix(in srgb, oklch(98.7% 0.022 95.277) 40%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-amber-50) 40%, transparent);
+    }
+  }
+  .bg-amber-100 {
+    background-color: var(--color-amber-100);
+  }
+  .bg-amber-500\/10 {
+    background-color: color-mix(in srgb, oklch(76.9% 0.188 70.08) 10%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-amber-500) 10%, transparent);
+    }
+  }
+  .bg-black {
+    background-color: var(--color-black);
+  }
+  .bg-emerald-50 {
+    background-color: var(--color-emerald-50);
+  }
+  .bg-emerald-100 {
+    background-color: var(--color-emerald-100);
+  }
+  .bg-indigo-50 {
+    background-color: var(--color-indigo-50);
+  }
+  .bg-neutral-50 {
+    background-color: var(--color-neutral-50);
+  }
+  .bg-neutral-50\/50 {
+    background-color: color-mix(in srgb, oklch(98.5% 0 0) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-neutral-50) 50%, transparent);
+    }
+  }
+  .bg-neutral-100 {
+    background-color: var(--color-neutral-100);
+  }
+  .bg-neutral-950 {
+    background-color: var(--color-neutral-950);
+  }
+  .bg-rose-50 {
+    background-color: var(--color-rose-50);
+  }
+  .bg-rose-50\/30 {
+    background-color: color-mix(in srgb, oklch(96.9% 0.015 12.422) 30%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-rose-50) 30%, transparent);
+    }
+  }
+  .bg-rose-50\/50 {
+    background-color: color-mix(in srgb, oklch(96.9% 0.015 12.422) 50%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-rose-50) 50%, transparent);
+    }
+  }
+  .bg-rose-100 {
+    background-color: var(--color-rose-100);
+  }
+  .bg-rose-600 {
+    background-color: var(--color-rose-600);
+  }
+  .bg-sky-50 {
+    background-color: var(--color-sky-50);
+  }
+  .bg-sky-50\/15 {
+    background-color: color-mix(in srgb, oklch(97.7% 0.013 236.62) 15%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-sky-50) 15%, transparent);
+    }
+  }
+  .bg-sky-50\/30 {
+    background-color: color-mix(in srgb, oklch(97.7% 0.013 236.62) 30%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-sky-50) 30%, transparent);
+    }
+  }
+  .bg-sky-500\/5 {
+    background-color: color-mix(in srgb, oklch(68.5% 0.169 237.323) 5%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-sky-500) 5%, transparent);
+    }
+  }
+  .bg-sky-600 {
+    background-color: var(--color-sky-600);
+  }
+  .bg-white {
+    background-color: var(--color-white);
+  }
+  .bg-white\/80 {
+    background-color: color-mix(in srgb, #fff 80%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-white) 80%, transparent);
+    }
+  }
+  .bg-linear-to-tr {
+    --tw-gradient-position: to top right;
+    @supports (background-image: linear-gradient(in lab, red, red)) {
+      --tw-gradient-position: to top right in oklab;
+    }
+    background-image: linear-gradient(var(--tw-gradient-stops));
+  }
+  .bg-gradient-to-b {
+    --tw-gradient-position: to bottom in oklab;
+    background-image: linear-gradient(var(--tw-gradient-stops));
+  }
+  .bg-gradient-to-r {
+    --tw-gradient-position: to right in oklab;
+    background-image: linear-gradient(var(--tw-gradient-stops));
+  }
+  .bg-gradient-to-tr {
+    --tw-gradient-position: to top right in oklab;
+    background-image: linear-gradient(var(--tw-gradient-stops));
+  }
+  .from-neutral-900 {
+    --tw-gradient-from: var(--color-neutral-900);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .from-neutral-950 {
+    --tw-gradient-from: var(--color-neutral-950);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .from-sky-200 {
+    --tw-gradient-from: var(--color-sky-200);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .from-sky-500 {
+    --tw-gradient-from: var(--color-sky-500);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .via-neutral-800 {
+    --tw-gradient-via: var(--color-neutral-800);
+    --tw-gradient-via-stops: var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-via) var(--tw-gradient-via-position), var(--tw-gradient-to) var(--tw-gradient-to-position);
+    --tw-gradient-stops: var(--tw-gradient-via-stops);
+  }
+  .to-indigo-200 {
+    --tw-gradient-to: var(--color-indigo-200);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .to-indigo-600 {
+    --tw-gradient-to: var(--color-indigo-600);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .to-neutral-500 {
+    --tw-gradient-to: var(--color-neutral-500);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .to-neutral-700 {
+    --tw-gradient-to: var(--color-neutral-700);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+  }
+  .bg-clip-text {
+    background-clip: text;
+  }
+  .fill-current {
+    fill: currentcolor;
+  }
+  .object-contain {
+    object-fit: contain;
+  }
+  .p-0\.5 {
+    padding: calc(var(--spacing) * 0.5);
+  }
+  .p-1 {
+    padding: calc(var(--spacing) * 1);
+  }
+  .p-2 {
+    padding: calc(var(--spacing) * 2);
+  }
+  .p-3 {
+    padding: calc(var(--spacing) * 3);
+  }
+  .p-3\.5 {
+    padding: calc(var(--spacing) * 3.5);
+  }
+  .p-4 {
+    padding: calc(var(--spacing) * 4);
+  }
+  .p-5 {
+    padding: calc(var(--spacing) * 5);
+  }
+  .p-6 {
+    padding: calc(var(--spacing) * 6);
+  }
+  .p-8 {
+    padding: calc(var(--spacing) * 8);
+  }
+  .px-1\.5 {
+    padding-inline: calc(var(--spacing) * 1.5);
+  }
+  .px-2 {
+    padding-inline: calc(var(--spacing) * 2);
+  }
+  .px-2\.5 {
+    padding-inline: calc(var(--spacing) * 2.5);
+  }
+  .px-3 {
+    padding-inline: calc(var(--spacing) * 3);
+  }
+  .px-3\.5 {
+    padding-inline: calc(var(--spacing) * 3.5);
+  }
+  .px-4 {
+    padding-inline: calc(var(--spacing) * 4);
+  }
+  .px-4\.5 {
+    padding-inline: calc(var(--spacing) * 4.5);
+  }
+  .px-6 {
+    padding-inline: calc(var(--spacing) * 6);
+  }
+  .py-0\.5 {
+    padding-block: calc(var(--spacing) * 0.5);
+  }
+  .py-1 {
+    padding-block: calc(var(--spacing) * 1);
+  }
+  .py-1\.5 {
+    padding-block: calc(var(--spacing) * 1.5);
+  }
+  .py-2 {
+    padding-block: calc(var(--spacing) * 2);
+  }
+  .py-2\.5 {
+    padding-block: calc(var(--spacing) * 2.5);
+  }
+  .py-3 {
+    padding-block: calc(var(--spacing) * 3);
+  }
+  .py-3\.5 {
+    padding-block: calc(var(--spacing) * 3.5);
+  }
+  .py-6 {
+    padding-block: calc(var(--spacing) * 6);
+  }
+  .py-10 {
+    padding-block: calc(var(--spacing) * 10);
+  }
+  .py-16 {
+    padding-block: calc(var(--spacing) * 16);
+  }
+  .py-20 {
+    padding-block: calc(var(--spacing) * 20);
+  }
+  .pt-1 {
+    padding-top: calc(var(--spacing) * 1);
+  }
+  .pt-2 {
+    padding-top: calc(var(--spacing) * 2);
+  }
+  .pt-4 {
+    padding-top: calc(var(--spacing) * 4);
+  }
+  .pt-5 {
+    padding-top: calc(var(--spacing) * 5);
+  }
+  .pt-16 {
+    padding-top: calc(var(--spacing) * 16);
+  }
+  .pr-4 {
+    padding-right: calc(var(--spacing) * 4);
+  }
+  .pb-4 {
+    padding-bottom: calc(var(--spacing) * 4);
+  }
+  .pb-6 {
+    padding-bottom: calc(var(--spacing) * 6);
+  }
+  .pl-3 {
+    padding-left: calc(var(--spacing) * 3);
+  }
+  .pl-10 {
+    padding-left: calc(var(--spacing) * 10);
+  }
+  .text-center {
+    text-align: center;
+  }
+  .text-left {
+    text-align: left;
+  }
+  .text-right {
+    text-align: right;
+  }
+  .font-mono {
+    font-family: var(--font-geist-mono);
+  }
+  .text-3xl {
+    font-size: var(--text-3xl);
+    line-height: var(--tw-leading, var(--text-3xl--line-height));
+  }
+  .text-4xl {
+    font-size: var(--text-4xl);
+    line-height: var(--tw-leading, var(--text-4xl--line-height));
+  }
+  .text-base {
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
+  }
+  .text-lg {
+    font-size: var(--text-lg);
+    line-height: var(--tw-leading, var(--text-lg--line-height));
+  }
+  .text-sm {
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+  }
+  .text-xl {
+    font-size: var(--text-xl);
+    line-height: var(--tw-leading, var(--text-xl--line-height));
+  }
+  .text-xs {
+    font-size: var(--text-xs);
+    line-height: var(--tw-leading, var(--text-xs--line-height));
+  }
+  .text-\[9px\] {
+    font-size: 9px;
+  }
+  .text-\[10px\] {
+    font-size: 10px;
+  }
+  .text-\[11px\] {
+    font-size: 11px;
+  }
+  .leading-relaxed {
+    --tw-leading: var(--leading-relaxed);
+    line-height: var(--leading-relaxed);
+  }
+  .font-bold {
+    --tw-font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-bold);
+  }
+  .font-extrabold {
+    --tw-font-weight: var(--font-weight-extrabold);
+    font-weight: var(--font-weight-extrabold);
+  }
+  .font-semibold {
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+  }
+  .tracking-tight {
+    --tw-tracking: var(--tracking-tight);
+    letter-spacing: var(--tracking-tight);
+  }
+  .tracking-wide {
+    --tw-tracking: var(--tracking-wide);
+    letter-spacing: var(--tracking-wide);
+  }
+  .tracking-wider {
+    --tw-tracking: var(--tracking-wider);
+    letter-spacing: var(--tracking-wider);
+  }
+  .break-all {
+    word-break: break-all;
+  }
+  .text-amber-500 {
+    color: var(--color-amber-500);
+  }
+  .text-amber-600 {
+    color: var(--color-amber-600);
+  }
+  .text-amber-700 {
+    color: var(--color-amber-700);
+  }
+  .text-amber-900 {
+    color: var(--color-amber-900);
+  }
+  .text-amber-950 {
+    color: var(--color-amber-950);
+  }
+  .text-emerald-500 {
+    color: var(--color-emerald-500);
+  }
+  .text-emerald-700 {
+    color: var(--color-emerald-700);
+  }
+  .text-emerald-800 {
+    color: var(--color-emerald-800);
+  }
+  .text-indigo-600 {
+    color: var(--color-indigo-600);
+  }
+  .text-neutral-100 {
+    color: var(--color-neutral-100);
+  }
+  .text-neutral-300 {
+    color: var(--color-neutral-300);
+  }
+  .text-neutral-400 {
+    color: var(--color-neutral-400);
+  }
+  .text-neutral-500 {
+    color: var(--color-neutral-500);
+  }
+  .text-neutral-600 {
+    color: var(--color-neutral-600);
+  }
+  .text-neutral-700 {
+    color: var(--color-neutral-700);
+  }
+  .text-neutral-800 {
+    color: var(--color-neutral-800);
+  }
+  .text-neutral-900 {
+    color: var(--color-neutral-900);
+  }
+  .text-neutral-950 {
+    color: var(--color-neutral-950);
+  }
+  .text-rose-500 {
+    color: var(--color-rose-500);
+  }
+  .text-rose-600 {
+    color: var(--color-rose-600);
+  }
+  .text-rose-700 {
+    color: var(--color-rose-700);
+  }
+  .text-rose-800 {
+    color: var(--color-rose-800);
+  }
+  .text-rose-900 {
+    color: var(--color-rose-900);
+  }
+  .text-rose-950 {
+    color: var(--color-rose-950);
+  }
+  .text-sky-500 {
+    color: var(--color-sky-500);
+  }
+  .text-sky-600 {
+    color: var(--color-sky-600);
+  }
+  .text-sky-700 {
+    color: var(--color-sky-700);
+  }
+  .text-sky-950 {
+    color: var(--color-sky-950);
+  }
+  .text-transparent {
+    color: transparent;
+  }
+  .text-white {
+    color: var(--color-white);
+  }
+  .text-white\/80 {
+    color: color-mix(in srgb, #fff 80%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      color: color-mix(in oklab, var(--color-white) 80%, transparent);
+    }
+  }
+  .uppercase {
+    text-transform: uppercase;
+  }
+  .italic {
+    font-style: italic;
+  }
+  .underline {
+    text-decoration-line: underline;
+  }
+  .underline-offset-2 {
+    text-underline-offset: 2px;
+  }
+  .antialiased {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .opacity-20 {
+    opacity: 20%;
+  }
+  .shadow-2xl {
+    --tw-shadow: 0 25px 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-2xs {
+    --tw-shadow: 0 1px var(--tw-shadow-color, rgb(0 0 0 / 0.05));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-lg {
+    --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 4px 6px -4px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-md {
+    --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1)), 0 2px 4px -2px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-xs {
+    --tw-shadow: 0 1px 2px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.05));
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .ring-1 {
+    --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+    box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+  .shadow-sky-500\/10 {
+    --tw-shadow-color: color-mix(in srgb, oklch(68.5% 0.169 237.323) 10%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tw-shadow-color: color-mix(in oklab, color-mix(in oklab, var(--color-sky-500) 10%, transparent) var(--tw-shadow-alpha), transparent);
+    }
+  }
+  .shadow-sky-500\/20 {
+    --tw-shadow-color: color-mix(in srgb, oklch(68.5% 0.169 237.323) 20%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tw-shadow-color: color-mix(in oklab, color-mix(in oklab, var(--color-sky-500) 20%, transparent) var(--tw-shadow-alpha), transparent);
+    }
+  }
+  .ring-sky-700\/10 {
+    --tw-ring-color: color-mix(in srgb, oklch(50% 0.134 242.749) 10%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      --tw-ring-color: color-mix(in oklab, var(--color-sky-700) 10%, transparent);
+    }
+  }
+  .blur-3xl {
+    --tw-blur: blur(var(--blur-3xl));
+    filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
+  }
+  .backdrop-blur-md {
+    --tw-backdrop-blur: blur(var(--blur-md));
+    -webkit-backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+    backdrop-filter: var(--tw-backdrop-blur,) var(--tw-backdrop-brightness,) var(--tw-backdrop-contrast,) var(--tw-backdrop-grayscale,) var(--tw-backdrop-hue-rotate,) var(--tw-backdrop-invert,) var(--tw-backdrop-opacity,) var(--tw-backdrop-saturate,) var(--tw-backdrop-sepia,);
+  }
+  .transition-all {
+    transition-property: all;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+  .transition-colors {
+    transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
+    transition-duration: var(--tw-duration, var(--default-transition-duration));
+  }
+  .duration-300 {
+    --tw-duration: 300ms;
+    transition-duration: 300ms;
+  }
+  .duration-1000 {
+    --tw-duration: 1000ms;
+    transition-duration: 1000ms;
+  }
+  .ease-out {
+    --tw-ease: var(--ease-out);
+    transition-timing-function: var(--ease-out);
+  }
+  .hover\:scale-105 {
+    &:hover {
+      @media (hover: hover) {
+        --tw-scale-x: 105%;
+        --tw-scale-y: 105%;
+        --tw-scale-z: 105%;
+        scale: var(--tw-scale-x) var(--tw-scale-y);
       }
     }
-    const r = await this.getReports();
-    const newReport = { ...item, id: Date.now().toString(36), date: new Date().toISOString() };
-    r.unshift(newReport);
-    localStorage.setItem('sn-reports', JSON.stringify(r));
-    return newReport;
-  },
-  getApiKey() { return localStorage.getItem('sn-api-key') || ''; },
-  setApiKey(k) { localStorage.setItem('sn-api-key', k); },
-  getElderly() { return localStorage.getItem('sn-elderly') === 'true'; },
-  setElderly(v) { localStorage.setItem('sn-elderly', v); },
-};
-
-
-// ‚îÄ‚îÄ‚îÄ INIT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-window.addEventListener('DOMContentLoaded', async () => {
-  // Restore elderly mode
-  if (storage.getElderly()) {
-    document.getElementById('html-root').classList.add('elderly');
-    document.getElementById('elderly-btn').classList.add('on');
-    document.getElementById('elderly-btn').textContent = '‚ù§Ô∏è Elderly: ON';
   }
-  renderHistory();
-  await renderReports();
-});
-
-// ‚îÄ‚îÄ‚îÄ TABS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-function showTab(name) {
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  const links = document.querySelectorAll('.nav-link');
-  const labels = ['scanner','history','reports'];
-  links[labels.indexOf(name)]?.classList.add('active');
-
-  if (name === 'history') renderHistory();
-  if (name === 'reports') renderReports();
-}
-
-function switchScanType(type) {
-  currentScanType = type;
-  ['text','url','image'].forEach(t => {
-    document.getElementById('input-' + t).style.display = t === type ? 'block' : 'none';
-    document.getElementById('seg-' + t).classList.toggle('active', t === type);
-  });
-  hideResults();
-  clearError();
-}
-
-// ‚îÄ‚îÄ‚îÄ ELDERLY MODE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-function handleElderlyClick() {
-  const isOn = document.getElementById('html-root').classList.contains('elderly');
-  if (isOn) {
-    // Turn off immediately
-    document.getElementById('html-root').classList.remove('elderly');
-    document.getElementById('elderly-btn').classList.remove('on');
-    document.getElementById('elderly-btn').textContent = '‚ù§Ô∏è Elderly Mode';
-    storage.setElderly('false');
-  } else {
-    // Show confirm dialog
-    openModal('elderly-modal');
-  }
-}
-
-function confirmElderly() {
-  document.getElementById('html-root').classList.add('elderly');
-  document.getElementById('elderly-btn').classList.add('on');
-  document.getElementById('elderly-btn').textContent = '‚ù§Ô∏è Elderly: ON';
-  storage.setElderly('true');
-  closeModal('elderly-modal');
-}
-
-// ‚îÄ‚îÄ‚îÄ SETTINGS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-function openSettings() {
-  document.getElementById('settings-key').value = storage.getApiKey();
-  openModal('settings-modal');
-}
-
-// Ensure clean saving of OpenRouter API Key (no weird chars or encoding)
-function saveSettings() {
-  const key = document.getElementById('settings-key').value.trim();
-  storage.setApiKey(key);
-  closeModal('settings-modal');
-  if (key) alert('‚úÖ API key saved! Live AI analysis is now active.');
-}
-
-// ‚îÄ‚îÄ‚îÄ MODALS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-// Close modals on overlay click
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) overlay.classList.remove('open');
-  });
-});
-
-// ‚îÄ‚îÄ‚îÄ IMAGE UPLOAD ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-function handleImageUpload(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    imageDataUrl = ev.target.result;
-    document.getElementById('image-preview').src = imageDataUrl;
-    document.getElementById('image-preview-wrap').style.display = 'flex';
-  };
-  reader.readAsDataURL(file);
-}
-
-// ‚îÄ‚îÄ‚îÄ SCAN ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-async function runScan(type) {
-  clearError();
-  hideResults();
-
-  let input = '';
-  if (type === 'text') {
-    input = document.getElementById('text-input').value.trim();
-    if (!input) return showError('Please paste a message to analyze.');
-  } else if (type === 'url') {
-    input = document.getElementById('url-input').value.trim();
-    if (!input) return showError('Please enter a URL to analyze.');
-  } else if (type === 'image') {
-    if (!imageDataUrl) return showError('Please upload a screenshot first.');
-  }
-
-  setBtnLoading(type, true);
-
-  try {
-    let result;
-    if (type === 'image') {
-      // Run OCR first
-      showError('üîç Extracting text from image via OCR...', true);
-      const ocrResult = await Tesseract.recognize(imageDataUrl, 'eng', { logger: () => {} });
-      const ocrText = ocrResult.data.text?.trim();
-      clearError();
-      if (!ocrText) return showError('No readable text found in the screenshot. Try a clearer image.');
-      input = ocrText;
-    }
-
-    const apiKey = storage.getApiKey();
-    if (apiKey) {
-      result = await callOpenRouter(type === 'url' ? URL_SYSTEM_PROMPT : TEXT_SYSTEM_PROMPT, input, apiKey, type);
-    } else {
-      result = runHeuristic(type === 'url' ? 'URL' : 'TEXT', input);
-    }
-
-    currentResult = result;
-    currentScanInput = input;
-    storage.addHistory({ type, input: input.substring(0, 120), verdict: result.verdict, riskScore: result.riskScore });
-    renderResults(result);
-  } catch (err) {
-    showError('Scan failed: ' + (err.message || 'Unknown error'));
-  } finally {
-    setBtnLoading(type, false);
-  }
-}
-
-function setBtnLoading(type, loading) {
-  const btn = document.getElementById('scan-btn-' + type);
-  if (!btn) return;
-  const labels = { text: '‚ú® Analyze Message', url: 'üåê Analyze URL', image: 'üì∏ Extract & Analyze' };
-  btn.disabled = loading;
-  btn.innerHTML = loading ? '<span class="spinner" style="width:18px;height:18px;border-width:2px;"></span> Analyzing...' : labels[type];
-}
-
-// ‚îÄ‚îÄ‚îÄ OPENROUTER API ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-async function callOpenRouter(systemPrompt, userContent, apiKey, type) {
-  const userMsg = type === 'url' ? `Analyze this URL: ${userContent}` : `Analyze this message: "${userContent}"`;
-  const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': 'https://safenet-app.local',
-      'X-Title': 'SafeNet Scanner',
-    },
-    body: JSON.stringify({
-      model: 'google/gemini-2.5-flash',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userMsg },
-      ],
-      temperature: 0.3,
-      max_tokens: 2500,
-    }),
-  });
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error?.message || `API error ${res.status}`);
-  }
-
-  const data = await res.json();
-  const raw = data.choices?.[0]?.message?.content || '{}';
-
-  // Strip markdown fences if present
-  let jsonStr = raw;
-  const fence = raw.match(/```(?:json)?\s*([\s\S]*?)```/);
-  if (fence) jsonStr = fence[1].trim();
-  else {
-    const start = raw.indexOf('{'), end = raw.lastIndexOf('}');
-    if (start !== -1 && end !== -1) jsonStr = raw.slice(start, end + 1);
-  }
-
-  const parsed = JSON.parse(jsonStr);
-  if (typeof parsed.riskScore !== 'number') throw new Error('Invalid AI response');
-  return parsed;
-}
-
-// ‚îÄ‚îÄ‚îÄ HEURISTIC FALLBACK ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-function runHeuristic(type, input) {
-  const norm = input.toLowerCase();
-  let score = 15;
-  const reasons = [], highlights = [], tactics = [];
-
-  if (type === 'URL') {
-    if (!input.startsWith('https://')) { score += 25; reasons.push('Not using HTTPS ‚Äî insecure connection.'); highlights.push('http://'); tactics.push('Insecure Connection'); }
-    if (/\.(xyz|top|tk|ml|gq|cf|buzz|click|loan|zip)$/i.test(norm)) { score += 30; reasons.push('Uses a TLD commonly associated with spam and phishing.'); tactics.push('Suspicious TLD'); }
-    if (/(paypal|netflix|amazon|chase|apple|microsoft|fedex|ups|irs)/i.test(norm) && (norm.includes('-') || norm.includes('verify') || norm.includes('signin'))) { score += 45; reasons.push('Brand name combined with suspicious path ‚Äî likely typosquatting.'); tactics.push('Brand Impersonation'); }
-    if (/(login|verify|reset|secure|account|confirm)/i.test(norm)) { score += 15; reasons.push('URL path contains credential-harvesting keywords.'); tactics.push('Urgency Framing'); }
-  } else {
-    // ‚îÄ‚îÄ Hate speech / slurs ‚Äî checked first, they dominate the score ‚îÄ‚îÄ
-    const slurPatterns = [
-      /\bn[i1][g9][g9][ae3]r?\b/i, /\bn[i1][g9]{2}[ae3]\b/i,
-      /\bfagg?[o0]t\b/i, /\bk[i1]ke\b/i, /\bch[i1]nk\b/i,
-      /\bsp[i1][ck]\b/i, /\bw[e3]tb[a4]ck\b/i, /\btowelhead\b/i,
-      /\bsand\s?n[i1]gg[ae]r\b/i, /\bcr[a4]ck[e3]r\b/i,
-      /\bth[e3]\s?j[e3]ws?\b/i, /\bj[e3]w[s]?[\s-]?lover\b/i,
-      /\btr[a4]nny\b/i, /\bretard\b/i,
-    ];
-    let hateSpeechDetected = false;
-    for (const pat of slurPatterns) {
-      if (pat.test(norm)) {
-        hateSpeechDetected = true;
-        score = Math.max(score, 80);
-        const matched = norm.match(pat)?.[0] || 'slur';
-        reasons.push(`Contains a racial or ethnic slur ("${matched}") ‚Äî classified as hate speech.`);
-        highlights.push(matched);
-        if (!tactics.includes('Hate Speech / Slur')) tactics.push('Hate Speech / Slur');
+  .hover\:scale-\[1\.01\] {
+    &:hover {
+      @media (hover: hover) {
+        scale: 1.01;
       }
     }
-
-    // ‚îÄ‚îÄ Violence / threat keywords ‚îÄ‚îÄ
-    const threatKw = [
-      { w: 'kill you', s: 70, t: 'Violent Threat' }, { w: 'gonna kill', s: 70, t: 'Violent Threat' },
-      { w: 'i will kill', s: 75, t: 'Violent Threat' }, { w: 'shoot you', s: 70, t: 'Violent Threat' },
-      { w: 'beat you up', s: 55, t: 'Violent Threat' }, { w: 'find your address', s: 60, t: 'Doxxing Threat' },
-      { w: 'doxx', s: 65, t: 'Doxxing Threat' }, { w: 'swat you', s: 70, t: 'Doxxing Threat' },
-    ];
-    for (const k of threatKw) {
-      if (norm.includes(k.w)) {
-        score = Math.max(score, k.s);
-        reasons.push(`Contains threatening language: "${k.w}".`);
-        highlights.push(k.w);
-        if (!tactics.includes(k.t)) tactics.push(k.t);
+  }
+  .hover\:scale-\[1\.02\] {
+    &:hover {
+      @media (hover: hover) {
+        scale: 1.02;
       }
     }
-
-    // ‚îÄ‚îÄ Scam keywords (only if not already dominated by hate speech) ‚îÄ‚îÄ
-    if (!hateSpeechDetected) {
-      const kw = [
-        { w: 'crypto', s: 35, t: 'Investment Scam' }, { w: 'bitcoin', s: 35, t: 'Investment Scam' },
-        { w: 'lottery', s: 40, t: 'Fake Reward' }, { w: 'winner', s: 30, t: 'Fake Reward' },
-        { w: 'gift card', s: 35, t: 'Fake Reward' }, { w: 'irs', s: 45, t: 'Authority Impersonation' },
-        { w: 'tax refund', s: 40, t: 'Authority Impersonation' }, { w: 'verify your account', s: 40, t: 'Account Phishing' },
-        { w: 'suspicious activity', s: 30, t: 'Account Phishing' }, { w: 'card suspended', s: 40, t: 'Urgency' },
-        { w: 'unauthorized', s: 35, t: 'Fear-Mongering' }, { w: 'bank alert', s: 25, t: 'Impersonation' },
-        { w: 'congratulations', s: 20, t: 'Fake Reward' }, { w: 'urgent', s: 20, t: 'Urgency' },
-        { w: 'suspended', s: 30, t: 'Fear-Mongering' }, { w: 'security code', s: 30, t: 'Credential Phishing' },
-        { w: 'passcode', s: 30, t: 'Credential Phishing' }, { w: 'wire', s: 25, t: 'Financial Fraud' },
-        { w: 'package delivery failed', s: 35, t: 'Delivery Phishing' },
-      ];
-      kw.forEach(k => {
-        if (norm.includes(k.w)) {
-          score += k.s;
-          reasons.push(`Contains "${k.w}" ‚Äî associated with ${k.t}.`);
-          highlights.push(k.w);
-          if (!tactics.includes(k.t)) tactics.push(k.t);
+  }
+  .hover\:bg-amber-500\/20 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: color-mix(in srgb, oklch(76.9% 0.188 70.08) 20%, transparent);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--color-amber-500) 20%, transparent);
         }
-      });
+      }
     }
-
-    if (/(https?:\/\/|www\.)/i.test(norm)) { score += 15; reasons.push('Contains an external link requesting action.'); if (!tactics.includes('Phishing Link')) tactics.push('Phishing Link'); }
-    if (/[A-Z]{4,}/.test(input)) { score += 10; reasons.push('Uses ALL CAPS to create false urgency.'); }
   }
-
-  score = Math.max(8, Math.min(99, score));
-  const verdict = score > 70 ? 'HIGH_RISK' : score > 30 ? 'SUSPICIOUS' : 'SAFE';
-  const hr = verdict === 'HIGH_RISK', sus = verdict === 'SUSPICIOUS';
-
-  return {
-    riskScore: score, verdict,
-    reasons: reasons.length ? reasons : ['No explicit scam patterns detected.'],
-    highlights, tactics: tactics.length ? tactics : ['Standard Traffic'],
-    actions: hr ? ['Do NOT tap any links.', 'Block this sender immediately.', 'Forward to 7726 (spam reporting).']
-               : sus ? ['Verify the sender independently.', 'Never share passwords or PINs.', 'Proceed with caution.']
-               : ['No action needed. Standard safety guidelines apply.'],
-    simulatedOutcomes: [
-      { choiceName: 'Trust & Interact', description: 'Click the link, call the number, or provide the requested information.',
-        scenarios: [
-          { type: 'BEST_CASE', title: 'Tracker Placement Only', impactData: 'Phone/email marked as active and sold to spam lists.', impactFinancial: 'No immediate loss, but spam volume increases.', impactEmotional: 'Minor annoyance.', severityScore: hr ? 30 : sus ? 20 : 10 },
-          { type: 'MOST_LIKELY', title: 'Account Takeover', impactData: 'Login credentials and 2FA codes stolen.', impactFinancial: 'Attacker accesses accounts and makes unauthorized purchases.', impactEmotional: 'High stress, hours of recovery work.', severityScore: hr ? 75 : sus ? 50 : 25 },
-          { type: 'WORST_CASE', title: 'Identity Theft', impactData: 'SSN, address, and full identity profile compromised.', impactFinancial: 'Bank accounts drained, credit lines opened fraudulently.', impactEmotional: 'Severe distress, weeks of dispute filings.', severityScore: hr ? 95 : sus ? 75 : 40 },
-        ] },
-      { choiceName: 'Reply / Argue', description: 'Reply "STOP", ask who this is, or engage with the sender.',
-        scenarios: [
-          { type: 'BEST_CASE', title: 'Sender Goes Silent', impactData: 'Your number confirmed active and saved for future use.', impactFinancial: 'None.', impactEmotional: 'None.', severityScore: 10 },
-          { type: 'MOST_LIKELY', title: 'Targeted Flooding', impactData: 'Number tagged as responsive ‚Äî more scam attempts inbound.', impactFinancial: 'No direct loss.', impactEmotional: 'Increased anxiety from daily spam.', severityScore: 35 },
-          { type: 'WORST_CASE', title: 'Social Engineering', impactData: 'Conversation reveals bank name, job, or family details.', impactFinancial: 'Customized voice phishing attack launched against you.', impactEmotional: 'Feeling manipulated and paranoid.', severityScore: 65 },
-        ] },
-      { choiceName: 'Block & Report', description: 'Block the sender, delete the message, and report it.',
-        scenarios: [
-          { type: 'BEST_CASE', title: 'Threat Neutralized', impactData: 'Zero exposure. Report trains filters for others.', impactFinancial: 'Zero risk.', impactEmotional: 'Peace of mind.', severityScore: 0 },
-          { type: 'MOST_LIKELY', title: 'Clean Resolution', impactData: 'No data shared. Scam fails to connect.', impactFinancial: 'Zero risk.', impactEmotional: 'Calm and relieved.', severityScore: 5 },
-          { type: 'WORST_CASE', title: 'Scammer Rotates Number', impactData: 'Another generic spam attempt later from a new burner.', impactFinancial: 'Zero risk.', impactEmotional: 'Minor annoyance.', severityScore: 12 },
-        ] },
-    ],
-  };
-}
-
-// ‚îÄ‚îÄ‚îÄ RENDER RESULTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-function renderResults(result) {
-  // Gauge
-  const circ = 2 * Math.PI * 46; // 289.03
-  const offset = circ * (1 - result.riskScore / 100);
-  const arc = document.getElementById('gauge-arc');
-  arc.style.strokeDashoffset = circ;
-  arc.style.stroke = result.riskScore < 30 ? '#10b981' : result.riskScore < 70 ? '#f59e0b' : '#ef4444';
-  setTimeout(() => arc.style.strokeDashoffset = offset, 50);
-
-  document.getElementById('gauge-score').textContent = result.riskScore;
-  document.getElementById('gauge-score').style.color = result.riskScore < 30 ? '#059669' : result.riskScore < 70 ? '#d97706' : '#dc2626';
-
-  // Verdict badge
-  const vb = document.getElementById('verdict-badge');
-  vb.className = 'verdict-badge';
-  vb.classList.add(result.verdict === 'SAFE' ? 'verdict-safe' : result.verdict === 'SUSPICIOUS' ? 'verdict-suspicious' : 'verdict-high');
-  vb.textContent = result.verdict.replace('_', ' ');
-
-  // Reasons
-  document.getElementById('reason-list').innerHTML = result.reasons.map(r => `<li>${r}</li>`).join('');
-
-  // Tactics & flags
-  document.getElementById('tactics-row').innerHTML = result.tactics.map(t => `<span class="badge badge-tactic">${t}</span>`).join('') || '<span class="text-muted">None</span>';
-  document.getElementById('flags-row').innerHTML = result.highlights.map(h => `<span class="badge badge-flag">"${h}"</span>`).join('') || '<span class="text-muted">None</span>';
-
-  // Choice simulator
-  selectedChoiceIdx = 0;
-  renderChoiceTabs(result.simulatedOutcomes);
-  renderScenarios(result.simulatedOutcomes[0]);
-
-  // Actions
-  document.getElementById('actions-list').innerHTML = result.actions.map(a => `<div class="action-item">${a}</div>`).join('');
-
-  // Show results
-  const resultsEl = document.getElementById('results');
-  resultsEl.style.display = 'block';
-  resultsEl.classList.add('visible');
-  document.getElementById('warn-btn-wrap').style.display = 'block';
-  resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function renderChoiceTabs(outcomes) {
-  const tabs = document.getElementById('choice-tabs');
-  tabs.innerHTML = outcomes.map((c, i) => `
-    <button class="seg-btn ${i === 0 ? 'active' : ''}" onclick="selectChoice(${i})" id="choice-tab-${i}">
-      Choice ${i + 1}
-    </button>`).join('');
-}
-
-function selectChoice(idx) {
-  selectedChoiceIdx = idx;
-  document.querySelectorAll('#choice-tabs .seg-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
-  renderScenarios(currentResult.simulatedOutcomes[idx]);
-}
-
-function renderScenarios(choice) {
-  document.getElementById('choice-desc').textContent = `${choice.choiceName} ‚Äî ${choice.description}`;
-  const typeMap = { BEST_CASE: { cls: 'type-best', label: 'Best Case' }, MOST_LIKELY: { cls: 'type-likely', label: 'Most Likely' }, WORST_CASE: { cls: 'type-worst', label: 'Worst Case' } };
-  const fillColor = s => s < 25 ? '#10b981' : s < 60 ? '#f59e0b' : '#ef4444';
-
-  document.getElementById('scenario-grid').innerHTML = choice.scenarios.map(s => {
-    const t = typeMap[s.type] || { cls: 'type-likely', label: s.type };
-    return `
-      <div class="scenario-card">
-        <div class="scenario-type ${t.cls}">${t.label}</div>
-        <div class="scenario-title">${s.title}</div>
-        <div class="scenario-impact"><strong>Privacy & Data</strong>${s.impactData}</div>
-        <div class="scenario-impact"><strong>Financial Risk</strong>${s.impactFinancial}</div>
-        <div class="scenario-impact"><strong>Emotional Toll</strong>${s.impactEmotional}</div>
-        <div class="severity-bar">
-          <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
-            <span style="font-size:0.62rem;color:var(--text-2);font-weight:700;text-transform:uppercase;">Severity</span>
-            <span style="font-size:0.7rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:${fillColor(s.severityScore)};">${s.severityScore}/100</span>
-          </div>
-          <div class="severity-track"><div class="severity-fill" style="width:${s.severityScore}%;background:${fillColor(s.severityScore)};"></div></div>
-        </div>
-      </div>`;
-  }).join('');
-}
-
-function hideResults() {
-  const r = document.getElementById('results');
-  if (r) {
-    r.style.display = 'none';
-    r.classList.remove('visible');
+  .hover\:bg-neutral-50 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-neutral-50);
+      }
+    }
+  }
+  .hover\:bg-neutral-50\/50 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: color-mix(in srgb, oklch(98.5% 0 0) 50%, transparent);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--color-neutral-50) 50%, transparent);
+        }
+      }
+    }
+  }
+  .hover\:bg-neutral-100 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-neutral-100);
+      }
+    }
+  }
+  .hover\:bg-neutral-100\/40 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: color-mix(in srgb, oklch(97% 0 0) 40%, transparent);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--color-neutral-100) 40%, transparent);
+        }
+      }
+    }
+  }
+  .hover\:bg-neutral-200 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-neutral-200);
+      }
+    }
+  }
+  .hover\:bg-neutral-800 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-neutral-800);
+      }
+    }
+  }
+  .hover\:bg-rose-50 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-rose-50);
+      }
+    }
+  }
+  .hover\:bg-sky-500 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-sky-500);
+      }
+    }
+  }
+  .hover\:text-neutral-950 {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-neutral-950);
+      }
+    }
+  }
+  .hover\:text-sky-500 {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-sky-500);
+      }
+    }
+  }
+  .hover\:text-sky-600 {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-sky-600);
+      }
+    }
+  }
+  .hover\:text-white {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-white);
+      }
+    }
+  }
+  .hover\:underline {
+    &:hover {
+      @media (hover: hover) {
+        text-decoration-line: underline;
+      }
+    }
+  }
+  .focus\:border-sky-500 {
+    &:focus {
+      border-color: var(--color-sky-500);
+    }
+  }
+  .focus\:ring-2 {
+    &:focus {
+      --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
+      box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    }
+  }
+  .focus\:ring-sky-500\/25 {
+    &:focus {
+      --tw-ring-color: color-mix(in srgb, oklch(68.5% 0.169 237.323) 25%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        --tw-ring-color: color-mix(in oklab, var(--color-sky-500) 25%, transparent);
+      }
+    }
+  }
+  .focus\:outline-none {
+    &:focus {
+      --tw-outline-style: none;
+      outline-style: none;
+    }
+  }
+  .active\:scale-\[0\.99\] {
+    &:active {
+      scale: 0.99;
+    }
+  }
+  .disabled\:opacity-50 {
+    &:disabled {
+      opacity: 50%;
+    }
+  }
+  .sm\:-top-80 {
+    @media (width >= 40rem) {
+      top: calc(var(--spacing) * -80);
+    }
+  }
+  .sm\:left-\[calc\(50\%-30rem\)\] {
+    @media (width >= 40rem) {
+      left: calc(50% - 30rem);
+    }
+  }
+  .sm\:block {
+    @media (width >= 40rem) {
+      display: block;
+    }
+  }
+  .sm\:w-96 {
+    @media (width >= 40rem) {
+      width: calc(var(--spacing) * 96);
+    }
+  }
+  .sm\:w-\[72rem\] {
+    @media (width >= 40rem) {
+      width: 72rem;
+    }
+  }
+  .sm\:grid-cols-2 {
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .sm\:grid-cols-3 {
+    @media (width >= 40rem) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .sm\:flex-row {
+    @media (width >= 40rem) {
+      flex-direction: row;
+    }
+  }
+  .sm\:items-center {
+    @media (width >= 40rem) {
+      align-items: center;
+    }
+  }
+  .sm\:p-8 {
+    @media (width >= 40rem) {
+      padding: calc(var(--spacing) * 8);
+    }
+  }
+  .sm\:px-6 {
+    @media (width >= 40rem) {
+      padding-inline: calc(var(--spacing) * 6);
+    }
+  }
+  .sm\:text-4xl {
+    @media (width >= 40rem) {
+      font-size: var(--text-4xl);
+      line-height: var(--tw-leading, var(--text-4xl--line-height));
+    }
+  }
+  .sm\:text-6xl {
+    @media (width >= 40rem) {
+      font-size: var(--text-6xl);
+      line-height: var(--tw-leading, var(--text-6xl--line-height));
+    }
+  }
+  .sm\:text-lg {
+    @media (width >= 40rem) {
+      font-size: var(--text-lg);
+      line-height: var(--tw-leading, var(--text-lg--line-height));
+    }
+  }
+  .md\:col-span-2 {
+    @media (width >= 48rem) {
+      grid-column: span 2 / span 2;
+    }
+  }
+  .md\:flex {
+    @media (width >= 48rem) {
+      display: flex;
+    }
+  }
+  .md\:hidden {
+    @media (width >= 48rem) {
+      display: none;
+    }
+  }
+  .md\:grid-cols-3 {
+    @media (width >= 48rem) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .lg\:col-span-2 {
+    @media (width >= 64rem) {
+      grid-column: span 2 / span 2;
+    }
+  }
+  .lg\:grid-cols-3 {
+    @media (width >= 64rem) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .lg\:grid-cols-4 {
+    @media (width >= 64rem) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .lg\:px-8 {
+    @media (width >= 64rem) {
+      padding-inline: calc(var(--spacing) * 8);
+    }
+  }
+  .dark\:border-emerald-900\/20 {
+    @media (prefers-color-scheme: dark) {
+      border-color: color-mix(in srgb, oklch(37.8% 0.077 168.94) 20%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        border-color: color-mix(in oklab, var(--color-emerald-900) 20%, transparent);
+      }
+    }
+  }
+  .dark\:border-neutral-700 {
+    @media (prefers-color-scheme: dark) {
+      border-color: var(--color-neutral-700);
+    }
+  }
+  .dark\:border-neutral-800 {
+    @media (prefers-color-scheme: dark) {
+      border-color: var(--color-neutral-800);
+    }
+  }
+  .dark\:border-neutral-800\/40 {
+    @media (prefers-color-scheme: dark) {
+      border-color: color-mix(in srgb, oklch(26.9% 0 0) 40%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        border-color: color-mix(in oklab, var(--color-neutral-800) 40%, transparent);
+      }
+    }
+  }
+  .dark\:border-neutral-800\/50 {
+    @media (prefers-color-scheme: dark) {
+      border-color: color-mix(in srgb, oklch(26.9% 0 0) 50%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        border-color: color-mix(in oklab, var(--color-neutral-800) 50%, transparent);
+      }
+    }
+  }
+  .dark\:border-neutral-800\/60 {
+    @media (prefers-color-scheme: dark) {
+      border-color: color-mix(in srgb, oklch(26.9% 0 0) 60%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        border-color: color-mix(in oklab, var(--color-neutral-800) 60%, transparent);
+      }
+    }
+  }
+  .dark\:border-rose-900\/20 {
+    @media (prefers-color-scheme: dark) {
+      border-color: color-mix(in srgb, oklch(41% 0.159 10.272) 20%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        border-color: color-mix(in oklab, var(--color-rose-900) 20%, transparent);
+      }
+    }
+  }
+  .dark\:border-rose-900\/50 {
+    @media (prefers-color-scheme: dark) {
+      border-color: color-mix(in srgb, oklch(41% 0.159 10.272) 50%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        border-color: color-mix(in oklab, var(--color-rose-900) 50%, transparent);
+      }
+    }
+  }
+  .dark\:border-rose-950\/25 {
+    @media (prefers-color-scheme: dark) {
+      border-color: color-mix(in srgb, oklch(27.1% 0.105 12.094) 25%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        border-color: color-mix(in oklab, var(--color-rose-950) 25%, transparent);
+      }
+    }
+  }
+  .dark\:border-sky-900\/40 {
+    @media (prefers-color-scheme: dark) {
+      border-color: color-mix(in srgb, oklch(39.1% 0.09 240.876) 40%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        border-color: color-mix(in oklab, var(--color-sky-900) 40%, transparent);
+      }
+    }
+  }
+  .dark\:bg-amber-950 {
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--color-amber-950);
+    }
+  }
+  .dark\:bg-amber-950\/20 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(27.9% 0.077 45.635) 20%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-amber-950) 20%, transparent);
+      }
+    }
+  }
+  .dark\:bg-amber-950\/30 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(27.9% 0.077 45.635) 30%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-amber-950) 30%, transparent);
+      }
+    }
+  }
+  .dark\:bg-emerald-950\/20 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(26.2% 0.051 172.552) 20%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-emerald-950) 20%, transparent);
+      }
+    }
+  }
+  .dark\:bg-emerald-950\/30 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(26.2% 0.051 172.552) 30%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-emerald-950) 30%, transparent);
+      }
+    }
+  }
+  .dark\:bg-indigo-950 {
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--color-indigo-950);
+    }
+  }
+  .dark\:bg-neutral-800 {
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--color-neutral-800);
+    }
+  }
+  .dark\:bg-neutral-900 {
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--color-neutral-900);
+    }
+  }
+  .dark\:bg-neutral-900\/50 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(20.5% 0 0) 50%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-neutral-900) 50%, transparent);
+      }
+    }
+  }
+  .dark\:bg-neutral-950 {
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--color-neutral-950);
+    }
+  }
+  .dark\:bg-neutral-950\/20 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(14.5% 0 0) 20%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-neutral-950) 20%, transparent);
+      }
+    }
+  }
+  .dark\:bg-neutral-950\/80 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(14.5% 0 0) 80%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-neutral-950) 80%, transparent);
+      }
+    }
+  }
+  .dark\:bg-rose-900\/30 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(41% 0.159 10.272) 30%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-rose-900) 30%, transparent);
+      }
+    }
+  }
+  .dark\:bg-rose-950 {
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--color-rose-950);
+    }
+  }
+  .dark\:bg-rose-950\/10 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(27.1% 0.105 12.094) 10%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-rose-950) 10%, transparent);
+      }
+    }
+  }
+  .dark\:bg-rose-950\/20 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(27.1% 0.105 12.094) 20%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-rose-950) 20%, transparent);
+      }
+    }
+  }
+  .dark\:bg-rose-950\/30 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(27.1% 0.105 12.094) 30%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-rose-950) 30%, transparent);
+      }
+    }
+  }
+  .dark\:bg-sky-950 {
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--color-sky-950);
+    }
+  }
+  .dark\:bg-sky-950\/15 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(29.3% 0.066 243.157) 15%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-sky-950) 15%, transparent);
+      }
+    }
+  }
+  .dark\:bg-sky-950\/30 {
+    @media (prefers-color-scheme: dark) {
+      background-color: color-mix(in srgb, oklch(29.3% 0.066 243.157) 30%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        background-color: color-mix(in oklab, var(--color-sky-950) 30%, transparent);
+      }
+    }
+  }
+  .dark\:bg-white {
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--color-white);
+    }
+  }
+  .dark\:from-sky-950\/10 {
+    @media (prefers-color-scheme: dark) {
+      --tw-gradient-from: color-mix(in srgb, oklch(29.3% 0.066 243.157) 10%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        --tw-gradient-from: color-mix(in oklab, var(--color-sky-950) 10%, transparent);
+      }
+      --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+    }
+  }
+  .dark\:from-white {
+    @media (prefers-color-scheme: dark) {
+      --tw-gradient-from: var(--color-white);
+      --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+    }
+  }
+  .dark\:via-neutral-100 {
+    @media (prefers-color-scheme: dark) {
+      --tw-gradient-via: var(--color-neutral-100);
+      --tw-gradient-via-stops: var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-via) var(--tw-gradient-via-position), var(--tw-gradient-to) var(--tw-gradient-to-position);
+      --tw-gradient-stops: var(--tw-gradient-via-stops);
+    }
+  }
+  .dark\:to-indigo-950\/10 {
+    @media (prefers-color-scheme: dark) {
+      --tw-gradient-to: color-mix(in srgb, oklch(25.7% 0.09 281.288) 10%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        --tw-gradient-to: color-mix(in oklab, var(--color-indigo-950) 10%, transparent);
+      }
+      --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+    }
+  }
+  .dark\:to-neutral-400 {
+    @media (prefers-color-scheme: dark) {
+      --tw-gradient-to: var(--color-neutral-400);
+      --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+    }
+  }
+  .dark\:to-neutral-500 {
+    @media (prefers-color-scheme: dark) {
+      --tw-gradient-to: var(--color-neutral-500);
+      --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+    }
+  }
+  .dark\:text-amber-400 {
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-amber-400);
+    }
+  }
+  .dark\:text-emerald-400 {
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-emerald-400);
+    }
+  }
+  .dark\:text-indigo-400 {
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-indigo-400);
+    }
+  }
+  .dark\:text-neutral-300 {
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-neutral-300);
+    }
+  }
+  .dark\:text-neutral-400 {
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-neutral-400);
+    }
+  }
+  .dark\:text-neutral-500 {
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-neutral-500);
+    }
+  }
+  .dark\:text-neutral-800 {
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-neutral-800);
+    }
+  }
+  .dark\:text-neutral-950 {
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-neutral-950);
+    }
+  }
+  .dark\:text-rose-400 {
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-rose-400);
+    }
+  }
+  .dark\:text-sky-400 {
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-sky-400);
+    }
+  }
+  .dark\:text-white {
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-white);
+    }
+  }
+  .dark\:ring-sky-800\/30 {
+    @media (prefers-color-scheme: dark) {
+      --tw-ring-color: color-mix(in srgb, oklch(44.3% 0.11 240.79) 30%, transparent);
+      @supports (color: color-mix(in lab, red, red)) {
+        --tw-ring-color: color-mix(in oklab, var(--color-sky-800) 30%, transparent);
+      }
+    }
+  }
+  .dark\:hover\:bg-neutral-100 {
+    @media (prefers-color-scheme: dark) {
+      &:hover {
+        @media (hover: hover) {
+          background-color: var(--color-neutral-100);
+        }
+      }
+    }
+  }
+  .dark\:hover\:bg-neutral-700 {
+    @media (prefers-color-scheme: dark) {
+      &:hover {
+        @media (hover: hover) {
+          background-color: var(--color-neutral-700);
+        }
+      }
+    }
+  }
+  .dark\:hover\:bg-neutral-900 {
+    @media (prefers-color-scheme: dark) {
+      &:hover {
+        @media (hover: hover) {
+          background-color: var(--color-neutral-900);
+        }
+      }
+    }
+  }
+  .dark\:hover\:bg-neutral-900\/40 {
+    @media (prefers-color-scheme: dark) {
+      &:hover {
+        @media (hover: hover) {
+          background-color: color-mix(in srgb, oklch(20.5% 0 0) 40%, transparent);
+          @supports (color: color-mix(in lab, red, red)) {
+            background-color: color-mix(in oklab, var(--color-neutral-900) 40%, transparent);
+          }
+        }
+      }
+    }
+  }
+  .dark\:hover\:text-white {
+    @media (prefers-color-scheme: dark) {
+      &:hover {
+        @media (hover: hover) {
+          color: var(--color-white);
+        }
+      }
+    }
   }
 }
-
-function resetScan() {
-  hideResults();
-  document.getElementById('text-input').value = '';
-  document.getElementById('url-input').value = '';
-  imageDataUrl = null;
-  document.getElementById('image-preview-wrap').style.display = 'none';
-  currentResult = null;
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
 }
-
-// ‚îÄ‚îÄ‚îÄ HISTORY ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-function renderHistory() {
-  const history = storage.getHistory();
-  const container = document.getElementById('history-list');
-  const stats = document.getElementById('history-stats');
-
-  if (!container) return;
-
-  const total = history.length;
-  const highRisk = history.filter(h => h.verdict === 'HIGH_RISK').length;
-  const suspicious = history.filter(h => h.verdict === 'SUSPICIOUS').length;
-  const avg = total ? Math.round(history.reduce((s, h) => s + h.riskScore, 0) / total) : 0;
-
-  stats.innerHTML = [
-    { label: 'Total Scans', val: total, color: 'var(--text)' },
-    { label: 'High Risk', val: highRisk, color: '#be123c' },
-    { label: 'Avg Score', val: avg + '%', color: avg < 30 ? '#059669' : avg < 70 ? '#d97706' : '#dc2626' },
-  ].map(s => `
-    <div class="card" style="text-align:center;">
-      <div class="text-muted" style="font-size:0.65rem;font-weight:700;text-transform:uppercase;">${s.label}</div>
-      <div style="font-size:1.8rem;font-weight:900;color:${s.color};margin-top:0.25rem;font-family:'JetBrains Mono',monospace;">${s.val}</div>
-    </div>`).join('');
-
-  if (!history.length) {
-    container.innerHTML = `<div class="empty"><div class="empty-icon">üìã</div><h3>No scan history yet</h3><p>Run your first scan and results will appear here.</p></div>`;
-    return;
-  }
-
-  const dotColor = v => v === 'HIGH_RISK' ? '#ef4444' : v === 'SUSPICIOUS' ? '#f59e0b' : '#10b981';
-  const scoreColor = v => v === 'HIGH_RISK' ? '#be123c' : v === 'SUSPICIOUS' ? '#d97706' : '#059669';
-
-  container.innerHTML = history.map((h, i) => `
-    <div class="history-item" onclick="viewHistoryItem(${i})">
-      <div class="history-verdict-dot" style="background:${dotColor(h.verdict)};"></div>
-      <div class="history-info">
-        <div class="history-input">${h.input}</div>
-        <div class="history-meta">${h.type?.toUpperCase()} &bull; ${new Date(h.date).toLocaleString()}</div>
-      </div>
-      <div class="history-score" style="color:${scoreColor(h.verdict)};">${h.riskScore}%</div>
-    </div>`).join('');
-}
-
-function viewHistoryItem(idx) {
-  const h = storage.getHistory()[idx];
-  if (!h) return;
-  const dotColor = v => v === 'HIGH_RISK' ? '#ef4444' : v === 'SUSPICIOUS' ? '#f59e0b' : '#10b981';
-  const content = document.getElementById('history-detail-content');
-  content.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
-      <div>
-        <div class="text-muted" style="font-size:0.65rem;font-weight:700;text-transform:uppercase;">Scan Record</div>
-        <h2 style="font-size:1rem;font-weight:700;margin-top:0.2rem;">${h.type.toUpperCase()} Scan ‚Äî ${new Date(h.date).toLocaleString()}</h2>
-      </div>
-      <button class="btn-ghost" onclick="closeModal('history-detail-modal')">‚úï Close</button>
-    </div>
-    <div style="background:var(--card-hover);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1rem;">
-      <div class="text-muted" style="font-size:0.65rem;font-weight:700;text-transform:uppercase;margin-bottom:0.35rem;">Scanned Content</div>
-      <p style="font-size:0.82rem;color:var(--text-2);line-height:1.55;word-break:break-all;">${h.input}</p>
-    </div>
-    <div style="display:flex;align-items:center;gap:0.75rem;">
-      <div style="width:12px;height:12px;border-radius:50%;background:${dotColor(h.verdict)};flex-shrink:0;"></div>
-      <span style="font-size:0.875rem;font-weight:700;">${h.verdict.replace('_',' ')} ‚Äî Risk Score: ${h.riskScore}/100</span>
-    </div>`;
-  openModal('history-detail-modal');
-}
-
-function clearHistory() {
-  if (confirm('Clear all scan history from this device?')) {
-    storage.clearHistory();
-    renderHistory();
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
   }
 }
-
-// ‚îÄ‚îÄ‚îÄ REPORTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-async function renderReports() {
-  const container = document.getElementById('reports-list');
-  if (!container) return;
-
-  container.innerHTML = '<div style="text-align:center;padding:2rem;"><span class="spinner"></span> Loading community reports...</div>';
-
-  const reports = await storage.getReports();
-
-  if (!reports.length) {
-    container.innerHTML = `<div class="empty"><div class="empty-icon">üö®</div><h3>No reports yet</h3><p>Be the first to file a community scam report by scanning a message or website and forwarding the results.</p></div>`;
-    return;
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+html.elderly-mode {
+  font-size: 118%;
+}
+html.elderly-mode body {
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+html.elderly-mode p,
+html.elderly-mode li {
+  font-size: 1.05rem !important;
+  line-height: 1.8 !important;
+}
+html.elderly-mode label {
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+}
+html.elderly-mode h1 {
+  font-size: 2.2rem !important;
+  line-height: 1.2 !important;
+}
+html.elderly-mode h2 {
+  font-size: 1.75rem !important;
+  line-height: 1.3 !important;
+}
+html.elderly-mode h3 {
+  font-size: 1.4rem !important;
+  line-height: 1.4 !important;
+}
+html.elderly-mode h4,
+html.elderly-mode h5 {
+  font-size: 1.2rem !important;
+}
+html.elderly-mode input,
+html.elderly-mode textarea,
+html.elderly-mode select {
+  font-size: 1.05rem !important;
+  padding-top: 0.65rem !important;
+  padding-bottom: 0.65rem !important;
+  line-height: 1.6 !important;
+}
+html.elderly-mode .text-\[10px\],
+html.elderly-mode .text-\[9px\],
+html.elderly-mode .text-\[11px\] {
+  font-size: 0.8rem !important;
+}
+html.elderly-mode .text-xs {
+  font-size: 0.9rem !important;
+}
+html.elderly-mode button[type="submit"] {
+  font-size: 1.1rem !important;
+  padding-top: 0.85rem !important;
+  padding-bottom: 0.85rem !important;
+  font-weight: 700 !important;
+}
+html.elderly-mode input:focus,
+html.elderly-mode textarea:focus,
+html.elderly-mode select:focus {
+  outline: 3px solid #0284c7 !important;
+  outline-offset: 2px !important;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
   }
-
-  container.innerHTML = reports.map(r => `
-    <div class="report-item">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.4rem;">
-        <span class="report-type-badge">${r.type}</span>
-        <span class="text-muted">${new Date(r.date).toLocaleDateString()}</span>
-      </div>
-      <div class="report-title">${r.title}</div>
-      <div class="report-desc" style="white-space:pre-wrap;">${r.desc}</div>
-      ${r.source ? `<div class="report-source">üî¥ Source/Target: ${r.source}</div>` : ''}
-    </div>`).join('');
-}
-
-function promptWarnCommunity() {
-  if (!currentResult) return;
-  openModal('warn-modal');
-}
-
-async function confirmWarnCommunity() {
-  if (!currentResult) return;
-  closeModal('warn-modal');
-  
-  const type = currentScanType.toUpperCase();
-  const source = currentScanType === 'url' ? currentScanInput : (currentScanInput.length > 60 ? currentScanInput.substring(0, 57) + '...' : currentScanInput);
-  
-  // Format details
-  const title = `üö® AI Alert: ${currentResult.verdict.replace('_', ' ')} (${currentResult.riskScore}/100 Risk)`;
-  const desc = `Tactics Detected: ${currentResult.tactics.join(', ') || 'None'}\n\n` +
-               `Analysis Findings:\n${currentResult.reasons.map(r => `‚Ä¢ ${r}`).join('\n')}\n\n` +
-               `Content Scanned:\n"${currentScanInput}"`;
-
-  try {
-    await storage.addReport({ type, source, title, desc });
-    alert('‚úÖ Report posted successfully to community board!');
-    await renderReports();
-    showTab('reports');
-  } catch (err) {
-    alert('Failed to post report: ' + err.message);
-  }
-}
-
-// ‚îÄ‚îÄ‚îÄ UTILS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-function showError(msg, info = false) {
-  const el = document.getElementById('scan-error');
-  el.className = 'alert ' + (info ? 'alert-success' : 'alert-error');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-function clearError() {
-  document.getElementById('scan-error').style.display = 'none';
-}
-
-// ‚îÄ‚îÄ‚îÄ NETBOT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
-const NETBOT_SYSTEM = `You are Netbot, a helpful AI assistant built into SafeNet ‚Äî an AI scam protection tool. You can answer questions about cybersecurity, scams, online safety, and general topics. Be concise, friendly, and helpful. Keep responses short unless the user asks for detail.`;
-let nbHistory = [];
-let nbBusy = false;
-
-function toggleNetbot() {
-  const panel = document.getElementById('netbot-panel');
-  panel.classList.toggle('open');
-  if (panel.classList.contains('open')) {
-    document.getElementById('nb-input').focus();
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
-
-function nbKeydown(e) {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    nbSend();
+.animate-fadeIn {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@property --tw-translate-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-translate-y {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-translate-z {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-rotate-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-rotate-z {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-x {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-skew-y {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-space-y-reverse {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-divide-y-reverse {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-border-style {
+  syntax: "*";
+  inherits: false;
+  initial-value: solid;
+}
+@property --tw-gradient-position {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-gradient-from {
+  syntax: "
+      <color>
+        ";
+  inherits: false;
+  initial-value: #0000;
+}
+@property --tw-gradient-via {
+  syntax: "
+        <color>
+          ";
+  inherits: false;
+  initial-value: #0000;
+}
+@property --tw-gradient-to {
+  syntax: "
+          <color>
+            ";
+  inherits: false;
+  initial-value: #0000;
+}
+@property --tw-gradient-stops {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-gradient-via-stops {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-gradient-from-position {
+  syntax: "
+            <length-percentage>
+              ";
+  inherits: false;
+  initial-value: 0%;
+}
+@property --tw-gradient-via-position {
+  syntax: "
+              <length-percentage>
+                ";
+  inherits: false;
+  initial-value: 50%;
+}
+@property --tw-gradient-to-position {
+  syntax: "
+                <length-percentage>
+                  ";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-leading {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-font-weight {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-tracking {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-shadow-alpha {
+  syntax: "
+                  <percentage>
+                    ";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-inset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-inset-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-inset-shadow-alpha {
+  syntax: "
+                    <percentage>
+                      ";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-ring-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-inset-ring-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-inset-ring-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-ring-inset {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ring-offset-width {
+  syntax: "
+                      <length>
+                        ";
+  inherits: false;
+  initial-value: 0px;
+}
+@property --tw-ring-offset-color {
+  syntax: "*";
+  inherits: false;
+  initial-value: #fff;
+}
+@property --tw-ring-offset-shadow {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0 0 #0000;
+}
+@property --tw-blur {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-brightness {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-contrast {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-grayscale {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-hue-rotate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-invert {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-opacity {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-saturate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-sepia {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-drop-shadow {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-drop-shadow-color {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-drop-shadow-alpha {
+  syntax: "
+                        <percentage>
+                          ";
+  inherits: false;
+  initial-value: 100%;
+}
+@property --tw-drop-shadow-size {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-blur {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-brightness {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-contrast {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-grayscale {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-hue-rotate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-invert {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-opacity {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-saturate {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-backdrop-sepia {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-duration {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-ease {
+  syntax: "*";
+  inherits: false;
+}
+@property --tw-scale-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 1;
+}
+@property --tw-scale-y {
+  syntax: "*";
+  inherits: false;
+  initial-value: 1;
+}
+@property --tw-scale-z {
+  syntax: "*";
+  inherits: false;
+  initial-value: 1;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
-
-function nbAppendMsg(role, text) {
-  const container = document.getElementById('nb-messages');
-  const div = document.createElement('div');
-  div.className = `nb-msg ${role}`;
-  const bubble = document.createElement('div');
-  bubble.className = 'nb-bubble';
-  bubble.textContent = text;
-  div.appendChild(bubble);
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-  return div;
-}
-
-function nbShowTyping() {
-  const container = document.getElementById('nb-messages');
-  const div = document.createElement('div');
-  div.className = 'nb-msg bot';
-  div.id = 'nb-typing-indicator';
-  div.innerHTML = '<div class="nb-bubble nb-typing"><span></span><span></span><span></span></div>';
-  container.appendChild(div);
-  container.scrollTop = container.scrollHeight;
-}
-
-function nbHideTyping() {
-  const el = document.getElementById('nb-typing-indicator');
-  if (el) el.remove();
-}
-
-async function nbSend() {
-  if (nbBusy) return;
-  const inputEl = document.getElementById('nb-input');
-  const text = inputEl.value.trim();
-  if (!text) return;
-
-  inputEl.value = '';
-  nbAppendMsg('user', text);
-  nbHistory.push({ role: 'user', content: text });
-
-  const apiKey = storage.getApiKey();
-  if (!apiKey) {
-    nbAppendMsg('bot', 'Please add your OpenRouter API key in Settings (gear icon) to use Netbot.');
-    return;
-  }
-
-  nbBusy = true;
-  document.getElementById('nb-send-btn').disabled = true;
-  nbShowTyping();
-
-  try {
-    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://safenet-app.local',
-        'X-Title': 'SafeNet Netbot',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: NETBOT_SYSTEM },
-          ...nbHistory.slice(-12),
-        ],
-        temperature: 0.7,
-        max_tokens: 600,
-      }),
-    });
-    const data = await res.json();
-    const reply = data.choices?.[0]?.message?.content?.trim() || 'Sorry, I could not get a response.';
-    nbHistory.push({ role: 'assistant', content: reply });
-    nbHideTyping();
-    nbAppendMsg('bot', reply);
-  } catch (err) {
-    nbHideTyping();
-    nbAppendMsg('bot', 'Error: ' + (err.message || 'Something went wrong.'));
-  } finally {
-    nbBusy = false;
-    document.getElementById('nb-send-btn').disabled = false;
-    document.getElementById('nb-input').focus();
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
   }
 }
-</script>
-</body>
-</html>
+@layer properties {
+  @supports ((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b)))) {
+    *, ::before, ::after, ::backdrop {
+      --tw-translate-x: 0;
+      --tw-translate-y: 0;
+      --tw-translate-z: 0;
+      --tw-rotate-x: initial;
+      --tw-rotate-y: initial;
+      --tw-rotate-z: initial;
+      --tw-skew-x: initial;
+      --tw-skew-y: initial;
+      --tw-space-y-reverse: 0;
+      --tw-divide-y-reverse: 0;
+      --tw-border-style: solid;
+      --tw-gradient-position: initial;
+      --tw-gradient-from: #0000;
+      --tw-gradient-via: #0000;
+      --tw-gradient-to: #0000;
+      --tw-gradient-stops: initial;
+      --tw-gradient-via-stops: initial;
+      --tw-gradient-from-position: 0%;
+      --tw-gradient-via-position: 50%;
+      --tw-gradient-to-position: 100%;
+      --tw-leading: initial;
+      --tw-font-weight: initial;
+      --tw-tracking: initial;
+      --tw-shadow: 0 0 #0000;
+      --tw-shadow-color: initial;
+      --tw-shadow-alpha: 100%;
+      --tw-inset-shadow: 0 0 #0000;
+      --tw-inset-shadow-color: initial;
+      --tw-inset-shadow-alpha: 100%;
+      --tw-ring-color: initial;
+      --tw-ring-shadow: 0 0 #0000;
+      --tw-inset-ring-color: initial;
+      --tw-inset-ring-shadow: 0 0 #0000;
+      --tw-ring-inset: initial;
+      --tw-ring-offset-width: 0px;
+      --tw-ring-offset-color: #fff;
+      --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-blur: initial;
+      --tw-brightness: initial;
+      --tw-contrast: initial;
+      --tw-grayscale: initial;
+      --tw-hue-rotate: initial;
+      --tw-invert: initial;
+      --tw-opacity: initial;
+      --tw-saturate: initial;
+      --tw-sepia: initial;
+      --tw-drop-shadow: initial;
+      --tw-drop-shadow-color: initial;
+      --tw-drop-shadow-alpha: 100%;
+      --tw-drop-shadow-size: initial;
+      --tw-backdrop-blur: initial;
+      --tw-backdrop-brightness: initial;
+      --tw-backdrop-contrast: initial;
+      --tw-backdrop-grayscale: initial;
+      --tw-backdrop-hue-rotate: initial;
+      --tw-backdrop-invert: initial;
+      --tw-backdrop-opacity: initial;
+      --tw-backdrop-saturate: initial;
+      --tw-backdrop-sepia: initial;
+      --tw-duration: initial;
+      --tw-ease: initial;
+      --tw-scale-x: 1;
+      --tw-scale-y: 1;
+      --tw-scale-z: 1;
+    }
+  }
+}
+                        </style>
+                      </head>
+                      <body class="min-h-full flex flex-col bg-neutral-50 dark:bg-neutral-955 text-neutral-900 dark:text-neutral-550 transition-colors duration-300">
+                        <div hidden="">
+                          <!--$-->
+                          <!--/$-->
+                        </div>
+                        <header class="sticky top-0 z-50 w-full border-b border-neutral-200/40 bg-white/80 backdrop-blur-md dark:border-neutral-800/40 dark:bg-neutral-950/80 transition-all duration-300">
+                          <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                            <div class="flex h-16 items-center justify-between gap-4">
+                              <a class="flex items-center gap-2 shrink-0" href="/">
+                                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-tr from-sky-500 to-indigo-600 text-white shadow-md shadow-sky-500/10">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield h-5 w-5" aria-hidden="true">
+                                    <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z">
+                                    </path>
+                                  </svg>
+                                </span>
+                                <span class="font-extrabold tracking-tight text-xl bg-clip-text text-transparent bg-gradient-to-r from-neutral-950 to-neutral-700 dark:from-white dark:to-neutral-400">
+                                  SafeNet
+                                </span>
+                              </a>
+                              <nav class="hidden md:flex items-center gap-1">
+                                <a class="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all text-neutral-600 hover:bg-neutral-50 hover:text-neutral-950 dark:text-neutral-455 dark:hover:bg-neutral-900 dark:hover:text-white" href="/scan">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-4.5 w-4.5" aria-hidden="true">
+                                    <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z">
+                                    </path>
+                                    <path d="M14 2v5a1 1 0 0 0 1 1h5">
+                                    </path>
+                                    <path d="M10 9H8">
+                                    </path>
+                                    <path d="M16 13H8">
+                                    </path>
+                                    <path d="M16 17H8">
+                                    </path>
+                                  </svg>
+                                  Scam Scanner
+                                </a>
+                                <a class="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all text-neutral-600 hover:bg-neutral-50 hover:text-neutral-950 dark:text-neutral-455 dark:hover:bg-neutral-900 dark:hover:text-white" href="/reports">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users h-4.5 w-4.5" aria-hidden="true">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2">
+                                    </path>
+                                    <path d="M16 3.128a4 4 0 0 1 0 7.744">
+                                    </path>
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87">
+                                    </path>
+                                    <circle cx="9" cy="7" r="4">
+                                    </circle>
+                                  </svg>
+                                  Report Board
+                                </a>
+                                <a class="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all text-neutral-600 hover:bg-neutral-50 hover:text-neutral-950 dark:text-neutral-455 dark:hover:bg-neutral-900 dark:hover:text-white" href="/dashboard">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard h-4.5 w-4.5" aria-hidden="true">
+                                    <rect width="7" height="9" x="3" y="3" rx="1">
+                                    </rect>
+                                    <rect width="7" height="5" x="14" y="3" rx="1">
+                                    </rect>
+                                    <rect width="7" height="9" x="14" y="12" rx="1">
+                                    </rect>
+                                    <rect width="7" height="5" x="3" y="16" rx="1">
+                                    </rect>
+                                  </svg>
+                                  History Logs
+                                </a>
+                              </nav>
+                              <div class="flex items-center gap-3 ml-auto">
+                                <button class="flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all border cursor-pointer shrink-0 min-w-[130px] justify-center bg-white border-neutral-200 text-neutral-600 hover:bg-neutral-50 dark:bg-neutral-900 dark:border-neutral-850 dark:text-neutral-455" title="Toggle Large Fonts &amp; Simple Words">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart h-4 w-4 fill-current shrink-0" aria-hidden="true">
+                                    <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5">
+                                    </path>
+                                  </svg>
+                                  <span class="truncate">
+                                    Elderly Mode
+                                  </span>
+                                </button>
+                                <div class="hidden sm:block">
+                                  <a class="rounded-xl bg-neutral-950 px-4 py-2 text-xs font-bold text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-950 dark:hover:bg-neutral-100 shadow-xs" href="/auth">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-in h-4 w-4 inline mr-1" aria-hidden="true">
+                                      <path d="m10 17 5-5-5-5">
+                                      </path>
+                                      <path d="M15 12H3">
+                                      </path>
+                                      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4">
+                                      </path>
+                                    </svg>
+                                    Sign In
+                                  </a>
+                                </div>
+                                <button class="md:hidden p-2 text-neutral-600 hover:bg-neutral-50 rounded-xl cursor-pointer">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu h-5 w-5" aria-hidden="true">
+                                    <path d="M4 5h16">
+                                    </path>
+                                    <path d="M4 12h16">
+                                    </path>
+                                    <path d="M4 19h16">
+                                    </path>
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </header>
+                        <main class="flex-1 flex flex-col">
+                          <div class="relative isolate overflow-hidden flex-1 flex flex-col justify-center">
+                            <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
+                              <div class="relative left-[calc(50%-11rem)] aspect-1155/678 w-[36rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-sky-200 to-indigo-200 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72rem] dark:from-sky-950/10 dark:to-indigo-950/10">
+                              </div>
+                            </div>
+                            <div class="mx-auto max-w-7xl px-6 py-20 lg:px-8 text-center space-y-12">
+                              <div class="flex justify-center">
+                                <span class="inline-flex items-center gap-1.5 rounded-full px-3.5 py-1 text-xs font-semibold bg-sky-50 text-sky-700 ring-1 ring-sky-700/10 dark:bg-sky-950/30 dark:text-sky-400 dark:ring-sky-800/30">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles h-3.5 w-3.5" aria-hidden="true">
+                                    <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z">
+                                    </path>
+                                    <path d="M20 2v4">
+                                    </path>
+                                    <path d="M22 4h-4">
+                                    </path>
+                                    <circle cx="4" cy="20" r="2">
+                                    </circle>
+                                  </svg>
+                                  AI-Powered Scam &amp; Phishing Protection
+                                </span>
+                              </div>
+                              <div class="space-y-4 max-w-4xl mx-auto">
+                                <h1 class="text-4xl font-extrabold tracking-tight text-neutral-900 sm:text-6xl dark:text-white bg-clip-text text-transparent bg-gradient-to-b from-neutral-900 via-neutral-800 to-neutral-500 dark:from-white dark:via-neutral-100 dark:to-neutral-500">
+                                  Received a suspicious message?
+                                  <br/>
+                                  Let&#x27;s check if it is safe.
+                                </h1>
+                                <p class="text-base sm:text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl mx-auto leading-relaxed">
+                                  SafeNet is a free scanner that instantly checks emails, DMs, texts, or websites for fraud. Upload screenshots or paste text to audit risk metrics and preview choice simulations.
+                                </p>
+                              </div>
+                              <div class="flex items-center justify-center gap-4">
+                                <a class="rounded-2xl bg-sky-600 px-6 py-3.5 text-sm font-semibold text-white shadow-xs hover:bg-sky-550 transition-all cursor-pointer hover:scale-[1.01]" href="/scan">
+                                  Start Scam Scan
+                                </a>
+                                <a class="rounded-2xl border border-neutral-300 bg-white px-6 py-3.5 text-sm font-semibold text-neutral-750 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-350 dark:hover:bg-neutral-850 transition-all cursor-pointer hover:scale-[1.01]" href="/reports">
+                                  View Scam Trends
+                                </a>
+                              </div>
+                              <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 max-w-7xl mx-auto pt-16 text-left">
+                                <div class="p-6 rounded-3xl border border-neutral-200/50 bg-white dark:border-neutral-800/50 dark:bg-neutral-900/50 shadow-xs flex flex-col justify-between gap-4">
+                                  <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 dark:bg-sky-950 text-sky-600 dark:text-sky-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-text h-5.5 w-5.5" aria-hidden="true">
+                                      <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z">
+                                      </path>
+                                      <path d="M14 2v5a1 1 0 0 0 1 1h5">
+                                      </path>
+                                      <path d="M10 9H8">
+                                      </path>
+                                      <path d="M16 13H8">
+                                      </path>
+                                      <path d="M16 17H8">
+                                      </path>
+                                    </svg>
+                                  </span>
+                                  <div>
+                                    <h3 class="font-bold text-neutral-900 dark:text-white text-sm">
+                                      Message Scanner
+                                    </h3>
+                                    <p class="mt-2 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+                                      Paste SMS codes, urgent bank notifications, or social DMs. AI isolates urgent indicators and flags malicious intents.
+                                    </p>
+                                  </div>
+                                </div>
+                                <div class="p-6 rounded-3xl border border-neutral-200/50 bg-white dark:border-neutral-800/50 dark:bg-neutral-900/50 shadow-xs flex flex-col justify-between gap-4">
+                                  <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image h-5.5 w-5.5" aria-hidden="true">
+                                      <rect width="18" height="18" x="3" y="3" rx="2" ry="2">
+                                      </rect>
+                                      <circle cx="9" cy="9" r="2">
+                                      </circle>
+                                      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21">
+                                      </path>
+                                    </svg>
+                                  </span>
+                                  <div>
+                                    <h3 class="font-bold text-neutral-900 dark:text-white text-sm">
+                                      Screenshot Analysis
+                                    </h3>
+                                    <p class="mt-2 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+                                      Upload images or screenshots. Client-side OCR extracts the texts automatically before auditing them for fraud patterns.
+                                    </p>
+                                  </div>
+                                </div>
+                                <div class="p-6 rounded-3xl border border-neutral-200/50 bg-white dark:border-neutral-800/50 dark:bg-neutral-900/50 shadow-xs flex flex-col justify-between gap-4">
+                                  <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-globe h-5.5 w-5.5" aria-hidden="true">
+                                      <circle cx="12" cy="12" r="10">
+                                      </circle>
+                                      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20">
+                                      </path>
+                                      <path d="M2 12h20">
+                                      </path>
+                                    </svg>
+                                  </span>
+                                  <div>
+                                    <h3 class="font-bold text-neutral-900 dark:text-white text-sm">
+                                      Website Auditor
+                                    </h3>
+                                    <p class="mt-2 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+                                      Paste suspicious links. Check domain configurations, secure connections, and potential brand typosquatting alerts.
+                                    </p>
+                                  </div>
+                                </div>
+                                <div class="p-6 rounded-3xl border border-neutral-200/50 bg-white dark:border-neutral-800/50 dark:bg-neutral-900/50 shadow-xs flex flex-col justify-between gap-4">
+                                  <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950 text-rose-600 dark:text-rose-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart h-5.5 w-5.5" aria-hidden="true">
+                                      <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5">
+                                      </path>
+                                    </svg>
+                                  </span>
+                                  <div>
+                                    <h3 class="font-bold text-neutral-900 dark:text-white text-sm">
+                                      Elderly Friendly
+                                    </h3>
+                                    <p class="mt-2 text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
+                                      One-click access to scale up fonts, simplify explanations, and show clear guidelines on who to contact.
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!--$-->
+                          <!--/$-->
+                        </main>
+                        <button class="fixed bottom-6 left-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-sky-600 text-white shadow-lg hover:bg-sky-550 transition-all hover:scale-105 cursor-pointer" title="Chat with Netbot">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square h-5 w-5" aria-hidden="true">
+                            <path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z">
+                            </path>
+                          </svg>
+                        </button>
+                        <footer class="border-t border-neutral-200/50 bg-white py-6 dark:border-neutral-800/50 dark:bg-neutral-950 transition-all duration-300">
+                          <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <span class="text-xs text-neutral-450 dark:text-neutral-500">
+                              <!-- -->
+                              2026
+                              <!-- -->
+                              SafeNet Scanner. Empowered by Cognitive Cyber Defense.
+                            </span>
+                            <div class="flex gap-4 text-xs text-neutral-400 dark:text-neutral-500">
+                              <a href="https://reportfraud.ftc.gov" target="_blank" rel="noopener noreferrer" class="hover:underline hover:text-sky-600">
+                                FTC Fraud Report
+                              </a>
+                              <span>
+                              </span>
+                              <span>
+                                Speculative Security Indicator
+                              </span>
+                            </div>
+                          </div>
+                        </footer>
+                      </body>
+                    </html>
