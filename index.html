@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SafeNet ‚Äî AI Scam Protection</title>
+  <title>SafeNet - AI Scam Protection</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
@@ -12,28 +12,29 @@
     /* ‚îÄ‚îÄ‚îÄ RESET & BASE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #06060f;
-      --surface: #0d0d1a;
-      --card: rgba(255,255,255,0.035);
-      --card-hover: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.08);
-      --border-strong: rgba(255,255,255,0.14);
-      --primary: #6366f1;
-      --primary-glow: rgba(99,102,241,0.25);
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --card: #ffffff;
+      --card-hover: #f1f5f9;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --primary: #0284c7;
+      --primary-glow: rgba(2, 132, 199, 0.15);
       --blue: #3b82f6;
       --success: #10b981;
       --warning: #f59e0b;
       --danger: #ef4444;
-      --danger-glow: rgba(239,68,68,0.2);
-      --text: #f1f5f9;
-      --text-2: #94a3b8;
-      --text-3: #475569;
+      --danger-glow: rgba(239, 68, 68, 0.1);
+      --text: #0f172a;
+      --text-2: #475569;
+      --text-3: #94a3b8;
       --radius: 16px;
       --radius-lg: 22px;
       --radius-xl: 28px;
     }
+
     html { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-    body { min-height: 100vh; display: flex; flex-direction: column; }
+    body { min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); color: var(--text); }
     button { font-family: inherit; cursor: pointer; border: none; outline: none; }
     input, textarea, select { font-family: inherit; outline: none; border: none; }
     a { color: inherit; text-decoration: none; }
@@ -50,6 +51,89 @@
     html.elderly .small-label { font-size: 0.8rem !important; }
     html.elderly button[data-primary] { font-size: 1.1rem !important; padding: 0.9rem 1.5rem !important; }
 
+    /* ‚îÄ‚îÄ‚îÄ NETBOT CHATBOT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
+    #netbot-fab {
+      position: fixed; bottom: 1.5rem; left: 1.5rem; z-index: 200;
+      width: 52px; height: 52px; border-radius: 16px;
+      background: linear-gradient(135deg, #0284c7, #3b82f6);
+      color: white; font-weight: 900; font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px rgba(2,132,199,0.35);
+      border: none; cursor: pointer; transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    #netbot-fab:hover { transform: scale(1.08) translateY(-2px); box-shadow: 0 12px 30px rgba(2,132,199,0.45); }
+    #netbot-fab .nb-dot {
+      position: absolute; top: -3px; right: -3px;
+      width: 10px; height: 10px; background: #10b981;
+      border-radius: 50%; border: 2px solid white;
+    }
+    #netbot-panel {
+      display: none; position: fixed; bottom: 5.5rem; left: 1.5rem; z-index: 199;
+      width: 340px; max-height: 520px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-xl); box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+      flex-direction: column; overflow: hidden;
+      animation: nbSlideIn 0.2s ease;
+    }
+    #netbot-panel.open { display: flex; }
+    @keyframes nbSlideIn { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: none; } }
+    .nb-header {
+      padding: 1rem 1.1rem; background: linear-gradient(135deg, #0284c7, #3b82f6);
+      color: white; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    .nb-header-left { display: flex; align-items: center; gap: 0.6rem; }
+    .nb-avatar {
+      width: 34px; height: 34px; border-radius: 10px;
+      background: rgba(255,255,255,0.2); display: flex; align-items: center;
+      justify-content: center; font-weight: 900; font-size: 0.9rem;
+    }
+    .nb-title { font-weight: 800; font-size: 0.9rem; }
+    .nb-subtitle { font-size: 0.7rem; opacity: 0.85; margin-top: 1px; }
+    .nb-close {
+      background: rgba(255,255,255,0.15); border: none; color: white;
+      width: 28px; height: 28px; border-radius: 8px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
+      transition: background 0.15s;
+    }
+    .nb-close:hover { background: rgba(255,255,255,0.28); }
+    .nb-messages {
+      flex: 1; overflow-y: auto; padding: 1rem; display: flex;
+      flex-direction: column; gap: 0.6rem;
+    }
+    .nb-msg { max-width: 88%; display: flex; flex-direction: column; gap: 2px; }
+    .nb-msg.bot { align-self: flex-start; }
+    .nb-msg.user { align-self: flex-end; }
+    .nb-bubble {
+      padding: 0.55rem 0.85rem; border-radius: 14px; font-size: 0.82rem; line-height: 1.55;
+    }
+    .nb-msg.bot .nb-bubble { background: #f1f5f9; color: var(--text); border-radius: 4px 14px 14px 14px; }
+    .nb-msg.user .nb-bubble { background: linear-gradient(135deg,#0284c7,#3b82f6); color: white; border-radius: 14px 4px 14px 14px; }
+    .nb-typing { display: flex; gap: 4px; align-items: center; padding: 0.55rem 0.85rem; }
+    .nb-typing span { width: 6px; height: 6px; background: var(--text-3); border-radius: 50%; animation: nbDot 1.2s infinite; }
+    .nb-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .nb-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes nbDot { 0%,80%,100% { opacity: 0.3; transform: scale(0.7); } 40% { opacity: 1; transform: scale(1); } }
+    .nb-footer {
+      padding: 0.75rem; border-top: 1px solid var(--border);
+      display: flex; gap: 0.5rem; flex-shrink: 0; background: var(--surface);
+    }
+    .nb-input {
+      flex: 1; background: #f8fafc; border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.55rem 0.8rem;
+      font-size: 0.82rem; color: var(--text); resize: none;
+      transition: border-color 0.15s; font-family: inherit;
+    }
+    .nb-input:focus { border-color: var(--primary); outline: none; }
+    .nb-send {
+      width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+      background: linear-gradient(135deg,#0284c7,#3b82f6); border: none;
+      color: white; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; font-size: 0.9rem; transition: all 0.15s;
+    }
+    .nb-send:hover { opacity: 0.88; transform: scale(1.05); }
+    .nb-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
     /* ‚îÄ‚îÄ‚îÄ SCROLLBAR ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -58,7 +142,7 @@
     /* ‚îÄ‚îÄ‚îÄ NAVBAR ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     #navbar {
       position: sticky; top: 0; z-index: 50;
-      background: rgba(6,6,15,0.85); backdrop-filter: blur(16px);
+      background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
       padding: 0 1.5rem; height: 60px;
       display: flex; align-items: center; justify-content: space-between; gap: 1rem;
@@ -66,31 +150,33 @@
     .nav-logo { display: flex; align-items: center; gap: 0.6rem; font-weight: 800; font-size: 1.1rem; }
     .nav-logo .logo-icon {
       width: 34px; height: 34px; border-radius: 10px;
-      background: linear-gradient(135deg, #6366f1, #3b82f6);
+      background: linear-gradient(135deg, #0284c7, #3b82f6);
       display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; box-shadow: 0 0 16px var(--primary-glow);
+      color: white; font-size: 1rem; box-shadow: 0 4px 12px var(--primary-glow);
     }
-    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-links { display: flex; align-items: center; gap: 4px; }
     .nav-link {
       padding: 0.4rem 0.85rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
       color: var(--text-2); transition: all 0.15s; background: none;
     }
-    .nav-link:hover { color: var(--text); background: var(--card); }
-    .nav-link.active { color: var(--text); background: var(--card); border: 1px solid var(--border); }
+    .nav-link:hover { color: var(--text); background: var(--card-hover); }
+    .nav-link.active { color: #0284c7; background: #e0f2fe; border: 1px solid #bae6fd; }
+    
     .nav-actions { display: flex; align-items: center; gap: 0.5rem; }
     .btn-icon {
       width: 36px; height: 36px; border-radius: 10px;
-      background: var(--card); border: 1px solid var(--border);
+      background: var(--surface); border: 1px solid var(--border);
       display: flex; align-items: center; justify-content: center;
       font-size: 1rem; color: var(--text-2); transition: all 0.15s;
     }
-    .btn-icon:hover { color: var(--text); border-color: var(--border-strong); }
+    .btn-icon:hover { color: var(--text); border-color: var(--border-strong); background: var(--card-hover); }
     .btn-elderly {
       padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
-      background: var(--card); border: 1px solid var(--border);
+      background: var(--surface); border: 1px solid var(--border);
       color: var(--text-2); display: flex; align-items: center; gap: 0.4rem; transition: all 0.15s;
     }
-    .btn-elderly.on { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.3); color: #fca5a5; }
+    .btn-elderly:hover { background: var(--card-hover); color: var(--text); }
+    .btn-elderly.on { background: #ffe4e6; border-color: #fecdd3; color: #be123c; }
 
     /* ‚îÄ‚îÄ‚îÄ MAIN CONTENT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     #main { flex: 1; max-width: 900px; width: 100%; margin: 0 auto; padding: 2rem 1.5rem; }
@@ -101,34 +187,34 @@
 
     /* ‚îÄ‚îÄ‚îÄ CARDS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     .card {
-      background: var(--card); border: 1px solid var(--border);
+      background: var(--surface); border: 1px solid var(--border);
       border-radius: var(--radius-xl); padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     .card-lg { padding: 2rem; }
 
     /* ‚îÄ‚îÄ‚îÄ SCAN TYPE TABS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     .seg-control {
-      display: flex; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      display: flex; background: #f1f5f9; border: 1px solid var(--border);
       border-radius: 12px; padding: 3px; gap: 2px;
     }
     .seg-btn {
       flex: 1; padding: 0.45rem 0.75rem; border-radius: 9px;
-      font-size: 0.78rem; font-weight: 600; color: var(--text-3);
+      font-size: 0.78rem; font-weight: 600; color: var(--text-2);
       background: none; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 0.4rem;
     }
-    .seg-btn:hover { color: var(--text-2); }
-    .seg-btn.active { background: rgba(255,255,255,0.07); color: var(--text); border: 1px solid var(--border); }
+    .seg-btn:hover { color: var(--text); }
+    .seg-btn.active { background: var(--surface); color: var(--text); border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 
     /* ‚îÄ‚îÄ‚îÄ FORM ELEMENTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .form-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); margin-bottom: 0.4rem; display: block; }
+    .form-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-2); margin-bottom: 0.4rem; display: block; }
     .form-input {
-      width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+      width: 100%; background: #f8fafc; border: 1px solid var(--border);
       border-radius: 12px; padding: 0.65rem 0.9rem; color: var(--text); font-size: 0.875rem;
-      transition: border-color 0.15s; resize: none;
+      transition: border-color 0.15s, box-shadow 0.15s; resize: none;
     }
-    .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); }
+    .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-glow); background: var(--surface); }
     .form-input::placeholder { color: var(--text-3); }
-    select.form-input option { background: #1a1a2e; }
 
     /* ‚îÄ‚îÄ‚îÄ BUTTONS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     .btn-primary {
@@ -136,15 +222,15 @@
       background: linear-gradient(135deg, var(--primary), var(--blue));
       color: white; font-weight: 700; font-size: 0.875rem;
       display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-      transition: all 0.2s; box-shadow: 0 4px 16px var(--primary-glow);
+      transition: all 0.2s; box-shadow: 0 4px 12px var(--primary-glow);
     }
-    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-primary:hover { opacity: 0.95; transform: translateY(-1px); }
     .btn-primary:disabled { opacity: 0.5; transform: none; cursor: not-allowed; }
     .btn-ghost {
       padding: 0.5rem 1rem; border-radius: 10px; font-size: 0.8rem; font-weight: 600;
-      background: var(--card); border: 1px solid var(--border); color: var(--text-2); transition: all 0.15s;
+      background: var(--surface); border: 1px solid var(--border); color: var(--text-2); transition: all 0.15s;
     }
-    .btn-ghost:hover { color: var(--text); border-color: var(--border-strong); }
+    .btn-ghost:hover { color: var(--text); border-color: var(--border-strong); background: var(--card-hover); }
     .btn-danger {
       width: 100%; padding: 0.8rem; border-radius: 12px;
       background: var(--danger); color: white; font-weight: 700; font-size: 0.9rem;
@@ -155,12 +241,12 @@
     /* ‚îÄ‚îÄ‚îÄ IMAGE UPLOAD ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     .upload-zone {
       border: 2px dashed var(--border); border-radius: 14px; padding: 2.5rem 1rem;
-      text-align: center; cursor: pointer; transition: all 0.15s; position: relative;
+      text-align: center; cursor: pointer; transition: all 0.15s; position: relative; background: #f8fafc;
     }
-    .upload-zone:hover { border-color: var(--primary); background: var(--primary-glow); }
+    .upload-zone:hover { border-color: var(--primary); background: #f0f9ff; }
     .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
     .upload-zone .upload-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-    .upload-preview { border-radius: 12px; overflow: hidden; max-height: 200px; display: flex; align-items: center; justify-content: center; background: #000; margin-top: 0.75rem; }
+    .upload-preview { border-radius: 12px; overflow: hidden; max-height: 200px; display: flex; align-items: center; justify-content: center; background: #f8fafc; border: 1px solid var(--border); margin-top: 0.75rem; }
     .upload-preview img { max-height: 200px; object-fit: contain; }
 
     /* ‚îÄ‚îÄ‚îÄ RESULTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
@@ -174,90 +260,91 @@
     @media(max-width: 600px) { .result-grid { grid-template-columns: 1fr; } }
 
     /* Risk gauge */
-    .gauge-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+    .gauge-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .gauge-wrap { position: relative; width: 110px; height: 110px; }
     .gauge-wrap svg { width: 100%; height: 100%; }
     .gauge-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .gauge-score { font-size: 1.6rem; font-weight: 900; font-family: 'JetBrains Mono', monospace; line-height: 1; }
-    .gauge-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-3); margin-top: 2px; }
+    .gauge-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-2); margin-top: 2px; }
     .verdict-badge { padding: 0.25rem 0.85rem; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; }
-    .verdict-safe { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.25); }
-    .verdict-suspicious { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
-    .verdict-high { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
+    .verdict-safe { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+    .verdict-suspicious { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .verdict-high { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
 
     /* Analysis panel */
-    .analysis-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
-    .analysis-card h4 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem; }
+    .analysis-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .analysis-card h4 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-2); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.4rem; }
     .reason-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1rem; }
     .reason-list li { font-size: 0.82rem; color: var(--text-2); display: flex; gap: 0.5rem; line-height: 1.5; }
-    .reason-list li::before { content: '‚Ä¢'; color: var(--blue); flex-shrink: 0; font-weight: 900; }
+    .reason-list li::before { content: '‚Ä¢'; color: var(--primary); flex-shrink: 0; font-weight: 900; }
     .badge-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
     .badge { padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.7rem; font-weight: 700; }
-    .badge-tactic { background: rgba(255,255,255,0.06); color: var(--text-2); border: 1px solid var(--border); }
-    .badge-flag { background: rgba(239,68,68,0.1); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+    .badge-tactic { background: #f1f5f9; color: var(--text-2); border: 1px solid var(--border); }
+    .badge-flag { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
 
     /* Choice simulator */
-    .choice-sim { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
-    .choice-sim-header { padding: 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+    .choice-sim { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .choice-sim-header { padding: 1.25rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; background: #f8fafc; }
     .choice-sim-header h3 { font-size: 0.875rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
     .choice-sim-body { padding: 1.25rem; }
     .choice-desc { font-size: 0.8rem; color: var(--text-2); margin-bottom: 1rem; line-height: 1.55; }
     .scenario-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
     @media(max-width: 600px) { .scenario-grid { grid-template-columns: 1fr; } }
-    .scenario-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem; }
+    .scenario-card { background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem; }
     .scenario-type { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.4rem; }
-    .type-best { color: var(--success); }
-    .type-likely { color: var(--warning); }
-    .type-worst { color: var(--danger); }
+    .type-best { color: #059669; }
+    .type-likely { color: #d97706; }
+    .type-worst { color: #dc2626; }
     .scenario-title { font-size: 0.78rem; font-weight: 700; color: var(--text); margin-bottom: 0.6rem; line-height: 1.3; }
     .scenario-impact { font-size: 0.73rem; color: var(--text-2); line-height: 1.5; margin-bottom: 0.3rem; }
-    .scenario-impact strong { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-3); display: block; }
+    .scenario-impact strong { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-2); display: block; margin-bottom: 0.1rem; }
     .severity-bar { margin-top: 0.6rem; }
     .severity-track { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
     .severity-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
 
     /* Actions */
-    .actions-card { background: rgba(99,102,241,0.06); border: 1px solid rgba(99,102,241,0.2); border-radius: var(--radius-lg); padding: 1.1rem; }
-    .actions-card h4 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--text-3); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; }
+    .actions-card { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: var(--radius-lg); padding: 1.1rem; }
+    .actions-card h4 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: #0369a1; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem; }
     .action-list { display: flex; flex-direction: column; gap: 0.45rem; }
     .action-item { font-size: 0.82rem; color: var(--text-2); display: flex; gap: 0.5rem; align-items: flex-start; }
     .action-item::before { content: '‚úî'; color: var(--primary); font-weight: 900; flex-shrink: 0; font-size: 0.75rem; margin-top: 1px; }
 
     /* ‚îÄ‚îÄ‚îÄ HISTORY ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     .history-item {
-      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
       padding: 0.9rem 1.1rem; display: flex; align-items: center; gap: 1rem;
       cursor: pointer; transition: all 0.15s; margin-bottom: 0.5rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
     }
     .history-item:hover { border-color: var(--border-strong); background: var(--card-hover); }
     .history-verdict-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
     .history-info { flex: 1; min-width: 0; }
-    .history-input { font-size: 0.82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .history-meta { font-size: 0.7rem; color: var(--text-3); margin-top: 2px; }
+    .history-input { font-size: 0.82rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); }
+    .history-meta { font-size: 0.7rem; color: var(--text-2); margin-top: 2px; }
     .history-score { font-size: 0.78rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
 
     /* ‚îÄ‚îÄ‚îÄ REPORTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .report-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; margin-bottom: 0.75rem; }
-    .report-type-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: var(--text-2); padding: 0.15rem 0.55rem; border-radius: 5px; }
-    .report-title { font-size: 0.9rem; font-weight: 700; margin: 0.4rem 0 0.3rem; }
+    .report-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem; margin-bottom: 0.75rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .report-type-badge { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; background: #f1f5f9; border: 1px solid var(--border); color: var(--text-2); padding: 0.15rem 0.55rem; border-radius: 5px; }
+    .report-title { font-size: 0.9rem; font-weight: 700; margin: 0.4rem 0 0.3rem; color: var(--text); }
     .report-desc { font-size: 0.8rem; color: var(--text-2); line-height: 1.55; }
-    .report-source { font-size: 0.72rem; color: #fca5a5; font-family: 'JetBrains Mono', monospace; margin-top: 0.5rem; }
+    .report-source { font-size: 0.72rem; color: #b91c1c; font-family: 'JetBrains Mono', monospace; margin-top: 0.5rem; padding: 0.25rem 0.5rem; background: #fee2e2; border-radius: 6px; border: 1px solid #fecaca; display: inline-block; word-break: break-all; }
 
     /* ‚îÄ‚îÄ‚îÄ EDUCATION ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
-    .lesson-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
-    .lesson-cat { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--blue); background: rgba(59,130,246,0.1); padding: 0.15rem 0.55rem; border-radius: 5px; display: inline-block; margin-bottom: 0.5rem; }
-    .lesson-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .lesson-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .lesson-cat { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: #0284c7; background: #e0f2fe; padding: 0.15rem 0.55rem; border-radius: 5px; display: inline-block; margin-bottom: 0.5rem; }
+    .lesson-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text); }
     .lesson-desc { font-size: 0.82rem; color: var(--text-2); line-height: 1.6; }
 
     /* ‚îÄ‚îÄ‚îÄ MODALS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     .modal-overlay {
       display: none; position: fixed; inset: 0; z-index: 100;
-      background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+      background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px);
       align-items: center; justify-content: center; padding: 1rem;
     }
     .modal-overlay.open { display: flex; animation: fadeIn 0.15s ease; }
-    .modal { background: #111122; border: 1px solid var(--border-strong); border-radius: var(--radius-xl); padding: 2rem; max-width: 400px; width: 100%; text-align: center; }
-    .modal h2 { font-size: 1.2rem; font-weight: 800; margin: 0.75rem 0 0.5rem; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 2rem; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04); }
+    .modal h2 { font-size: 1.2rem; font-weight: 800; margin: 0.75rem 0 0.5rem; color: var(--text); }
     .modal p { font-size: 0.85rem; color: var(--text-2); line-height: 1.6; margin-bottom: 1.25rem; }
     .modal-icon { width: 64px; height: 64px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 0.25rem; }
     .modal-stack { display: flex; flex-direction: column; gap: 0.6rem; }
@@ -269,23 +356,23 @@
 
     /* ‚îÄ‚îÄ‚îÄ ALERT BANNERS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     .alert { padding: 0.75rem 1rem; border-radius: 10px; font-size: 0.82rem; line-height: 1.5; margin-bottom: 0.75rem; }
-    .alert-error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: #fca5a5; }
-    .alert-success { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); color: #6ee7b7; }
+    .alert-error { background: #fee2e2; border: 1px solid #fecaca; color: #991b1b; }
+    .alert-success { background: #d1fae5; border: 1px solid #a7f3d0; color: #065f46; }
 
     /* ‚îÄ‚îÄ‚îÄ LOADING ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     .loading-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1rem; gap: 0.75rem; }
     .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; }
-    .loading-wrap p { font-size: 0.82rem; color: var(--text-3); font-weight: 600; }
+    .loading-wrap p { font-size: 0.82rem; color: var(--text-2); font-weight: 600; }
 
     /* ‚îÄ‚îÄ‚îÄ EMPTY STATE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     .empty { text-align: center; padding: 3rem 1rem; color: var(--text-3); }
     .empty .empty-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
     .empty h3 { font-size: 0.95rem; font-weight: 700; color: var(--text-2); margin-bottom: 0.35rem; }
-    .empty p { font-size: 0.82rem; line-height: 1.55; }
+    .empty p { font-size: 0.82rem; line-height: 1.55; color: var(--text-2); }
 
     /* ‚îÄ‚îÄ‚îÄ PAGE HEADER ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
     .page-header { margin-bottom: 1.5rem; }
-    .page-header h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.25rem; }
+    .page-header h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.25rem; color: var(--text); }
     .page-header p { font-size: 0.85rem; color: var(--text-2); }
 
     /* ‚îÄ‚îÄ‚îÄ UTILITY ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ */
@@ -294,7 +381,7 @@
     .flex { display: flex; }
     .flex-between { display: flex; align-items: center; justify-content: space-between; }
     .gap-sm { gap: 0.5rem; }
-    .text-muted { color: var(--text-3); font-size: 0.78rem; }
+    .text-muted { color: var(--text-2); font-size: 0.78rem; }
     .text-sm { font-size: 0.82rem; }
     .font-bold { font-weight: 700; }
     .mt-1 { margin-top: 0.5rem; }
@@ -330,11 +417,11 @@
 <!-- ‚îÄ‚îÄ‚îÄ ELDERLY MODE CONFIRM MODAL ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
 <div class="modal-overlay" id="elderly-modal">
   <div class="modal">
-    <div class="modal-icon" style="background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.25);">‚ù§Ô∏è</div>
+    <div class="modal-icon" style="background:#ffe4e6; border:1px solid #fecdd3;">‚ù§Ô∏è</div>
     <h2>Enable Elderly-Friendly Mode?</h2>
     <p>This makes all text larger and easier to read, increases form field sizes, and improves overall readability for comfortable use.</p>
     <div class="modal-stack">
-      <button class="btn-danger" onclick="confirmElderly()">‚ù§Ô∏è Yes, enable it</button>
+      <button class="btn-danger" style="background:#e11d48;" onclick="confirmElderly()">‚ù§Ô∏è Yes, enable it</button>
       <button class="btn-ghost" style="width:100%; justify-content:center;" onclick="closeModal('elderly-modal')">Cancel</button>
     </div>
   </div>
@@ -343,7 +430,7 @@
 <!-- ‚îÄ‚îÄ‚îÄ SETTINGS MODAL ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
 <div class="modal-overlay" id="settings-modal">
   <div class="modal settings-modal">
-    <div class="modal-icon" style="background:rgba(99,102,241,0.12); border:1px solid rgba(99,102,241,0.25);">‚öôÔ∏è</div>
+    <div class="modal-icon" style="background:#e0f2fe; border:1px solid #bae6fd;">‚öôÔ∏è</div>
     <h2>AI Settings</h2>
     <p>Enter your OpenRouter API key to enable live AI scam analysis.</p>
     <div class="space-y">
@@ -359,19 +446,19 @@
 
 <!-- ‚îÄ‚îÄ‚îÄ HISTORY DETAIL MODAL ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
 <div class="modal-overlay" id="history-detail-modal" style="align-items:flex-start; padding-top:2rem; overflow-y:auto;">
-  <div id="history-detail-content" style="background:#111122; border:1px solid var(--border-strong); border-radius:var(--radius-xl); padding:1.5rem; max-width:860px; width:100%; margin: 0 auto;">
+  <div id="history-detail-content" style="background:var(--surface); border:1px solid var(--border-strong); border-radius:var(--radius-xl); padding:1.5rem; max-width:860px; width:100%; margin: 0 auto; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);">
   </div>
 </div>
 
 <!-- ‚îÄ‚îÄ‚îÄ WARN COMMUNITY CONFIRM MODAL ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
 <div class="modal-overlay" id="warn-modal">
   <div class="modal">
-    <div class="modal-icon" style="background:rgba(245,158,11,0.12); border:1px solid rgba(245,158,11,0.3);">&#x26A0;&#xFE0F;</div>
+    <div class="modal-icon" style="background:#fef3c7; border:1px solid #fde68a;">‚ö†Ô∏è</div>
     <h2>Warn the Community?</h2>
     <p>This will forward the AI scan report to the Community Reports page so others can see this threat. The scanned content preview and risk details will be visible to anyone viewing reports.</p>
     <div class="modal-stack">
-      <button onclick="confirmWarnCommunity()" style="width:100%;padding:0.8rem;border-radius:12px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:#fbbf24;font-weight:700;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
-        &#x26A0;&#xFE0F; Yes, warn the community
+      <button onclick="confirmWarnCommunity()" style="width:100%;padding:0.8rem;border-radius:12px;background:#fef3c7;border:1px solid #fde68a;color:#b56205;font-weight:700;font-size:0.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:0.5rem;">
+        ‚ö†Ô∏è Yes, warn the community
       </button>
       <button class="btn-ghost" style="width:100%;justify-content:center;" onclick="closeModal('warn-modal')">Cancel</button>
     </div>
@@ -456,7 +543,7 @@
           <div class="gauge-wrap">
             <svg viewBox="0 0 110 110" style="transform:rotate(-90deg);">
               <circle cx="55" cy="55" r="46" fill="none" stroke="var(--border)" stroke-width="8"/>
-              <circle id="gauge-arc" cx="55" cy="55" r="46" fill="none" stroke="#6366f1" stroke-width="8"
+              <circle id="gauge-arc" cx="55" cy="55" r="46" fill="none" stroke="#0284c7" stroke-width="8"
                 stroke-dasharray="289.0" stroke-dashoffset="289.0" stroke-linecap="round"
                 style="transition: stroke-dashoffset 0.8s ease, stroke 0.4s;"/>
             </svg>
@@ -504,8 +591,8 @@
 
       <!-- Warn Community button -->
       <div id="warn-btn-wrap" style="margin-top:0.75rem;display:none;">
-        <button onclick="promptWarnCommunity()" style="width:100%;padding:0.8rem 1.25rem;border-radius:12px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.35);color:#fbbf24;font-weight:700;font-size:0.875rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='rgba(245,158,11,0.18)'" onmouseout="this.style.background='rgba(245,158,11,0.1)'">
-          ‚ö†Ô∏è Warn Community ‚Äî Forward This Report
+        <button onclick="promptWarnCommunity()" style="width:100%;padding:0.8rem 1.25rem;border-radius:12px;background:#fef3c7;border:1px solid #fde68a;color:#b56205;font-weight:700;font-size:0.875rem;display:flex;align-items:center;justify-content:center;gap:0.5rem;transition:all 0.2s;cursor:pointer;" onmouseover="this.style.background='#fde68a'" onmouseout="this.style.background='#fef3c7'">
+          Warn Community - Forward This Report
         </button>
       </div>
     </div>
@@ -538,10 +625,10 @@
     </div>
 
     <!-- How it works notice -->
-    <div style="background:rgba(99,102,241,0.07);border:1px solid rgba(99,102,241,0.2);border-radius:14px;padding:0.9rem 1.1rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:0.75rem;">
+    <div style="background:#e0f2fe;border:1px solid #bae6fd;border-radius:14px;padding:0.9rem 1.1rem;margin-bottom:1.25rem;display:flex;align-items:flex-start;gap:0.75rem;">
       <span style="font-size:1.1rem;flex-shrink:0;">üí°</span>
       <p style="font-size:0.8rem;color:var(--text-2);line-height:1.6;margin:0;">
-        <strong style="color:var(--text);">How to report:</strong> Run a scan on a suspicious message or URL. When the results appear, click the <strong style="color:#fbbf24;">‚ö†Ô∏è Warn Community</strong> button to forward the AI report here so others can see it.
+        <strong style="color:var(--text);">How to report:</strong> Run a scan on a suspicious message or URL. When the results appear, click the <strong style="color:#b56205;">‚ö†Ô∏è Warn Community</strong> button to forward the AI report here so others can see it.
       </p>
     </div>
 
@@ -550,17 +637,62 @@
 
 </div><!-- /#main -->
 
+<!-- ‚îÄ‚îÄ‚îÄ NETBOT CHATBOT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ -->
+<button id="netbot-fab" onclick="toggleNetbot()" title="Open Netbot AI">
+  N
+  <span class="nb-dot"></span>
+</button>
+
+<div id="netbot-panel">
+  <div class="nb-header">
+    <div class="nb-header-left">
+      <div class="nb-avatar">N</div>
+      <div>
+        <div class="nb-title">Netbot</div>
+        <div class="nb-subtitle">AI Assistant - Ask me anything</div>
+      </div>
+    </div>
+    <button class="nb-close" onclick="toggleNetbot()">x</button>
+  </div>
+  <div class="nb-messages" id="nb-messages">
+    <div class="nb-msg bot">
+      <div class="nb-bubble">Hi! I'm Netbot, your AI assistant. Ask me anything about scams, cybersecurity, or anything else!</div>
+    </div>
+  </div>
+  <div class="nb-footer">
+    <textarea class="nb-input" id="nb-input" rows="1" placeholder="Ask Netbot anything..." onkeydown="nbKeydown(event)"></textarea>
+    <button class="nb-send" id="nb-send-btn" onclick="nbSend()">&#9658;</button>
+  </div>
+</div>
+
 <script>
 // ‚îÄ‚îÄ‚îÄ CONSTANTS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
 
-const TEXT_SYSTEM_PROMPT = `You are an expert cybersecurity analyst. Analyze the provided message (SMS, email, DM, chat) for scam indicators.
+const TEXT_SYSTEM_PROMPT = `You are an expert cybersecurity analyst and scam prevention assistant.
+Analyze the provided message content (SMS, email, social DM, or chat) and evaluate whether it is a scam, phishing attempt, malicious communication, harassment, hate speech, or containing abusive language/racial slurs.
 
-Check for: urgency/fear language, brand impersonation, requests for passwords/OTPs/money, suspicious links, fake prizes, and grammar inconsistencies.
+Check for these indicators:
+- Urgency / fear / pressure language
+- Impersonation of brands, banks, government agencies, or known contacts
+- Requests for passwords, OTPs, card numbers, or wire transfers
+- Suspicious links (shortened URLs, domain mismatches, unusual TLDs)
+- Lottery/prize/investment scam patterns
+- Grammar inconsistencies or unusual phrasing
+- Abusive language, hate speech, racial slurs, threats of violence, or harassment
+
+SCORING RULES - score by context and combination, not flat values:
+- Single racial slur or offensive word, no other threat or scam content: riskScore 30-45, verdict SUSPICIOUS. Offensive but not an active danger or scam.
+- Racial slur + direct personal threat (e.g. "I will kill you"): riskScore 55-70, verdict HIGH_RISK.
+- Racial slur + threat + financial scam OR doxxing/SWAT threat: riskScore 75-92, verdict HIGH_RISK.
+- Full financial scam with urgency, impersonation, and phishing links: riskScore 80-95, verdict HIGH_RISK.
+- Mild profanity or casual insult with no threat/scam: riskScore 10-25, verdict SAFE.
+- Normal conversation: riskScore 5-15, verdict SAFE.
+- IMPORTANT: Do NOT give a score above 50 for a message that is only a single slur with no threat, no scam, and no victim targeting.
 
 Simulate 3 user responses:
-1. "Trust & Interact" ‚Äî click link, call number, share info, send money
-2. "Reply / Argue" ‚Äî reply STOP, engage the sender
-3. "Block & Report" ‚Äî block, delete, report
+1. "Trust & Interact" - click link, call number, share info, send money
+2. "Reply / Argue" - reply STOP, engage the sender
+3. "Block & Report" - block, delete, report
 
 For each response provide 3 scenarios (BEST_CASE, MOST_LIKELY, WORST_CASE) with realistic Data/Privacy impact, Financial impact, Emotional impact, and a severity score 0-100.
 
@@ -675,13 +807,6 @@ function switchScanType(type) {
   clearError();
 }
 
-function switchReportTab(tab) {
-  document.getElementById('reports-list-pane').style.display = tab === 'list' ? 'block' : 'none';
-  document.getElementById('reports-form-pane').style.display = tab === 'form' ? 'block' : 'none';
-  document.getElementById('seg-report-list').classList.toggle('active', tab === 'list');
-  document.getElementById('seg-report-form').classList.toggle('active', tab === 'form');
-}
-
 // ‚îÄ‚îÄ‚îÄ ELDERLY MODE ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
 function handleElderlyClick() {
   const isOn = document.getElementById('html-root').classList.contains('elderly');
@@ -711,6 +836,7 @@ function openSettings() {
   openModal('settings-modal');
 }
 
+// Ensure clean saving of OpenRouter API Key (no weird chars or encoding)
 function saveSettings() {
   const key = document.getElementById('settings-key').value.trim();
   storage.setApiKey(key);
@@ -854,26 +980,67 @@ function runHeuristic(type, input) {
     if (/(paypal|netflix|amazon|chase|apple|microsoft|fedex|ups|irs)/i.test(norm) && (norm.includes('-') || norm.includes('verify') || norm.includes('signin'))) { score += 45; reasons.push('Brand name combined with suspicious path ‚Äî likely typosquatting.'); tactics.push('Brand Impersonation'); }
     if (/(login|verify|reset|secure|account|confirm)/i.test(norm)) { score += 15; reasons.push('URL path contains credential-harvesting keywords.'); tactics.push('Urgency Framing'); }
   } else {
-    const kw = [
-      { w: 'crypto', s: 35, t: 'Investment Scam' }, { w: 'bitcoin', s: 35, t: 'Investment Scam' },
-      { w: 'lottery', s: 40, t: 'Fake Reward' }, { w: 'winner', s: 30, t: 'Fake Reward' },
-      { w: 'gift card', s: 35, t: 'Fake Reward' }, { w: 'irs', s: 45, t: 'Authority Impersonation' },
-      { w: 'tax refund', s: 40, t: 'Authority Impersonation' }, { w: 'verify your account', s: 40, t: 'Account Phishing' },
-      { w: 'suspicious activity', s: 30, t: 'Account Phishing' }, { w: 'card suspended', s: 40, t: 'Urgency' },
-      { w: 'unauthorized', s: 35, t: 'Fear-Mongering' }, { w: 'bank alert', s: 25, t: 'Impersonation' },
-      { w: 'congratulations', s: 20, t: 'Fake Reward' }, { w: 'urgent', s: 20, t: 'Urgency' },
-      { w: 'suspended', s: 30, t: 'Fear-Mongering' }, { w: 'security code', s: 30, t: 'Credential Phishing' },
-      { w: 'passcode', s: 30, t: 'Credential Phishing' }, { w: 'wire', s: 25, t: 'Financial Fraud' },
-      { w: 'package delivery failed', s: 35, t: 'Delivery Phishing' },
+    // ‚îÄ‚îÄ Hate speech / slurs ‚Äî checked first, they dominate the score ‚îÄ‚îÄ
+    const slurPatterns = [
+      /\bn[i1][g9][g9][ae3]r?\b/i, /\bn[i1][g9]{2}[ae3]\b/i,
+      /\bfagg?[o0]t\b/i, /\bk[i1]ke\b/i, /\bch[i1]nk\b/i,
+      /\bsp[i1][ck]\b/i, /\bw[e3]tb[a4]ck\b/i, /\btowelhead\b/i,
+      /\bsand\s?n[i1]gg[ae]r\b/i, /\bcr[a4]ck[e3]r\b/i,
+      /\bth[e3]\s?j[e3]ws?\b/i, /\bj[e3]w[s]?[\s-]?lover\b/i,
+      /\btr[a4]nny\b/i, /\bretard\b/i,
     ];
-    kw.forEach(k => {
+    let hateSpeechDetected = false;
+    for (const pat of slurPatterns) {
+      if (pat.test(norm)) {
+        hateSpeechDetected = true;
+        score = Math.max(score, 80);
+        const matched = norm.match(pat)?.[0] || 'slur';
+        reasons.push(`Contains a racial or ethnic slur ("${matched}") ‚Äî classified as hate speech.`);
+        highlights.push(matched);
+        if (!tactics.includes('Hate Speech / Slur')) tactics.push('Hate Speech / Slur');
+      }
+    }
+
+    // ‚îÄ‚îÄ Violence / threat keywords ‚îÄ‚îÄ
+    const threatKw = [
+      { w: 'kill you', s: 70, t: 'Violent Threat' }, { w: 'gonna kill', s: 70, t: 'Violent Threat' },
+      { w: 'i will kill', s: 75, t: 'Violent Threat' }, { w: 'shoot you', s: 70, t: 'Violent Threat' },
+      { w: 'beat you up', s: 55, t: 'Violent Threat' }, { w: 'find your address', s: 60, t: 'Doxxing Threat' },
+      { w: 'doxx', s: 65, t: 'Doxxing Threat' }, { w: 'swat you', s: 70, t: 'Doxxing Threat' },
+    ];
+    for (const k of threatKw) {
       if (norm.includes(k.w)) {
-        score += k.s;
-        reasons.push(`Contains "${k.w}" ‚Äî associated with ${k.t}.`);
+        score = Math.max(score, k.s);
+        reasons.push(`Contains threatening language: "${k.w}".`);
         highlights.push(k.w);
         if (!tactics.includes(k.t)) tactics.push(k.t);
       }
-    });
+    }
+
+    // ‚îÄ‚îÄ Scam keywords (only if not already dominated by hate speech) ‚îÄ‚îÄ
+    if (!hateSpeechDetected) {
+      const kw = [
+        { w: 'crypto', s: 35, t: 'Investment Scam' }, { w: 'bitcoin', s: 35, t: 'Investment Scam' },
+        { w: 'lottery', s: 40, t: 'Fake Reward' }, { w: 'winner', s: 30, t: 'Fake Reward' },
+        { w: 'gift card', s: 35, t: 'Fake Reward' }, { w: 'irs', s: 45, t: 'Authority Impersonation' },
+        { w: 'tax refund', s: 40, t: 'Authority Impersonation' }, { w: 'verify your account', s: 40, t: 'Account Phishing' },
+        { w: 'suspicious activity', s: 30, t: 'Account Phishing' }, { w: 'card suspended', s: 40, t: 'Urgency' },
+        { w: 'unauthorized', s: 35, t: 'Fear-Mongering' }, { w: 'bank alert', s: 25, t: 'Impersonation' },
+        { w: 'congratulations', s: 20, t: 'Fake Reward' }, { w: 'urgent', s: 20, t: 'Urgency' },
+        { w: 'suspended', s: 30, t: 'Fear-Mongering' }, { w: 'security code', s: 30, t: 'Credential Phishing' },
+        { w: 'passcode', s: 30, t: 'Credential Phishing' }, { w: 'wire', s: 25, t: 'Financial Fraud' },
+        { w: 'package delivery failed', s: 35, t: 'Delivery Phishing' },
+      ];
+      kw.forEach(k => {
+        if (norm.includes(k.w)) {
+          score += k.s;
+          reasons.push(`Contains "${k.w}" ‚Äî associated with ${k.t}.`);
+          highlights.push(k.w);
+          if (!tactics.includes(k.t)) tactics.push(k.t);
+        }
+      });
+    }
+
     if (/(https?:\/\/|www\.)/i.test(norm)) { score += 15; reasons.push('Contains an external link requesting action.'); if (!tactics.includes('Phishing Link')) tactics.push('Phishing Link'); }
     if (/[A-Z]{4,}/.test(input)) { score += 10; reasons.push('Uses ALL CAPS to create false urgency.'); }
   }
@@ -923,7 +1090,7 @@ function renderResults(result) {
   setTimeout(() => arc.style.strokeDashoffset = offset, 50);
 
   document.getElementById('gauge-score').textContent = result.riskScore;
-  document.getElementById('gauge-score').style.color = result.riskScore < 30 ? '#34d399' : result.riskScore < 70 ? '#fbbf24' : '#f87171';
+  document.getElementById('gauge-score').style.color = result.riskScore < 30 ? '#059669' : result.riskScore < 70 ? '#d97706' : '#dc2626';
 
   // Verdict badge
   const vb = document.getElementById('verdict-badge');
@@ -984,7 +1151,7 @@ function renderScenarios(choice) {
         <div class="scenario-impact"><strong>Emotional Toll</strong>${s.impactEmotional}</div>
         <div class="severity-bar">
           <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
-            <span style="font-size:0.62rem;color:var(--text-3);font-weight:700;text-transform:uppercase;">Severity</span>
+            <span style="font-size:0.62rem;color:var(--text-2);font-weight:700;text-transform:uppercase;">Severity</span>
             <span style="font-size:0.7rem;font-weight:700;font-family:'JetBrains Mono',monospace;color:${fillColor(s.severityScore)};">${s.severityScore}/100</span>
           </div>
           <div class="severity-track"><div class="severity-fill" style="width:${s.severityScore}%;background:${fillColor(s.severityScore)};"></div></div>
@@ -995,8 +1162,10 @@ function renderScenarios(choice) {
 
 function hideResults() {
   const r = document.getElementById('results');
-  r.style.display = 'none';
-  r.classList.remove('visible');
+  if (r) {
+    r.style.display = 'none';
+    r.classList.remove('visible');
+  }
 }
 
 function resetScan() {
@@ -1023,8 +1192,8 @@ function renderHistory() {
 
   stats.innerHTML = [
     { label: 'Total Scans', val: total, color: 'var(--text)' },
-    { label: 'High Risk', val: highRisk, color: '#f87171' },
-    { label: 'Avg Score', val: avg + '%', color: avg < 30 ? '#34d399' : avg < 70 ? '#fbbf24' : '#f87171' },
+    { label: 'High Risk', val: highRisk, color: '#be123c' },
+    { label: 'Avg Score', val: avg + '%', color: avg < 30 ? '#059669' : avg < 70 ? '#d97706' : '#dc2626' },
   ].map(s => `
     <div class="card" style="text-align:center;">
       <div class="text-muted" style="font-size:0.65rem;font-weight:700;text-transform:uppercase;">${s.label}</div>
@@ -1037,7 +1206,7 @@ function renderHistory() {
   }
 
   const dotColor = v => v === 'HIGH_RISK' ? '#ef4444' : v === 'SUSPICIOUS' ? '#f59e0b' : '#10b981';
-  const scoreColor = v => v === 'HIGH_RISK' ? '#f87171' : v === 'SUSPICIOUS' ? '#fbbf24' : '#34d399';
+  const scoreColor = v => v === 'HIGH_RISK' ? '#be123c' : v === 'SUSPICIOUS' ? '#d97706' : '#059669';
 
   container.innerHTML = history.map((h, i) => `
     <div class="history-item" onclick="viewHistoryItem(${i})">
@@ -1059,11 +1228,11 @@ function viewHistoryItem(idx) {
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
       <div>
         <div class="text-muted" style="font-size:0.65rem;font-weight:700;text-transform:uppercase;">Scan Record</div>
-        <h2 style="font-size:1rem;font-weight:700;margin-top:0.2rem;">${h.type} Scan ‚Äî ${new Date(h.date).toLocaleString()}</h2>
+        <h2 style="font-size:1rem;font-weight:700;margin-top:0.2rem;">${h.type.toUpperCase()} Scan ‚Äî ${new Date(h.date).toLocaleString()}</h2>
       </div>
       <button class="btn-ghost" onclick="closeModal('history-detail-modal')">‚úï Close</button>
     </div>
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1rem;">
+    <div style="background:var(--card-hover);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1rem;">
       <div class="text-muted" style="font-size:0.65rem;font-weight:700;text-transform:uppercase;margin-bottom:0.35rem;">Scanned Content</div>
       <p style="font-size:0.82rem;color:var(--text-2);line-height:1.55;word-break:break-all;">${h.input}</p>
     </div>
@@ -1135,8 +1304,6 @@ async function confirmWarnCommunity() {
   }
 }
 
-
-
 // ‚îÄ‚îÄ‚îÄ UTILS ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
 function showError(msg, info = false) {
   const el = document.getElementById('scan-error');
@@ -1147,6 +1314,108 @@ function showError(msg, info = false) {
 
 function clearError() {
   document.getElementById('scan-error').style.display = 'none';
+}
+
+// ‚îÄ‚îÄ‚îÄ NETBOT ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ‚îÄ
+const NETBOT_SYSTEM = `You are Netbot, a helpful AI assistant built into SafeNet ‚Äî an AI scam protection tool. You can answer questions about cybersecurity, scams, online safety, and general topics. Be concise, friendly, and helpful. Keep responses short unless the user asks for detail.`;
+let nbHistory = [];
+let nbBusy = false;
+
+function toggleNetbot() {
+  const panel = document.getElementById('netbot-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    document.getElementById('nb-input').focus();
+  }
+}
+
+function nbKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    nbSend();
+  }
+}
+
+function nbAppendMsg(role, text) {
+  const container = document.getElementById('nb-messages');
+  const div = document.createElement('div');
+  div.className = `nb-msg ${role}`;
+  const bubble = document.createElement('div');
+  bubble.className = 'nb-bubble';
+  bubble.textContent = text;
+  div.appendChild(bubble);
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+function nbShowTyping() {
+  const container = document.getElementById('nb-messages');
+  const div = document.createElement('div');
+  div.className = 'nb-msg bot';
+  div.id = 'nb-typing-indicator';
+  div.innerHTML = '<div class="nb-bubble nb-typing"><span></span><span></span><span></span></div>';
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function nbHideTyping() {
+  const el = document.getElementById('nb-typing-indicator');
+  if (el) el.remove();
+}
+
+async function nbSend() {
+  if (nbBusy) return;
+  const inputEl = document.getElementById('nb-input');
+  const text = inputEl.value.trim();
+  if (!text) return;
+
+  inputEl.value = '';
+  nbAppendMsg('user', text);
+  nbHistory.push({ role: 'user', content: text });
+
+  const apiKey = storage.getApiKey();
+  if (!apiKey) {
+    nbAppendMsg('bot', 'Please add your OpenRouter API key in Settings (gear icon) to use Netbot.');
+    return;
+  }
+
+  nbBusy = true;
+  document.getElementById('nb-send-btn').disabled = true;
+  nbShowTyping();
+
+  try {
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://safenet-app.local',
+        'X-Title': 'SafeNet Netbot',
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash',
+        messages: [
+          { role: 'system', content: NETBOT_SYSTEM },
+          ...nbHistory.slice(-12),
+        ],
+        temperature: 0.7,
+        max_tokens: 600,
+      }),
+    });
+    const data = await res.json();
+    const reply = data.choices?.[0]?.message?.content?.trim() || 'Sorry, I could not get a response.';
+    nbHistory.push({ role: 'assistant', content: reply });
+    nbHideTyping();
+    nbAppendMsg('bot', reply);
+  } catch (err) {
+    nbHideTyping();
+    nbAppendMsg('bot', 'Error: ' + (err.message || 'Something went wrong.'));
+  } finally {
+    nbBusy = false;
+    document.getElementById('nb-send-btn').disabled = false;
+    document.getElementById('nb-input').focus();
+  }
 }
 </script>
 </body>
