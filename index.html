@@ -8,18 +8,21 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #f8fafc;
-      --surface: #ffffff;
-      --surface-soft: #f1f5f9;
-      --text: #171717;
-      --muted: #64748b;
-      --line: rgba(148, 163, 184, 0.28);
+      --bg: #fafafa;
+      --panel: #ffffff;
+      --panel-soft: #f8fafc;
+      --ink: #171717;
+      --muted: #737373;
+      --faint: #a3a3a3;
+      --line: rgba(212, 212, 216, 0.72);
       --sky: #0284c7;
-      --sky-dark: #0369a1;
-      --indigo: #4f46e5;
-      --amber: #d97706;
+      --sky-hover: #0ea5e9;
+      --emerald: #10b981;
+      --amber: #f59e0b;
       --rose: #e11d48;
-      --shadow: 0 20px 70px rgba(15, 23, 42, 0.10);
+      --indigo: #4f46e5;
+      --shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+      --deep-shadow: 0 24px 80px rgba(15, 23, 42, 0.18);
     }
 
     * {
@@ -34,17 +37,10 @@
     body {
       min-height: 100vh;
       margin: 0;
-      background:
-        radial-gradient(circle at 20% -10%, rgba(14, 165, 233, 0.18), transparent 34rem),
-        radial-gradient(circle at 82% 12%, rgba(79, 70, 229, 0.14), transparent 32rem),
-        var(--bg);
-      color: var(--text);
+      background: var(--bg);
+      color: var(--ink);
       font-family: Arial, Helvetica, sans-serif;
       line-height: 1.5;
-    }
-
-    body.menu-open {
-      overflow: hidden;
     }
 
     a {
@@ -53,103 +49,108 @@
     }
 
     button,
-    input {
+    input,
+    textarea,
+    select {
       font: inherit;
     }
 
-    .site-shell {
+    button {
+      cursor: pointer;
+    }
+
+    .app-shell {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    .header {
+    .site-header {
       position: sticky;
       top: 0;
       z-index: 50;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.84);
+      border-bottom: 1px solid rgba(229, 229, 229, 0.75);
+      background: rgba(255, 255, 255, 0.82);
       backdrop-filter: blur(18px);
     }
 
-    .nav-wrap {
+    .nav-inner {
       max-width: 1180px;
+      min-height: 64px;
       margin: 0 auto;
       padding: 0 24px;
-      min-height: 64px;
       display: flex;
       align-items: center;
-      gap: 22px;
+      gap: 16px;
     }
 
     .brand {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      flex: 0 0 auto;
-      font-weight: 900;
+      flex-shrink: 0;
       font-size: 21px;
+      font-weight: 900;
       letter-spacing: 0;
     }
 
     .brand-mark {
       width: 36px;
       height: 36px;
-      border-radius: 12px;
       display: grid;
       place-items: center;
+      border-radius: 12px;
+      color: white;
       background: linear-gradient(135deg, #0ea5e9, #4f46e5);
-      color: #fff;
-      box-shadow: 0 12px 28px rgba(2, 132, 199, 0.18);
+      box-shadow: 0 12px 30px rgba(14, 165, 233, 0.15);
     }
 
-    .brand-text {
-      background: linear-gradient(90deg, #111827, #475569);
+    .brand-word {
+      color: transparent;
+      background: linear-gradient(90deg, #0a0a0a, #525252);
       -webkit-background-clip: text;
       background-clip: text;
-      color: transparent;
     }
 
     .desktop-nav {
+      margin-left: auto;
       display: flex;
       align-items: center;
       gap: 4px;
-      margin-left: auto;
     }
 
-    .nav-link {
+    .nav-link,
+    .mobile-link {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 7px;
       min-height: 40px;
+      border: 0;
       border-radius: 10px;
+      background: transparent;
+      color: #525252;
       padding: 0 12px;
-      color: #475569;
       font-size: 14px;
-      font-weight: 700;
-      transition: background 0.18s ease, color 0.18s ease;
+      font-weight: 800;
+      transition: color 0.18s ease, background 0.18s ease;
     }
 
-    .nav-link:hover {
-      background: #f1f5f9;
-      color: #0f172a;
+    .nav-link:hover,
+    .nav-link.active,
+    .mobile-link:hover,
+    .mobile-link.active {
+      background: #f0f9ff;
+      color: #0369a1;
     }
 
     .nav-actions {
-      margin-left: 8px;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .pill-button,
-    .sign-in,
-    .menu-button {
-      border: 0;
-      cursor: pointer;
-    }
-
-    .pill-button {
+    .elderly-toggle {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -157,215 +158,907 @@
       min-width: 130px;
       min-height: 34px;
       border-radius: 999px;
-      border: 1px solid #e2e8f0;
-      background: #fff;
-      color: #475569;
+      border: 1px solid #e5e5e5;
+      background: white;
+      color: #525252;
+      padding: 0 13px;
       font-size: 12px;
-      font-weight: 800;
-      padding: 0 14px;
+      font-weight: 900;
     }
 
-    .pill-button.active {
+    .elderly-toggle.active {
       border-color: #fecdd3;
       background: #fff1f2;
       color: #be123c;
     }
 
-    .sign-in {
+    .auth-button {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 7px;
       min-height: 36px;
+      border: 0;
       border-radius: 12px;
-      background: #0f172a;
-      color: #fff;
-      padding: 0 16px;
+      background: #0a0a0a;
+      color: white;
+      padding: 0 15px;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 900;
+    }
+
+    .auth-button.secondary {
+      border: 1px solid #e5e5e5;
+      background: white;
+      color: #525252;
     }
 
     .menu-button {
       display: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      background: transparent;
-      color: #475569;
       align-items: center;
       justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: #525252;
     }
 
-    .mobile-panel {
+    .mobile-menu {
       display: none;
-      border-top: 1px solid var(--line);
-      background: #fff;
+      border-top: 1px solid #e5e5e5;
+      background: white;
       padding: 12px 24px 16px;
     }
 
-    .mobile-panel.open {
+    .mobile-menu.open {
       display: grid;
       gap: 8px;
     }
 
     main {
       flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .page {
+      width: 100%;
+      flex: 1;
+      animation: fadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    .container.narrow {
+      max-width: 860px;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .stack {
+      display: grid;
+      gap: 24px;
+    }
+
+    .page-title {
+      margin: 0;
+      color: #171717;
+      font-size: 36px;
+      line-height: 1.16;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    .page-copy {
+      max-width: 500px;
+      margin: 9px auto 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
     }
 
     .hero {
       position: relative;
       overflow: hidden;
-      padding: 78px 24px 92px;
+      display: flex;
+      align-items: center;
+      padding: 72px 24px 86px;
+      text-align: center;
+      isolation: isolate;
+    }
+
+    .hero:before {
+      content: "";
+      position: absolute;
+      inset: -260px auto auto 50%;
+      z-index: -1;
+      width: min(960px, 88vw);
+      height: 560px;
+      transform: translateX(-50%) rotate(18deg);
+      border-radius: 50%;
+      background: linear-gradient(90deg, rgba(186, 230, 253, 0.52), rgba(199, 210, 254, 0.48));
+      filter: blur(58px);
+      opacity: 0.55;
     }
 
     .hero-inner {
+      width: 100%;
       max-width: 1180px;
       margin: 0 auto;
-      text-align: center;
     }
 
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 7px;
+      border: 1px solid rgba(3, 105, 161, 0.12);
       border-radius: 999px;
-      border: 1px solid rgba(3, 105, 161, 0.14);
       background: #f0f9ff;
       color: #0369a1;
       padding: 5px 14px;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 900;
     }
 
-    h1 {
-      max-width: 860px;
+    .hero h1 {
+      max-width: 880px;
       margin: 34px auto 0;
+      color: transparent;
+      background: linear-gradient(180deg, #171717, #262626 48%, #737373);
+      -webkit-background-clip: text;
+      background-clip: text;
       font-size: clamp(42px, 7vw, 72px);
       line-height: 1.04;
       letter-spacing: 0;
       font-weight: 900;
-      color: #0f172a;
     }
 
-    .hero-copy {
+    .hero p {
       max-width: 690px;
       margin: 22px auto 0;
-      color: var(--muted);
+      color: #525252;
       font-size: 18px;
       line-height: 1.7;
     }
 
     .cta-row {
-      margin-top: 34px;
       display: flex;
+      align-items: center;
       justify-content: center;
       gap: 14px;
       flex-wrap: wrap;
+      margin-top: 34px;
     }
 
+    .button,
     .cta {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
-      border-radius: 16px;
-      padding: 0 24px;
-      font-size: 14px;
-      font-weight: 800;
-      transition: transform 0.18s ease, background 0.18s ease, border 0.18s ease;
+      gap: 8px;
+      min-height: 44px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      padding: 0 20px;
+      font-size: 13px;
+      font-weight: 900;
+      transition: transform 0.16s ease, background 0.16s ease, border 0.16s ease, color 0.16s ease;
     }
 
+    .button:hover,
     .cta:hover {
       transform: translateY(-1px);
     }
 
+    .button.primary,
     .cta.primary {
       background: var(--sky);
-      color: #fff;
-      box-shadow: 0 14px 34px rgba(2, 132, 199, 0.22);
+      color: white;
+      box-shadow: 0 12px 28px rgba(2, 132, 199, 0.13);
     }
 
+    .button.primary:hover,
     .cta.primary:hover {
-      background: var(--sky-dark);
+      background: var(--sky-hover);
     }
 
-    .cta.secondary {
-      border: 1px solid #d4d4d8;
-      background: #fff;
-      color: #334155;
+    .button.ghost,
+    .cta.ghost {
+      border-color: #d4d4d8;
+      background: white;
+      color: #404040;
     }
 
-    .cta.secondary:hover {
-      background: #f8fafc;
+    .button.warn {
+      border-color: rgba(245, 158, 11, 0.34);
+      background: rgba(245, 158, 11, 0.10);
+      color: #b45309;
+    }
+
+    .button.danger {
+      border-color: rgba(225, 29, 72, 0.22);
+      background: #fff1f2;
+      color: #be123c;
+    }
+
+    .button:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
+      transform: none;
     }
 
     .features {
-      margin: 76px auto 0;
+      margin-top: 76px;
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 18px;
       text-align: left;
     }
 
+    .feature-card,
+    .panel,
+    .stat-card,
+    .auth-card {
+      border: 1px solid rgba(212, 212, 216, 0.75);
+      background: white;
+      box-shadow: var(--shadow);
+    }
+
     .feature-card {
-      min-height: 228px;
+      min-height: 224px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       gap: 22px;
-      border: 1px solid rgba(148, 163, 184, 0.28);
       border-radius: 24px;
-      background: rgba(255, 255, 255, 0.82);
       padding: 24px;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
     }
 
     .feature-icon {
+      display: grid;
+      place-items: center;
       width: 42px;
       height: 42px;
       border-radius: 14px;
-      display: grid;
-      place-items: center;
     }
 
-    .feature-icon.sky {
-      background: #f0f9ff;
-      color: var(--sky);
-    }
-
-    .feature-icon.indigo {
-      background: #eef2ff;
-      color: var(--indigo);
-    }
-
-    .feature-icon.amber {
-      background: #fffbeb;
-      color: var(--amber);
-    }
-
-    .feature-icon.rose {
-      background: #fff1f2;
-      color: var(--rose);
-    }
+    .feature-icon.sky { color: var(--sky); background: #f0f9ff; }
+    .feature-icon.indigo { color: var(--indigo); background: #eef2ff; }
+    .feature-icon.amber { color: var(--amber); background: #fffbeb; }
+    .feature-icon.rose { color: var(--rose); background: #fff1f2; }
 
     .feature-card h3 {
       margin: 0;
-      color: #111827;
       font-size: 15px;
       font-weight: 900;
     }
 
     .feature-card p {
       margin: 9px 0 0;
-      color: #64748b;
+      color: var(--muted);
       font-size: 13px;
       line-height: 1.7;
     }
 
-    .netbot-trigger {
+    .scan-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
+      gap: 32px;
+      margin-top: 32px;
+    }
+
+    .panel {
+      border-radius: 28px;
+      padding: 28px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      border-radius: 14px;
+      background: #f5f5f5;
+      padding: 4px;
+    }
+
+    .tab {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 38px;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: #737373;
+      padding: 0 10px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .tab.active {
+      background: white;
+      color: #171717;
+      box-shadow: var(--shadow);
+    }
+
+    .form {
+      display: grid;
+      gap: 22px;
+      margin-top: 24px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label {
+      color: #404040;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .input,
+    .textarea,
+    .select {
+      width: 100%;
+      border: 1px solid #e5e5e5;
+      border-radius: 14px;
+      background: #fafafa;
+      color: #171717;
+      padding: 12px 14px;
+      font-size: 14px;
+      outline: none;
+      transition: border 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .textarea {
+      min-height: 156px;
+      resize: vertical;
+    }
+
+    .input:focus,
+    .textarea:focus,
+    .select:focus {
+      border-color: var(--sky);
+      box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.12);
+    }
+
+    .upload-box {
+      display: grid;
+      place-items: center;
+      min-height: 164px;
+      border: 2px dashed #d4d4d8;
+      border-radius: 20px;
+      background: #fafafa;
+      color: #737373;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .upload-box strong {
+      color: var(--sky);
+    }
+
+    .preview {
+      display: none;
+      max-height: 230px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid #e5e5e5;
+      background: #000;
+      place-items: center;
+    }
+
+    .preview img {
+      display: block;
+      max-width: 100%;
+      max-height: 230px;
+      object-fit: contain;
+    }
+
+    .side-card {
+      border: 1px solid rgba(186, 230, 253, 0.52);
+      border-radius: 24px;
+      background: rgba(240, 249, 255, 0.35);
+      padding: 22px;
+      color: #525252;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .side-card h3,
+    .side-card h4 {
+      margin: 0 0 8px;
+      color: #171717;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .side-card.amber {
+      border-color: rgba(245, 158, 11, 0.22);
+      background: rgba(255, 251, 235, 0.65);
+    }
+
+    .side-card.rose {
+      border-color: rgba(225, 29, 72, 0.18);
+      background: rgba(255, 241, 242, 0.55);
+    }
+
+    .error-box,
+    .success-box,
+    .info-box {
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .error-box {
+      border: 1px solid #fecdd3;
+      background: #fff1f2;
+      color: #9f1239;
+    }
+
+    .success-box {
+      border: 1px solid #a7f3d0;
+      background: #ecfdf5;
+      color: #065f46;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .info-box {
+      display: flex;
+      gap: 12px;
+      border: 1px solid rgba(186, 230, 253, 0.7);
+      background: rgba(240, 249, 255, 0.58);
+      color: #525252;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr);
+      gap: 24px;
+    }
+
+    .verdict-card {
+      display: grid;
+      place-items: center;
+      text-align: center;
+      gap: 12px;
+      border-radius: 28px;
+      padding: 28px;
+    }
+
+    .mini-label {
+      display: block;
+      color: var(--faint);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .verdict-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .verdict-safe { border: 1px solid #bbf7d0; background: #ecfdf5; color: #047857; }
+    .verdict-suspicious { border: 1px solid #fde68a; background: #fffbeb; color: #b45309; }
+    .verdict-high { border: 1px solid #fecdd3; background: #fff1f2; color: #be123c; }
+
+    .risk-ring {
+      position: relative;
+      width: 104px;
+      height: 104px;
+      display: grid;
+      place-items: center;
+    }
+
+    .risk-ring svg {
+      position: absolute;
+      inset: 0;
+      transform: rotate(-90deg);
+    }
+
+    .risk-score {
+      display: grid;
+      place-items: center;
+      line-height: 1.05;
+    }
+
+    .risk-score strong {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 22px;
+      font-weight: 900;
+    }
+
+    .analysis-card {
+      border-radius: 28px;
+      padding: 28px;
+    }
+
+    .analysis-card h4,
+    .sim-title {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #525252;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .reason-list {
+      display: grid;
+      gap: 10px;
+      margin: 16px 0 0;
+      padding: 0;
+      list-style: none;
+      color: #525252;
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .reason-list li {
+      display: flex;
+      gap: 9px;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid #f5f5f5;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .tag {
+      display: inline-flex;
+      max-width: 100%;
+      border-radius: 7px;
+      background: #f5f5f5;
+      color: #525252;
+      padding: 3px 8px;
+      font-size: 10px;
+      font-weight: 900;
+      overflow-wrap: anywhere;
+    }
+
+    .tag.flag {
+      border: 1px solid rgba(225, 29, 72, 0.12);
+      background: #fff1f2;
+      color: #be123c;
+    }
+
+    .sim-panel {
+      border-radius: 28px;
+      overflow: hidden;
+    }
+
+    .sim-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid #f5f5f5;
+      background: rgba(250, 250, 250, 0.72);
+      padding: 24px;
+    }
+
+    .choice-tabs {
+      display: flex;
+      border: 1px solid #e5e5e5;
+      border-radius: 13px;
+      background: #f5f5f5;
+      padding: 3px;
+    }
+
+    .choice-tab {
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: #737373;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .choice-tab.active {
+      background: white;
+      color: #171717;
+      box-shadow: var(--shadow);
+    }
+
+    .sim-body {
+      padding: 24px;
+    }
+
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .scenario-card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border: 1px solid #e5e5e5;
+      border-radius: 20px;
+      background: rgba(250, 250, 250, 0.65);
+      padding: 20px;
+    }
+
+    .scenario-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .scenario-type {
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .severity {
+      border-radius: 7px;
+      padding: 3px 7px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .scenario-card h5 {
+      margin: 0;
+      color: #171717;
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.4;
+    }
+
+    .impact {
+      display: grid;
+      gap: 10px;
+      font-size: 12px;
+      color: #525252;
+      line-height: 1.6;
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 14px;
+    }
+
+    .report-list {
+      display: grid;
+      gap: 0;
+      border-radius: 28px;
+      overflow: hidden;
+    }
+
+    .report-item,
+    .history-item {
+      border-bottom: 1px solid #f5f5f5;
+      padding: 20px;
+      background: white;
+    }
+
+    .report-item:last-child,
+    .history-item:last-child {
+      border-bottom: 0;
+    }
+
+    .report-top,
+    .history-item {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .report-item h3,
+    .history-item h4 {
+      margin: 10px 0 0;
+      color: #171717;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .report-item p {
+      margin: 9px 0 0;
+      white-space: pre-wrap;
+      color: #525252;
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .code {
+      display: inline-block;
+      max-width: 100%;
+      margin-top: 8px;
+      border: 1px solid rgba(225, 29, 72, 0.12);
+      border-radius: 7px;
+      background: #fff1f2;
+      color: #be123c;
+      padding: 3px 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      overflow-wrap: anywhere;
+    }
+
+    .empty {
+      display: grid;
+      place-items: center;
+      gap: 12px;
+      min-height: 250px;
+      border-radius: 28px;
+      border: 1px solid #e5e5e5;
+      background: white;
+      text-align: center;
+      padding: 28px;
+      color: #737373;
+      font-size: 12px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .stat-card strong {
+      display: block;
+      margin-top: 4px;
+      color: #171717;
+      font-size: 32px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .history-item {
+      align-items: center;
+      cursor: pointer;
+      transition: background 0.16s ease;
+    }
+
+    .history-item:hover {
+      background: #fafafa;
+    }
+
+    .history-main {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .history-main h4 {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 590px;
+    }
+
+    .auth-wrap {
+      min-height: 650px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 56px 24px;
+    }
+
+    .auth-card {
+      width: min(100%, 440px);
+      border-radius: 28px;
+      padding: 32px;
+    }
+
+    .auth-icon {
+      display: grid;
+      place-items: center;
+      width: 52px;
+      height: 52px;
+      margin: 0 auto;
+      border-radius: 18px;
+      background: #f0f9ff;
+      color: var(--sky);
+    }
+
+    .auth-card h1 {
+      margin: 16px 0 0;
+      text-align: center;
+      font-size: 32px;
+      line-height: 1.15;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .auth-card p {
+      margin: 8px 0 0;
+      text-align: center;
+      color: #737373;
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .footer {
+      border-top: 1px solid rgba(229, 229, 229, 0.75);
+      background: white;
+      padding: 24px;
+    }
+
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      color: #a3a3a3;
+      font-size: 12px;
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .footer a:hover {
+      color: var(--sky);
+      text-decoration: underline;
+    }
+
+    .chat-trigger {
       position: fixed;
       left: 24px;
       bottom: 24px;
-      z-index: 40;
+      z-index: 60;
       display: grid;
       place-items: center;
       width: 52px;
@@ -373,30 +1066,23 @@
       border: 0;
       border-radius: 999px;
       background: var(--sky);
-      color: #fff;
-      box-shadow: var(--shadow);
-      cursor: pointer;
-      transition: transform 0.18s ease, background 0.18s ease;
-    }
-
-    .netbot-trigger:hover {
-      transform: scale(1.04);
-      background: var(--sky-dark);
+      color: white;
+      box-shadow: var(--deep-shadow);
     }
 
     .chat-box {
       position: fixed;
       left: 24px;
       bottom: 88px;
-      z-index: 60;
+      z-index: 70;
       display: none;
       width: min(384px, calc(100vw - 48px));
       height: 480px;
       overflow: hidden;
-      border: 1px solid rgba(148, 163, 184, 0.38);
+      border: 1px solid #e5e5e5;
       border-radius: 20px;
-      background: #fff;
-      box-shadow: 0 28px 90px rgba(15, 23, 42, 0.24);
+      background: white;
+      box-shadow: var(--deep-shadow);
     }
 
     .chat-box.open {
@@ -412,72 +1098,73 @@
       justify-content: space-between;
       gap: 12px;
       background: var(--sky);
-      color: #fff;
+      color: white;
       padding: 0 16px;
       font-size: 14px;
       font-weight: 900;
     }
 
-    .chat-close {
-      width: 34px;
-      height: 34px;
+    .icon-button {
+      display: inline-grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
       border: 0;
       border-radius: 10px;
       background: transparent;
-      color: #fff;
-      cursor: pointer;
+      color: inherit;
     }
 
     .chat-messages {
       flex: 1;
       overflow-y: auto;
-      background: #f8fafc;
-      padding: 16px;
       display: grid;
       align-content: start;
       gap: 12px;
-      font-size: 13px;
+      background: #fafafa;
+      padding: 16px;
+      font-size: 12px;
     }
 
     .message {
       max-width: 82%;
       border-radius: 18px;
       padding: 11px 13px;
-      line-height: 1.55;
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+      line-height: 1.58;
+      box-shadow: var(--shadow);
     }
 
     .message.bot {
       justify-self: start;
+      border: 1px solid #e5e5e5;
       border-bottom-left-radius: 4px;
-      border: 1px solid #e2e8f0;
-      background: #fff;
-      color: #334155;
+      background: white;
+      color: #404040;
     }
 
     .message.user {
       justify-self: end;
       border-bottom-right-radius: 4px;
       background: var(--sky);
-      color: #fff;
+      color: white;
     }
 
     .chat-form {
       display: flex;
       gap: 8px;
-      border-top: 1px solid #e2e8f0;
-      background: #fff;
+      border-top: 1px solid #e5e5e5;
+      background: white;
       padding: 12px;
     }
 
     .chat-form input {
       min-width: 0;
       flex: 1;
-      border: 1px solid #e2e8f0;
+      border: 1px solid #e5e5e5;
       border-radius: 13px;
-      background: #f8fafc;
+      background: #fafafa;
       padding: 10px 12px;
-      font-size: 13px;
+      font-size: 12px;
       outline: 0;
     }
 
@@ -486,47 +1173,23 @@
     }
 
     .chat-form button {
+      display: grid;
+      place-items: center;
       width: 42px;
       border: 0;
       border-radius: 13px;
       background: var(--sky);
-      color: #fff;
-      cursor: pointer;
+      color: white;
     }
 
-    footer {
-      border-top: 1px solid var(--line);
-      background: #fff;
-      padding: 24px;
-    }
-
-    .footer-inner {
-      max-width: 1180px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      color: #94a3b8;
-      font-size: 12px;
-    }
-
-    .footer-links {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .footer-links a:hover {
-      color: var(--sky);
-      text-decoration: underline;
+    .hidden {
+      display: none !important;
     }
 
     .icon {
       width: 1em;
       height: 1em;
-      display: inline-block;
-      vertical-align: -0.14em;
+      flex: 0 0 auto;
       stroke: currentColor;
       stroke-width: 2;
       stroke-linecap: round;
@@ -534,16 +1197,17 @@
       fill: none;
     }
 
-    .filled {
+    .fill {
       fill: currentColor;
     }
 
-    .elderly-mode {
-      font-size: 118%;
-    }
+    .emerald { color: var(--emerald); }
+    .amber { color: var(--amber); }
+    .rose { color: var(--rose); }
+    .sky { color: var(--sky); }
 
-    .elderly-mode body,
     body.elderly-mode {
+      font-size: 118%;
       line-height: 1.75;
     }
 
@@ -554,14 +1218,13 @@
     }
 
     body.elderly-mode h1 {
-      font-size: clamp(38px, 5vw, 58px);
-      line-height: 1.18;
+      line-height: 1.2;
     }
 
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateY(6px);
+        transform: translateY(4px);
       }
       to {
         opacity: 1;
@@ -569,36 +1232,46 @@
       }
     }
 
-    @media (max-width: 920px) {
+    @media (max-width: 980px) {
       .desktop-nav,
-      .sign-in {
+      .auth-button {
         display: none;
-      }
-
-      .menu-button {
-        display: inline-flex;
       }
 
       .nav-actions {
         margin-left: auto;
       }
 
-      .features {
+      .menu-button {
+        display: inline-flex;
+      }
+
+      .features,
+      .stats-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .scan-layout,
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .scenario-grid,
+      .actions-grid {
+        grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 640px) {
-      .nav-wrap {
+      .nav-inner {
         padding: 0 16px;
-        gap: 12px;
       }
 
-      .brand-text {
+      .brand-word {
         font-size: 19px;
       }
 
-      .pill-button {
+      .elderly-toggle {
         min-width: 112px;
         padding: 0 10px;
       }
@@ -607,25 +1280,45 @@
         padding: 58px 18px 70px;
       }
 
-      h1 {
+      .hero h1 {
         font-size: 42px;
       }
 
-      .hero-copy {
+      .hero p {
         font-size: 16px;
       }
 
-      .features {
+      .container {
+        padding: 32px 18px;
+      }
+
+      .features,
+      .stats-grid,
+      .split {
         grid-template-columns: 1fr;
-        margin-top: 54px;
+      }
+
+      .sim-head,
+      .report-top,
+      .history-item,
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
       }
 
       .footer-inner {
-        flex-direction: column;
-        text-align: center;
+        text-align: left;
       }
 
-      .netbot-trigger {
+      .choice-tabs {
+        width: 100%;
+      }
+
+      .choice-tab {
+        flex: 1;
+      }
+
+      .chat-trigger {
         left: 18px;
         bottom: 18px;
       }
@@ -639,144 +1332,65 @@
   </style>
 </head>
 <body>
-  <div class="site-shell">
-    <header class="header">
-      <div class="nav-wrap">
-        <a class="brand" href="#top" aria-label="SafeNet home">
-          <span class="brand-mark" aria-hidden="true">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-          </span>
-          <span class="brand-text">SafeNet</span>
-        </a>
+  <div class="app-shell">
+    <header class="site-header">
+      <div class="nav-inner">
+        <button class="brand" data-route="/" aria-label="SafeNet home">
+          <span class="brand-mark" aria-hidden="true" data-icon="shield"></span>
+          <span class="brand-word">SafeNet</span>
+        </button>
 
         <nav class="desktop-nav" aria-label="Primary navigation">
-          <a class="nav-link" href="#scan">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path></svg>
-            Scam Scanner
-          </a>
-          <a class="nav-link" href="#reports">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-            Report Board
-          </a>
-          <a class="nav-link" href="#history">
-            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
-            History Logs
-          </a>
+          <button class="nav-link" data-route="/scan"><span data-icon="file"></span>Scam Scanner</button>
+          <button class="nav-link" data-route="/reports"><span data-icon="users"></span>Report Board</button>
+          <button class="nav-link" data-route="/dashboard"><span data-icon="layout"></span>History Logs</button>
         </nav>
 
         <div class="nav-actions">
-          <button class="pill-button" id="elderlyToggle" type="button" title="Toggle large fonts and simple words">
-            <svg class="icon filled" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+          <button class="elderly-toggle" id="elderlyToggle" type="button" title="Toggle Large Fonts & Simple Words">
+            <span data-icon="heart"></span>
             <span id="elderlyLabel">Elderly Mode</span>
           </button>
-          <a class="sign-in" href="#signin">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="M10 17l5-5-5-5"></path><path d="M15 12H3"></path></svg>
-            Sign In
-          </a>
+          <button class="auth-button" id="authNavButton" data-route="/auth">
+            <span data-icon="login"></span>
+            <span>Sign In</span>
+          </button>
           <button class="menu-button" id="menuButton" type="button" aria-label="Open menu" aria-expanded="false">
-            <svg class="icon" id="menuIcon" viewBox="0 0 24 24"><path d="M3 12h18"></path><path d="M3 6h18"></path><path d="M3 18h18"></path></svg>
+            <span id="menuIcon" data-icon="menu"></span>
           </button>
         </div>
       </div>
-
-      <nav class="mobile-panel" id="mobilePanel" aria-label="Mobile navigation">
-        <a class="nav-link" href="#scan">Scam Scanner</a>
-        <a class="nav-link" href="#reports">Report Board</a>
-        <a class="nav-link" href="#history">History Logs</a>
-        <a class="nav-link" href="#signin">Sign In</a>
+      <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
+        <button class="mobile-link" data-route="/scan">Scam Scanner</button>
+        <button class="mobile-link" data-route="/reports">Report Board</button>
+        <button class="mobile-link" data-route="/dashboard">History Logs</button>
+        <button class="mobile-link" data-route="/auth">Sign In</button>
       </nav>
     </header>
 
-    <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-inner">
-          <span class="badge">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M9.9 2.1 8.4 7.4 3.1 9l5.3 1.6 1.5 5.3 1.6-5.3L16.8 9l-5.3-1.6z"></path><path d="M19 12l-.9 3.1L15 16l3.1.9L19 20l.9-3.1L23 16l-3.1-.9z"></path></svg>
-            AI-Powered Scam & Phishing Protection
-          </span>
+    <main id="app"></main>
 
-          <h1 id="hero-title">Received a suspicious message?<br>Let's check if it is safe.</h1>
-
-          <p class="hero-copy">
-            SafeNet is a free scanner that instantly checks emails, DMs, texts, or websites for fraud. Upload screenshots or paste text to audit risk metrics and preview choice simulations.
-          </p>
-
-          <div class="cta-row">
-            <a class="cta primary" href="#scan">Start Scam Scan</a>
-            <a class="cta secondary" href="#reports">View Scam Trends</a>
-          </div>
-
-          <div class="features" id="scan">
-            <article class="feature-card">
-              <span class="feature-icon sky" aria-hidden="true">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>
-              </span>
-              <div>
-                <h3>Message Scanner</h3>
-                <p>Paste SMS codes, urgent bank notifications, or social DMs. AI isolates urgent indicators and flags malicious intents.</p>
-              </div>
-            </article>
-
-            <article class="feature-card">
-              <span class="feature-icon indigo" aria-hidden="true">
-                <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>
-              </span>
-              <div>
-                <h3>Screenshot Analysis</h3>
-                <p>Upload images or screenshots. Client-side OCR extracts the texts automatically before auditing them for fraud patterns.</p>
-              </div>
-            </article>
-
-            <article class="feature-card" id="reports">
-              <span class="feature-icon amber" aria-hidden="true">
-                <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 0 20"></path><path d="M12 2a15.3 15.3 0 0 0 0 20"></path></svg>
-              </span>
-              <div>
-                <h3>Website Auditor</h3>
-                <p>Paste suspicious links. Check domain configurations, secure connections, and potential brand typosquatting alerts.</p>
-              </div>
-            </article>
-
-            <article class="feature-card" id="history">
-              <span class="feature-icon rose" aria-hidden="true">
-                <svg class="icon filled" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-              </span>
-              <div>
-                <h3>Elderly Friendly</h3>
-                <p>One-click access to scale up fonts, simplify explanations, and show clear guidelines on who to contact.</p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <button class="netbot-trigger" id="chatTrigger" type="button" title="Chat with Netbot" aria-label="Chat with Netbot">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path></svg>
+    <button class="chat-trigger" id="chatTrigger" type="button" title="Chat with Netbot" aria-label="Chat with Netbot">
+      <span data-icon="message"></span>
     </button>
 
     <section class="chat-box" id="chatBox" aria-label="Netbot Scam Assistant">
       <div class="chat-head">
-        <span>
-          <svg class="icon" viewBox="0 0 24 24"><path d="M9.9 2.1 8.4 7.4 3.1 9l5.3 1.6 1.5 5.3 1.6-5.3L16.8 9l-5.3-1.6z"></path><path d="M19 12l-.9 3.1L15 16l3.1.9L19 20l.9-3.1L23 16l-3.1-.9z"></path></svg>
-          Netbot Scam Assistant
-        </span>
-        <button class="chat-close" id="chatClose" type="button" aria-label="Close chat">X</button>
+        <span><span data-icon="sparkles"></span> Netbot Scam Assistant</span>
+        <button class="icon-button" id="chatClose" type="button" aria-label="Close chat">X</button>
       </div>
       <div class="chat-messages" id="chatMessages">
-        <div class="message bot">Hi! I am Netbot, your scam protection assistant. Send me any suspicious message or link, or ask me cybersecurity questions!</div>
+        <div class="message bot">Hi! I am Netbot, your scam protection assistant. Send me any suspicious message or link, or ask me cybersecurity questions.</div>
       </div>
       <form class="chat-form" id="chatForm">
         <input id="chatInput" type="text" placeholder="Ask Netbot about a message or security risk..." required>
-        <button type="submit" aria-label="Send message">
-          <svg class="icon" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg>
-        </button>
+        <button type="submit" aria-label="Send message"><span data-icon="send"></span></button>
       </form>
     </section>
 
-    <footer>
+    <footer class="footer">
       <div class="footer-inner">
-        <span>(c) 2026 SafeNet Scanner. Empowered by Cognitive Cyber Defense.</span>
+        <span id="footerYear"></span>
         <div class="footer-links">
           <a href="https://reportfraud.ftc.gov" target="_blank" rel="noopener noreferrer">FTC Fraud Report</a>
           <span aria-hidden="true">|</span>
@@ -787,77 +1401,909 @@
   </div>
 
   <script>
-    const menuButton = document.getElementById('menuButton');
-    const mobilePanel = document.getElementById('mobilePanel');
-    const menuIcon = document.getElementById('menuIcon');
-    const elderlyToggle = document.getElementById('elderlyToggle');
-    const elderlyLabel = document.getElementById('elderlyLabel');
-    const chatTrigger = document.getElementById('chatTrigger');
-    const chatBox = document.getElementById('chatBox');
-    const chatClose = document.getElementById('chatClose');
-    const chatForm = document.getElementById('chatForm');
-    const chatInput = document.getElementById('chatInput');
-    const chatMessages = document.getElementById('chatMessages');
+    const icons = {
+      shield: '<svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>',
+      shieldCheck: '<svg class="icon" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8z"></path><path d="m9 12 2 2 4-4"></path></svg>',
+      shieldAlert: '<svg class="icon" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3v8z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>',
+      file: '<svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M16 13H8"></path><path d="M16 17H8"></path></svg>',
+      image: '<svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><path d="M21 15l-5-5L5 21"></path></svg>',
+      globe: '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20"></path><path d="M12 2a15.3 15.3 0 0 1 0 20"></path><path d="M12 2a15.3 15.3 0 0 0 0 20"></path></svg>',
+      heart: '<svg class="icon fill" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"></path></svg>',
+      sparkles: '<svg class="icon" viewBox="0 0 24 24"><path d="M9.9 2.1 8.4 7.4 3.1 9l5.3 1.6 1.5 5.3 1.6-5.3L16.8 9l-5.3-1.6z"></path><path d="M19 12l-.9 3.1L15 16l3.1.9L19 20l.9-3.1L23 16l-3.1-.9z"></path></svg>',
+      users: '<svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
+      layout: '<svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>',
+      login: '<svg class="icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="M10 17l5-5-5-5"></path><path d="M15 12H3"></path></svg>',
+      logout: '<svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="m16 17 5-5-5-5"></path><path d="M21 12H9"></path></svg>',
+      menu: '<svg class="icon" viewBox="0 0 24 24"><path d="M3 12h18"></path><path d="M3 6h18"></path><path d="M3 18h18"></path></svg>',
+      x: '<svg class="icon" viewBox="0 0 24 24"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>',
+      message: '<svg class="icon" viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H7l-4 4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"></path></svg>',
+      send: '<svg class="icon" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"></path><path d="M22 2 11 13"></path></svg>',
+      info: '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>',
+      alert: '<svg class="icon" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>',
+      lock: '<svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>',
+      mail: '<svg class="icon" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-10 5L2 7"></path></svg>',
+      user: '<svg class="icon" viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"></path><circle cx="12" cy="7" r="4"></circle></svg>',
+      calendar: '<svg class="icon" viewBox="0 0 24 24"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path></svg>',
+      refresh: '<svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path><path d="M3 21v-5h5"></path></svg>'
+    };
+
+    const storage = {
+      get(key, fallback) {
+        try {
+          const value = localStorage.getItem(key);
+          return value ? JSON.parse(value) : fallback;
+        } catch {
+          return fallback;
+        }
+      },
+      set(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+    };
+
+    const app = document.getElementById('app');
+    const state = {
+      route: location.hash.replace('#', '') || '/',
+      currentUser: storage.get('safenet-current-user', null),
+      users: storage.get('safenet-users', []),
+      scans: storage.get('safenet-scans', []),
+      reports: storage.get('safenet-reports', []),
+      elderlyMode: localStorage.getItem('safenet-elderly') === 'true',
+      scanTab: 'TEXT',
+      lastResult: null,
+      lastInput: '',
+      lastType: 'TEXT',
+      selectedChoice: 0,
+      authMode: 'login',
+      imageData: null
+    };
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[char]);
+    }
+
+    function id() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    }
+
+    function date(value) {
+      return new Date(value).toLocaleDateString();
+    }
+
+    function icon(name) {
+      return icons[name] || '';
+    }
+
+    function injectIcons(root = document) {
+      root.querySelectorAll('[data-icon]').forEach(node => {
+        const name = node.getAttribute('data-icon');
+        node.innerHTML = icon(name);
+      });
+    }
+
+    function persist() {
+      storage.set('safenet-current-user', state.currentUser);
+      storage.set('safenet-users', state.users);
+      storage.set('safenet-scans', state.scans);
+      storage.set('safenet-reports', state.reports);
+    }
+
+    function routeTo(route) {
+      state.route = route;
+      location.hash = route;
+      closeMenu();
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 
     function setMenu(open) {
-      mobilePanel.classList.toggle('open', open);
+      const mobileMenu = document.getElementById('mobileMenu');
+      const menuButton = document.getElementById('menuButton');
+      const menuIcon = document.getElementById('menuIcon');
+      mobileMenu.classList.toggle('open', open);
       menuButton.setAttribute('aria-expanded', String(open));
       menuButton.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      menuIcon.innerHTML = open
-        ? '<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>'
-        : '<path d="M3 12h18"></path><path d="M3 6h18"></path><path d="M3 18h18"></path>';
+      menuIcon.innerHTML = open ? icon('x') : icon('menu');
     }
 
-    function setElderlyMode(active) {
-      document.body.classList.toggle('elderly-mode', active);
-      elderlyToggle.classList.toggle('active', active);
-      elderlyLabel.textContent = active ? 'Elderly: ON' : 'Elderly Mode';
-      localStorage.setItem('safenet-elderly', String(active));
+    function closeMenu() {
+      setMenu(false);
     }
 
-    menuButton.addEventListener('click', () => {
-      setMenu(!mobilePanel.classList.contains('open'));
-    });
+    function updateChrome() {
+      document.body.classList.toggle('elderly-mode', state.elderlyMode);
+      const elderlyToggle = document.getElementById('elderlyToggle');
+      const elderlyLabel = document.getElementById('elderlyLabel');
+      elderlyToggle.classList.toggle('active', state.elderlyMode);
+      elderlyLabel.textContent = state.elderlyMode ? 'Elderly: ON' : 'Elderly Mode';
+      localStorage.setItem('safenet-elderly', String(state.elderlyMode));
 
-    mobilePanel.addEventListener('click', event => {
-      if (event.target.tagName === 'A') {
-        setMenu(false);
+      const authNavButton = document.getElementById('authNavButton');
+      authNavButton.innerHTML = state.currentUser
+        ? `${icon('logout')}<span>Sign Out</span>`
+        : `${icon('login')}<span>Sign In</span>`;
+      authNavButton.dataset.route = state.currentUser ? '/logout' : '/auth';
+
+      document.querySelectorAll('.nav-link,.mobile-link').forEach(link => {
+        link.classList.toggle('active', link.dataset.route === state.route);
+      });
+      document.getElementById('footerYear').textContent = `(c) ${new Date().getFullYear()} SafeNet Scanner. Empowered by Cognitive Cyber Defense.`;
+    }
+
+    function shellHeader(title, copy) {
+      return `
+        <div class="center">
+          <h1 class="page-title">${title}</h1>
+          <p class="page-copy">${copy}</p>
+        </div>
+      `;
+    }
+
+    function homePage() {
+      return `
+        <section class="page hero">
+          <div class="hero-inner">
+            <span class="badge">${icon('sparkles')} AI-Powered Scam & Phishing Protection</span>
+            <h1>Received a suspicious message?<br>Let's check if it is safe.</h1>
+            <p>SafeNet is a free scanner that instantly checks emails, DMs, texts, or websites for fraud. Upload screenshots or paste text to audit risk metrics and preview choice simulations.</p>
+            <div class="cta-row">
+              <button class="cta primary" data-route="/scan">Start Scam Scan</button>
+              <button class="cta ghost" data-route="/reports">View Scam Trends</button>
+            </div>
+            <div class="features">
+              ${feature('file', 'sky', 'Message Scanner', 'Paste SMS codes, urgent bank notifications, or social DMs. AI isolates urgent indicators and flags malicious intents.')}
+              ${feature('image', 'indigo', 'Screenshot Analysis', 'Upload images or screenshots. Client-side preview helps you inspect the message before auditing fraud patterns.')}
+              ${feature('globe', 'amber', 'Website Auditor', 'Paste suspicious links. Check domain structure, secure connections, and possible brand typosquatting alerts.')}
+              ${feature('heart', 'rose', 'Elderly Friendly', 'One-click access to scale up fonts, simplify explanations, and show clear guidance on who to contact.')}
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function feature(iconName, color, title, text) {
+      return `
+        <article class="feature-card">
+          <span class="feature-icon ${color}" aria-hidden="true">${icon(iconName)}</span>
+          <div>
+            <h3>${title}</h3>
+            <p>${text}</p>
+          </div>
+        </article>
+      `;
+    }
+
+    function scanPage() {
+      if (state.lastResult) {
+        return scanResultsPage();
+      }
+
+      return `
+        <section class="page">
+          <div class="container narrow">
+            ${shellHeader('AI Scam Protection Scanner', 'Audit suspicious messages, screenshots, or website links. Check risk percentages and explore choice outcomes.')}
+            <div class="scan-layout">
+              <div class="panel">
+                <div class="tabs">
+                  ${scanTab('TEXT', 'file', 'Message')}
+                  ${scanTab('IMAGE', 'image', 'Screenshot')}
+                  ${scanTab('URL', 'globe', 'Website Link')}
+                </div>
+                <div id="scanError"></div>
+                <form class="form" id="scanForm">
+                  ${scanInputMarkup()}
+                  <button class="button primary" id="scanSubmit" type="submit">${icon('sparkles')} Run Safety Scan</button>
+                </form>
+              </div>
+              <aside class="stack">
+                <div class="side-card">
+                  <h3>${icon('file')} Dynamic Fraud Prevention</h3>
+                  <p>By entering a query, SafeNet isolates high-pressure wording, checks suspicious domain patterns, and extracts the warning signs that often appear in scams.</p>
+                </div>
+                ${safetyCards()}
+              </aside>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function scanTab(type, iconName, label) {
+      return `<button class="tab ${state.scanTab === type ? 'active' : ''}" type="button" data-scan-tab="${type}">${icon(iconName)} ${label}</button>`;
+    }
+
+    function scanInputMarkup() {
+      if (state.scanTab === 'URL') {
+        return `
+          <div class="field">
+            <label for="urlInput">Paste Website Link</label>
+            <input class="input" id="urlInput" type="url" placeholder="https://suspicious-login-link-here.com" required>
+          </div>
+        `;
+      }
+
+      if (state.scanTab === 'IMAGE') {
+        return `
+          <div class="field">
+            <label for="imageInput">Upload Screenshot</label>
+            <label class="upload-box" for="imageInput">
+              <span style="font-size: 32px;">${icon('image')}</span>
+              <span><strong>Click to upload screenshot</strong> or drag and drop</span>
+              <small>PNG, JPG, or WEBP up to your browser limit</small>
+              <input id="imageInput" class="hidden" type="file" accept="image/*">
+            </label>
+            <div class="preview" id="imagePreview"></div>
+          </div>
+          <div class="info-box">${icon('info')}<span>Single-file deploys cannot run the local server OCR route. This version scans the image filename and lets you paste screenshot text into the Message tab for a stronger scan.</span></div>
+        `;
+      }
+
+      return `
+        <div class="field">
+          <label for="textInput">Paste Message Text</label>
+          <textarea class="textarea" id="textInput" rows="6" placeholder="Paste email text, SMS message, social DM chat, or message history..." required></textarea>
+        </div>
+      `;
+    }
+
+    function safetyCards() {
+      return `
+        <div class="side-card amber">
+          <h4>${icon('alert')} Speculative Scam Risk Evaluation</h4>
+          <p>SafeNet scans text and links using pattern matching to help identify threat tactics. This assessment is a risk indicator, not a guarantee of safety or fraudulence.</p>
+        </div>
+        <div class="side-card rose">
+          <h4>${icon('shieldAlert')} Emergency Fraud Recovery Steps</h4>
+          <p><strong>1.</strong> Contact your bank immediately if you shared account details.</p>
+          <p><strong>2.</strong> Change passwords and enable MFA on important accounts.</p>
+          <p><strong>3.</strong> Report fraud to official channels like the FTC or your platform provider.</p>
+        </div>
+      `;
+    }
+
+    function scanResultsPage() {
+      return `
+        <section class="page">
+          <div class="container">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid #f5f5f5;padding-bottom:18px;margin-bottom:28px;">
+              <div>
+                <span class="mini-label">Simulation Audit Complete</span>
+                <h2 style="margin:4px 0 0;font-size:20px;font-weight:900;">Scam Verification Report</h2>
+              </div>
+              <button class="button ghost" id="resetScan">${icon('refresh')} Scan Another Item</button>
+            </div>
+            ${resultsDisplay(state.lastResult, true)}
+          </div>
+        </section>
+      `;
+    }
+
+    function resultsDisplay(result, allowReport) {
+      const verdictClass = result.verdict === 'SAFE' ? 'verdict-safe' : result.verdict === 'SUSPICIOUS' ? 'verdict-suspicious' : 'verdict-high';
+      const ringColor = result.riskScore < 30 ? 'var(--emerald)' : result.riskScore < 70 ? 'var(--amber)' : 'var(--rose)';
+      const dash = 251.2 * (1 - result.riskScore / 100);
+      const choices = result.simulatedOutcomes || [];
+      const active = choices[state.selectedChoice] || choices[0];
+
+      return `
+        <div class="stack">
+          <div class="results-grid">
+            <div class="panel verdict-card">
+              <span class="mini-label">Verdict Assessment</span>
+              <span class="verdict-pill ${verdictClass}">${result.verdict.replace('_', ' ')}</span>
+              <div class="risk-ring">
+                <svg viewBox="0 0 104 104">
+                  <circle cx="52" cy="52" r="40" stroke="#f5f5f5" stroke-width="8" fill="transparent"></circle>
+                  <circle cx="52" cy="52" r="40" stroke="${ringColor}" stroke-width="8" fill="transparent" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="${dash}"></circle>
+                </svg>
+                <div class="risk-score"><strong>${result.riskScore}</strong><span class="mini-label">Scam Score</span></div>
+              </div>
+            </div>
+            <div class="panel analysis-card">
+              <h4>${icon('info')} Audit Analysis</h4>
+              <ul class="reason-list">
+                ${result.reasons.map(reason => `<li><span class="sky">•</span><span>${escapeHtml(reason)}</span></li>`).join('')}
+              </ul>
+              <div class="split">
+                <div>
+                  <span class="mini-label">Tactics Spotted:</span>
+                  <div class="tags">${(result.tactics.length ? result.tactics : ['None']).map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+                </div>
+                <div>
+                  <span class="mini-label">Flagged Terms:</span>
+                  <div class="tags">${(result.highlights.length ? result.highlights : ['No major flagged terms']).map(h => `<span class="tag flag">${escapeHtml(h)}</span>`).join('')}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          ${choices.length ? `
+            <div class="panel sim-panel">
+              <div class="sim-head">
+                <div>
+                  <h3 class="sim-title">${icon('sparkles')} Reaction Choice Outcome Simulator</h3>
+                  <p style="margin:6px 0 0;color:#737373;font-size:12px;">Explore what happens depending on how you react to this item.</p>
+                </div>
+                <div class="choice-tabs">
+                  ${choices.map((choice, index) => `<button class="choice-tab ${index === state.selectedChoice ? 'active' : ''}" data-choice="${index}">Choice ${index + 1}</button>`).join('')}
+                </div>
+              </div>
+              <div class="sim-body">
+                <h4 style="margin:0;font-size:15px;font-weight:900;">${escapeHtml(active.choiceName)}</h4>
+                <p style="margin:6px 0 0;color:#737373;font-size:12px;line-height:1.65;">${escapeHtml(active.description)}</p>
+                <div class="scenario-grid">
+                  ${active.scenarios.map(scenarioCard).join('')}
+                </div>
+              </div>
+            </div>
+          ` : ''}
+
+          <div class="side-card">
+            <h4>${icon('shieldCheck')} Recommended Action Protocol</h4>
+            <div class="actions-grid">
+              ${result.actions.map(action => `<div style="display:flex;gap:8px;font-size:12px;color:#525252;line-height:1.65;"><span class="sky">✓</span><span>${escapeHtml(action)}</span></div>`).join('')}
+            </div>
+          </div>
+
+          ${allowReport ? reportActionMarkup() : ''}
+        </div>
+      `;
+    }
+
+    function scenarioCard(scenario) {
+      const typeColor = scenario.type === 'BEST_CASE' ? 'emerald' : scenario.type === 'MOST_LIKELY' ? 'amber' : 'rose';
+      const severityClass = scenario.severityScore < 25 ? 'verdict-safe' : scenario.severityScore < 60 ? 'verdict-suspicious' : 'verdict-high';
+      return `
+        <article class="scenario-card">
+          <div class="scenario-top">
+            <span class="scenario-type ${typeColor}">${scenario.type.replace('_', ' ')}</span>
+            <span class="severity ${severityClass}">Risk: ${scenario.severityScore}/100</span>
+          </div>
+          <h5>${escapeHtml(scenario.title)}</h5>
+          <div class="impact">
+            <div><span class="mini-label">Privacy & Data:</span>${escapeHtml(scenario.impactData)}</div>
+            <div><span class="mini-label">Financial Loss:</span>${escapeHtml(scenario.impactFinancial)}</div>
+            <div><span class="mini-label">Emotional Toll:</span>${escapeHtml(scenario.impactEmotional)}</div>
+          </div>
+        </article>
+      `;
+    }
+
+    function reportActionMarkup() {
+      if (!state.currentUser) {
+        return `<button class="button ghost" style="width:100%;" data-route="/auth">${icon('login')} Sign in to Warn the Community</button>`;
+      }
+      return `<button class="button warn" style="width:100%;" id="warnCommunity">${icon('alert')} Warn Community - Forward This Report</button>`;
+    }
+
+    function reportsPage() {
+      const reports = [...state.reports].sort((a, b) => new Date(b.reportedAt) - new Date(a.reportedAt));
+      return `
+        <section class="page">
+          <div class="container narrow stack">
+            ${shellHeader('Community Scam Reports', 'AI-verified scam threats forwarded by users. Perform a scan on a message or link to warn the community.')}
+            <div class="info-box">${icon('info')}<span><strong>How to Report:</strong> First run a safety audit in the Scam Scanner. When the analysis complete screen appears, click Warn Community to publish the report here.</span></div>
+            ${reports.length ? `
+              <div class="panel report-list">
+                ${reports.map(report => `
+                  <article class="report-item">
+                    <div class="report-top">
+                      <span class="tag">${escapeHtml(report.scamType)}</span>
+                      <span class="mini-label">${icon('calendar')} ${date(report.reportedAt)}</span>
+                    </div>
+                    <h3>${escapeHtml(report.title)}</h3>
+                    <p>${escapeHtml(report.description)}</p>
+                    ${report.offendingSource ? `<div><span class="mini-label" style="margin-top:14px;">Scam Source / Sender:</span><code class="code">${escapeHtml(report.offendingSource)}</code></div>` : ''}
+                    ${report.reportedBy ? `<div style="margin-top:10px;color:#a3a3a3;font-size:10px;font-weight:800;">Reported by <strong style="color:#525252;">${escapeHtml(report.reportedBy)}</strong></div>` : ''}
+                  </article>
+                `).join('')}
+              </div>
+            ` : `
+              <div class="empty"><p>No community reports submitted yet.</p></div>
+            `}
+          </div>
+        </section>
+      `;
+    }
+
+    function dashboardPage() {
+      if (!state.currentUser) {
+        return `
+          <section class="page">
+            <div class="container">
+              <div class="empty" style="max-width:520px;margin:80px auto;">
+                <span style="font-size:56px;color:var(--sky);">${icon('lock')}</span>
+                <h1 class="page-title" style="font-size:32px;">Sign in to view your history</h1>
+                <p>Your scan history logs are saved to your account in this browser. Sign in to review previous checks, re-read audit reports, and track your security stats over time.</p>
+                <div class="cta-row" style="margin-top:8px;">
+                  <button class="button primary" data-route="/auth">${icon('login')} Sign In to SafeNet</button>
+                  <button class="button ghost" data-route="/scan">${icon('shield')} Scan Without Account</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        `;
+      }
+
+      const scans = state.scans.filter(scan => scan.userId === state.currentUser.id).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      const total = scans.length;
+      const high = scans.filter(s => s.verdict === 'HIGH_RISK').length;
+      const suspicious = scans.filter(s => s.verdict === 'SUSPICIOUS').length;
+      const average = total ? Math.round(scans.reduce((sum, scan) => sum + scan.riskScore, 0) / total) : 0;
+      return `
+        <section class="page">
+          <div class="container stack">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+              <div>
+                <h1 class="page-title">Security Scan History</h1>
+                <p style="margin:6px 0 0;color:#737373;font-size:12px;">Review previous scam checks, audit details, and track your online security stats.</p>
+              </div>
+              <button class="button primary" data-route="/scan">${icon('sparkles')} Run New Scan</button>
+            </div>
+            <div class="stats-grid">
+              ${stat('Total Audits', total, '')}
+              ${stat('Threats Prevented', high, 'rose')}
+              ${stat('Suspicious Checks', suspicious, 'amber')}
+              ${stat('Average Risk Score', average + '%', '')}
+            </div>
+            ${scans.length ? `
+              <div class="panel report-list">
+                ${scans.map(scan => historyItem(scan)).join('')}
+              </div>
+            ` : `
+              <div class="empty">
+                <span style="font-size:44px;color:#d4d4d8;">${icon('shield')}</span>
+                <h3 style="margin:0;color:#262626;">No scan history recorded</h3>
+                <p>Sign in and perform scans to save analysis logs and review them here.</p>
+                <button class="button primary" data-route="/scan">Scan First Item</button>
+              </div>
+            `}
+          </div>
+        </section>
+      `;
+    }
+
+    function stat(label, value, color) {
+      return `<div class="stat-card"><span class="mini-label">${label}</span><strong class="${color}">${value}</strong></div>`;
+    }
+
+    function historyItem(scan) {
+      const color = scan.verdict === 'SAFE' ? 'emerald' : scan.verdict === 'SUSPICIOUS' ? 'amber' : 'rose';
+      const iconName = scan.verdict === 'SAFE' ? 'shieldCheck' : scan.verdict === 'SUSPICIOUS' ? 'alert' : 'shieldAlert';
+      return `
+        <div class="history-item" data-open-scan="${scan.id}">
+          <div class="history-main">
+            <span class="${color}" style="font-size:24px;">${icon(iconName)}</span>
+            <div style="min-width:0;">
+              <span class="mini-label">${escapeHtml(scan.type)} | ${date(scan.createdAt)}</span>
+              <h4>${escapeHtml(scan.input)}</h4>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <span class="mini-label">Risk Profile</span>
+            <strong class="${color}" style="font-size:12px;">${scan.riskScore}% ${scan.verdict.replace('_', ' ')}</strong>
+          </div>
+        </div>
+      `;
+    }
+
+    function authPage() {
+      return `
+        <section class="page auth-wrap">
+          <div class="auth-card">
+            <div class="auth-icon">${icon('shieldCheck')}</div>
+            <h1>${state.authMode === 'login' ? 'Sign in to SafeNet' : 'Create an account'}</h1>
+            <p>Sync scan history across this browser and mobile layouts.</p>
+            <div class="tabs" style="margin-top:24px;">
+              <button class="tab ${state.authMode === 'login' ? 'active' : ''}" data-auth-mode="login">Sign In</button>
+              <button class="tab ${state.authMode === 'signup' ? 'active' : ''}" data-auth-mode="signup">Sign Up</button>
+            </div>
+            <div id="authError"></div>
+            <form class="form" id="authForm">
+              ${state.authMode === 'signup' ? `
+                <div class="field">
+                  <label for="nameInput">Full Name</label>
+                  <input class="input" id="nameInput" type="text" placeholder="Jane Doe" required>
+                </div>
+              ` : ''}
+              <div class="field">
+                <label for="emailInput">Email Address</label>
+                <input class="input" id="emailInput" type="email" placeholder="you@example.com" required>
+              </div>
+              <div class="field">
+                <label for="passwordInput">Password</label>
+                <input class="input" id="passwordInput" type="password" placeholder="Password" required>
+              </div>
+              <button class="button primary" style="width:100%;" type="submit">${state.authMode === 'login' ? 'Sign In' : 'Create Account'}</button>
+            </form>
+          </div>
+        </section>
+      `;
+    }
+
+    function runScan(type, input) {
+      const normalized = input.toLowerCase();
+      let riskScore = 10;
+      const reasons = [];
+      const highlights = [];
+      const tactics = [];
+      const actions = ['Do not share passwords, one-time codes, or payment details.', 'Verify through the official website or phone number.', 'Block and report the sender if the message feels coercive.'];
+
+      if (type === 'URL') {
+        riskScore = normalized.startsWith('https://') ? 12 : 38;
+        const suspiciousTld = /\.(xyz|top|loan|click|work|buzz|gq|cf|ml|tk|zip|info|cc)(\/|$)/.test(normalized);
+        const brand = /(paypal|netflix|amazon|chase|wellsfargo|bankofamerica|fedex|ups|dhl|apple|microsoft|google|facebook|instagram|irs|usps)/.exec(normalized);
+        const urgent = /(login|security|verification|verify|alert|update|signin|reset|resolve|cancel|refund|invoice|secure)/.test(normalized);
+        const shortener = /(bit\.ly|tinyurl|t\.co|goo\.gl|ow\.ly)/.test(normalized);
+        if (!normalized.startsWith('https://')) {
+          reasons.push('The website does not use HTTPS, which is risky if it asks for personal or account information.');
+          highlights.push('http://');
+          tactics.push('Insecure Connection');
+        }
+        if (suspiciousTld) {
+          riskScore += 28;
+          reasons.push('The domain uses a top-level domain commonly associated with spam or throwaway sites.');
+          tactics.push('Suspicious Domain Extension');
+        }
+        if (brand && urgent) {
+          riskScore += 42;
+          reasons.push('The link combines a known brand keyword with login, verification, or security language.');
+          highlights.push(brand[0]);
+          tactics.push('Brand Impersonation');
+          tactics.push('Credential Harvesting');
+        }
+        if (shortener) {
+          riskScore += 18;
+          reasons.push('The link uses a URL shortener that hides the true destination.');
+          tactics.push('Link Obfuscation');
+        }
+        if (!reasons.length) {
+          reasons.push('No obvious phishing patterns were detected in the URL structure.');
+          highlights.push('No major red flags');
+          tactics.push('Low-Risk URL Pattern');
+        }
+      } else if (type === 'IMAGE') {
+        riskScore = 35;
+        reasons.push('Single-file mode cannot perform the same server OCR as the local Next.js app.');
+        reasons.push('If this screenshot contains urgent payment requests, login links, or codes, paste its text into the Message tab for a stronger scan.');
+        highlights.push('Screenshot Upload');
+        tactics.push('Manual Review Needed');
+      } else {
+        const urgentWords = ['urgent', 'final notice', 'immediately', '30 minutes', 'act now', 'limited time', 'account suspended', 'legal action', 'verify your identity'];
+        const moneyWords = ['bank', 'password', 'otp', 'code', 'sin', 'social security', 'wire', 'gift card', 'crypto', 'refund', 'invoice', 'payment'];
+        const linkPattern = /(https?:\/\/|www\.|\.com|\.net|\.org|\.xyz|\.top)/;
+        const threatPattern = /(kill|rape|hurt|dox|leak|i know where you live|threat)/;
+        const profanityPattern = /(fuck|shit|bitch|asshole)/;
+        const slurPattern = /(n[i1]g|fagg|k[i1]ke|ch[i1]nk|sp[i1]c|tranny|retard)/;
+
+        const urgentHits = urgentWords.filter(word => normalized.includes(word));
+        const moneyHits = moneyWords.filter(word => normalized.includes(word));
+        if (urgentHits.length) {
+          riskScore += 22;
+          reasons.push('The message uses urgency or fear language to pressure a quick reaction.');
+          highlights.push(...urgentHits.slice(0, 3));
+          tactics.push('Urgency Framing');
+        }
+        if (moneyHits.length) {
+          riskScore += 24;
+          reasons.push('The message mentions account, money, identity, or credential details that scammers often target.');
+          highlights.push(...moneyHits.slice(0, 3));
+          tactics.push('Sensitive Information Request');
+        }
+        if (linkPattern.test(normalized)) {
+          riskScore += 26;
+          reasons.push('The message contains a link or domain. Scam messages often use links to harvest credentials or payments.');
+          highlights.push('Suspicious link/domain');
+          tactics.push('Phishing Link');
+        }
+        if (threatPattern.test(normalized)) {
+          riskScore += 48;
+          reasons.push('The message contains threatening or violent language.');
+          highlights.push('Threatening language');
+          tactics.push('Threat / Harassment');
+        }
+        if (slurPattern.test(normalized)) {
+          riskScore += threatPattern.test(normalized) ? 34 : 22;
+          reasons.push('The message contains abusive or hate-speech language.');
+          highlights.push('Abusive language');
+          tactics.push('Harassment & Hate Speech');
+        } else if (profanityPattern.test(normalized)) {
+          riskScore += 12;
+          reasons.push('The message contains aggressive language that may be intended to provoke a reply.');
+          highlights.push('Aggressive language');
+          tactics.push('Provocation');
+        }
+        if (!reasons.length) {
+          reasons.push('The message does not contain obvious scam indicators, credential requests, threats, or suspicious links.');
+          highlights.push('No major red flags');
+          tactics.push('Normal Communication');
+        }
+      }
+
+      riskScore = Math.max(0, Math.min(100, riskScore));
+      const verdict = riskScore >= 70 ? 'HIGH_RISK' : riskScore >= 30 ? 'SUSPICIOUS' : 'SAFE';
+      return {
+        riskScore,
+        verdict,
+        reasons,
+        highlights: [...new Set(highlights)].slice(0, 6),
+        tactics: [...new Set(tactics)].slice(0, 6),
+        actions,
+        simulatedOutcomes: buildSimulations(verdict, riskScore, type)
+      };
+    }
+
+    function buildSimulations(verdict, riskScore, type) {
+      const high = verdict === 'HIGH_RISK';
+      const suspicious = verdict === 'SUSPICIOUS';
+      const subject = type === 'URL' ? 'link' : type === 'IMAGE' ? 'screenshot' : 'message';
+      return [
+        {
+          choiceName: type === 'URL' ? 'Visit the Website' : 'Trust & Interact',
+          description: `You engage with the ${subject}, click through, reply, or provide requested information.`,
+          scenarios: [
+            scenario('BEST_CASE', 'Nothing serious happens', 'No sensitive data is exposed.', 'No money is lost.', 'You may still feel uneasy afterward.', high ? 45 : suspicious ? 20 : 5),
+            scenario('MOST_LIKELY', high ? 'Credentials or personal details are targeted' : 'More unwanted contact follows', high ? 'Private account details may be captured or profiled.' : 'Your contact may be marked active.', high ? 'Possible unauthorized charges or account takeover.' : 'Usually no immediate loss, but risk increases.', 'Stress rises as the situation keeps pulling attention.', high ? 86 : suspicious ? 45 : 12),
+            scenario('WORST_CASE', high ? 'Account takeover or identity theft' : 'Escalation into a stronger scam', 'Personal data can be reused for further fraud.', high ? 'Major financial loss is possible.' : 'Loss is possible if later steps request payment or codes.', 'Significant anxiety, frustration, and recovery effort.', high ? 98 : suspicious ? 68 : 26)
+          ]
+        },
+        {
+          choiceName: 'Reply / Argue',
+          description: 'You respond to the sender, confront them, or ask for clarification.',
+          scenarios: [
+            scenario('BEST_CASE', 'Sender stops responding', 'No extra private data is exposed.', 'No money is lost.', 'Temporary relief after ending the exchange.', high ? 35 : suspicious ? 18 : 5),
+            scenario('MOST_LIKELY', 'The sender learns you are responsive', 'Your contact becomes more valuable for future attempts.', 'No immediate loss, but future targeting becomes more likely.', 'Annoyance and stress increase.', high ? 62 : suspicious ? 38 : 12),
+            scenario('WORST_CASE', 'Pressure escalates', 'Conversation may reveal personal clues.', 'Scammer may push harder for payment, codes, or credentials.', 'The exchange becomes draining and scary.', high ? 82 : suspicious ? 58 : 22)
+          ]
+        },
+        {
+          choiceName: 'Block & Report',
+          description: 'You avoid engagement, block the sender, and report the item to the platform or authorities.',
+          scenarios: [
+            scenario('BEST_CASE', 'Threat is stopped immediately', 'No data is exposed.', 'No money is lost.', 'You regain control quickly.', 0),
+            scenario('MOST_LIKELY', 'Risk is contained', 'No data is exposed from this item.', 'No money is lost.', 'Minor lingering concern, but the immediate risk is handled.', high ? 8 : 4),
+            scenario('WORST_CASE', 'Sender tries another channel', 'No data is exposed from this interaction.', 'No direct loss from blocking.', 'You may need to keep blocking and reporting.', high ? 22 : suspicious ? 16 : 8)
+          ]
+        }
+      ];
+    }
+
+    function scenario(type, title, impactData, impactFinancial, impactEmotional, severityScore) {
+      return { type, title, impactData, impactFinancial, impactEmotional, severityScore };
+    }
+
+    function render() {
+      updateChrome();
+      if (state.route === '/scan') app.innerHTML = scanPage();
+      else if (state.route === '/reports') app.innerHTML = reportsPage();
+      else if (state.route === '/dashboard') app.innerHTML = dashboardPage();
+      else if (state.route === '/auth') app.innerHTML = authPage();
+      else app.innerHTML = homePage();
+      injectIcons(app);
+      bindPage();
+    }
+
+    function bindPage() {
+      app.querySelectorAll('[data-route]').forEach(button => {
+        button.addEventListener('click', () => routeTo(button.dataset.route));
+      });
+
+      app.querySelectorAll('[data-scan-tab]').forEach(button => {
+        button.addEventListener('click', () => {
+          state.scanTab = button.dataset.scanTab;
+          state.imageData = null;
+          render();
+        });
+      });
+
+      app.querySelectorAll('[data-auth-mode]').forEach(button => {
+        button.addEventListener('click', () => {
+          state.authMode = button.dataset.authMode;
+          render();
+        });
+      });
+
+      app.querySelectorAll('[data-choice]').forEach(button => {
+        button.addEventListener('click', () => {
+          state.selectedChoice = Number(button.dataset.choice);
+          render();
+        });
+      });
+
+      app.querySelectorAll('[data-open-scan]').forEach(row => {
+        row.addEventListener('click', () => {
+          const scan = state.scans.find(item => item.id === row.dataset.openScan);
+          if (scan) {
+            state.lastResult = scan.analysis;
+            state.lastInput = scan.input;
+            state.lastType = scan.type;
+            state.selectedChoice = 0;
+            state.route = '/scan';
+            render();
+          }
+        });
+      });
+
+      const scanForm = document.getElementById('scanForm');
+      if (scanForm) scanForm.addEventListener('submit', handleScanSubmit);
+
+      const imageInput = document.getElementById('imageInput');
+      if (imageInput) imageInput.addEventListener('change', handleImage);
+
+      const resetScan = document.getElementById('resetScan');
+      if (resetScan) resetScan.addEventListener('click', () => {
+        state.lastResult = null;
+        state.lastInput = '';
+        state.lastType = state.scanTab;
+        state.selectedChoice = 0;
+        render();
+      });
+
+      const warnCommunity = document.getElementById('warnCommunity');
+      if (warnCommunity) warnCommunity.addEventListener('click', forwardReport);
+
+      const authForm = document.getElementById('authForm');
+      if (authForm) authForm.addEventListener('submit', handleAuthSubmit);
+    }
+
+    function handleImage(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        state.imageData = { name: file.name, dataUrl: reader.result };
+        const preview = document.getElementById('imagePreview');
+        preview.style.display = 'grid';
+        preview.innerHTML = `<img src="${reader.result}" alt="Screenshot Preview">`;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleScanSubmit(event) {
+      event.preventDefault();
+      const errorBox = document.getElementById('scanError');
+      errorBox.innerHTML = '';
+      let input = '';
+      if (state.scanTab === 'TEXT') input = document.getElementById('textInput').value.trim();
+      if (state.scanTab === 'URL') input = document.getElementById('urlInput').value.trim();
+      if (state.scanTab === 'IMAGE') input = state.imageData ? `Screenshot Upload: ${state.imageData.name}` : '';
+      if (!input) {
+        errorBox.innerHTML = '<div class="error-box" style="margin-top:18px;">Please enter something to scan.</div>';
+        return;
+      }
+      const result = runScan(state.scanTab, input);
+      state.lastResult = result;
+      state.lastInput = input;
+      state.lastType = state.scanTab;
+      state.selectedChoice = 0;
+      if (state.currentUser) {
+        state.scans.push({
+          id: id(),
+          type: state.scanTab,
+          input,
+          verdict: result.verdict,
+          riskScore: result.riskScore,
+          analysis: result,
+          userId: state.currentUser.id,
+          createdAt: new Date().toISOString()
+        });
+        persist();
+      }
+      render();
+    }
+
+    function forwardReport() {
+      if (!state.currentUser || !state.lastResult) return;
+      const report = {
+        id: id(),
+        scamType: state.lastType,
+        title: `AI Alert: ${state.lastResult.verdict.replace('_', ' ')} (${state.lastResult.riskScore}/100 Risk)`,
+        description: `Tactics Spotted: ${state.lastResult.tactics.join(', ') || 'None'}\n\nAnalysis Findings:\n${state.lastResult.reasons.map(r => '- ' + r).join('\n')}\n\nContent Scanned:\n"${state.lastInput}"`,
+        offendingSource: state.lastType === 'URL' ? state.lastInput : state.lastInput.slice(0, 80),
+        reportedBy: state.currentUser.name || state.currentUser.email,
+        reportedAt: new Date().toISOString()
+      };
+      state.reports.push(report);
+      persist();
+      app.querySelector('#warnCommunity').outerHTML = '<div class="success-box">Successfully forwarded to community report board.</div>';
+    }
+
+    function handleAuthSubmit(event) {
+      event.preventDefault();
+      const errorBox = document.getElementById('authError');
+      const name = document.getElementById('nameInput') ? document.getElementById('nameInput').value.trim() : '';
+      const email = document.getElementById('emailInput').value.trim().toLowerCase();
+      const password = document.getElementById('passwordInput').value;
+      errorBox.innerHTML = '';
+
+      if (state.authMode === 'signup') {
+        if (state.users.some(user => user.email === email)) {
+          errorBox.innerHTML = '<div class="error-box" style="margin-top:18px;">User already exists.</div>';
+          return;
+        }
+        const user = { id: id(), name, email, password };
+        state.users.push(user);
+        state.currentUser = { id: user.id, name: user.name, email: user.email };
+        persist();
+        routeTo('/dashboard');
+        return;
+      }
+
+      const user = state.users.find(item => item.email === email && item.password === password);
+      if (!user) {
+        errorBox.innerHTML = '<div class="error-box" style="margin-top:18px;">No matching local account found. Use Sign Up first.</div>';
+        return;
+      }
+      state.currentUser = { id: user.id, name: user.name, email: user.email };
+      persist();
+      routeTo('/dashboard');
+    }
+
+    function chatReply(text) {
+      const result = runScan(text.includes('.') || text.startsWith('http') ? 'URL' : 'TEXT', text);
+      return `Quick scan: ${result.verdict.replace('_', ' ')} at ${result.riskScore}/100 risk. ${result.reasons[0]} Best move: ${result.actions[0]}`;
+    }
+
+    document.addEventListener('click', event => {
+      const routeTarget = event.target.closest('[data-route]');
+      if (routeTarget) {
+        event.preventDefault();
+        const route = routeTarget.dataset.route;
+        if (route === '/logout') {
+          state.currentUser = null;
+          persist();
+          routeTo('/');
+        } else {
+          routeTo(route);
+        }
       }
     });
 
-    elderlyToggle.addEventListener('click', () => {
-      setElderlyMode(!document.body.classList.contains('elderly-mode'));
+    document.getElementById('menuButton').addEventListener('click', () => {
+      const mobileMenu = document.getElementById('mobileMenu');
+      setMenu(!mobileMenu.classList.contains('open'));
     });
 
-    chatTrigger.addEventListener('click', () => {
-      chatBox.classList.add('open');
-      chatInput.focus();
+    document.getElementById('elderlyToggle').addEventListener('click', () => {
+      state.elderlyMode = !state.elderlyMode;
+      updateChrome();
     });
 
-    chatClose.addEventListener('click', () => {
-      chatBox.classList.remove('open');
+    document.getElementById('chatTrigger').addEventListener('click', () => {
+      document.getElementById('chatBox').classList.add('open');
+      document.getElementById('chatInput').focus();
     });
 
-    chatForm.addEventListener('submit', event => {
+    document.getElementById('chatClose').addEventListener('click', () => {
+      document.getElementById('chatBox').classList.remove('open');
+    });
+
+    document.getElementById('chatForm').addEventListener('submit', event => {
       event.preventDefault();
-      const text = chatInput.value.trim();
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
       if (!text) return;
-
-      const userMessage = document.createElement('div');
-      userMessage.className = 'message user';
-      userMessage.textContent = text;
-      chatMessages.appendChild(userMessage);
-
-      const botMessage = document.createElement('div');
-      botMessage.className = 'message bot';
-      botMessage.textContent = 'Quick safety check: do not click links, send money, or share codes until you verify the sender through an official website or phone number.';
-      chatMessages.appendChild(botMessage);
-
-      chatInput.value = '';
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+      const messages = document.getElementById('chatMessages');
+      messages.insertAdjacentHTML('beforeend', `<div class="message user">${escapeHtml(text)}</div>`);
+      messages.insertAdjacentHTML('beforeend', `<div class="message bot">${escapeHtml(chatReply(text))}</div>`);
+      input.value = '';
+      messages.scrollTop = messages.scrollHeight;
     });
 
-    setElderlyMode(localStorage.getItem('safenet-elderly') === 'true');
+    window.addEventListener('hashchange', () => {
+      state.route = location.hash.replace('#', '') || '/';
+      state.lastResult = state.route === '/scan' ? state.lastResult : null;
+      render();
+    });
+
+    injectIcons(document);
+    render();
   </script>
 </body>
 </html>
