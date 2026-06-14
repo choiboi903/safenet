@@ -1579,7 +1579,7 @@
     };
 
     const app = document.getElementById('app');
-    const _k = ['NDAzMDE=','Nzk0MA==','NDM3NA==','NTZmYTk=','NTYmYTk=','NWY1NTE=','ZGMxNWM5','MjY0','ZDA=','OTMx','OTg0NmM=','MzIxMzk=','NTM1Yw==','MTUzNQ==','NTM5ODE=','MTg1Mw==','YmUx','MDc=','NWU2NWM=','djEt','b3It','c2st'].reverse();
+    const BUNDLED_OPENROUTER_KEY = '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';
     const SUPABASE_URL = 'https://fytvxnsrjpxqcjyzczve.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_AIkMDn2iw0tw0Skz4QRX5g_vhMe_50r';
     const SUPABASE_REPORTS_TABLE = 'reports';
@@ -1871,7 +1871,7 @@
         return `
           <div class="field">
             <label for="urlInput">Paste Website Link</label>
-            <input class="input" id="urlInput" type="text" inputmode="url" placeholder="acelearn.org or suspicious-login-link.com" required>
+            <input class="input" id="urlInput" type="text" inputmode="url" placeholder="Insert website URL" required>
           </div>
         `;
       }
@@ -2209,7 +2209,9 @@
       `;
     }
 
-    function getOpenRouterKey() { return _k.map(s => atob(s)).join(''); }
+    function getOpenRouterKey() {
+      return BUNDLED_OPENROUTER_KEY;
+    }
 
     function normalizeUrlInput(value) {
       const trimmed = value.trim();
@@ -2229,7 +2231,7 @@
 
     async function analyzeWithOpenRouter(type, input) {
       const key = getOpenRouterKey();
-      if (!key) throw new Error('No API key configured.');
+      if (!key) throw new Error('No OpenRouter API key was provided.');
 
       const systemPrompt = type === 'URL'
         ? `You are a world-class URL forensics and phishing analyst. Analyze domain structure, TLD risk, HTTPS, brand impersonation, path/parameter intent, shorteners, urgency language, and legitimacy. Be specific, avoid generic warnings, and do not flag clearly legitimate major domains as high risk. ${REPORT_REQUIREMENTS} ${ANALYSIS_SCHEMA}`
