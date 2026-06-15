@@ -1579,7 +1579,7 @@
     };
 
     const app = document.getElementById('app');
-    const BUNDLED_OPENROUTER_KEY = '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';
+    const BUNDLED_OPENROUTER_KEY = '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';
     const SUPABASE_URL = 'https://fytvxnsrjpxqcjyzczve.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_AIkMDn2iw0tw0Skz4QRX5g_vhMe_50r';
     const SUPABASE_REPORTS_TABLE = 'reports';
@@ -1940,7 +1940,7 @@
             <div class="panel analysis-card">
               <h4>${icon('info')} Audit Analysis</h4>
               <ul class="reason-list">
-                ${result.reasons.map(reason => `<li><span class="sky">‚Ä¢</span><span>${escapeHtml(reason)}</span></li>`).join('')}
+                ${result.reasons.map(reason => `<li><span class="sky">&bull;</span><span>${escapeHtml(reason)}</span></li>`).join('')}
               </ul>
               <div class="split">
                 <div>
@@ -1979,7 +1979,7 @@
           <div class="side-card">
             <h4>${icon('shieldCheck')} Recommended Action Protocol</h4>
             <div class="actions-grid">
-              ${result.actions.map(action => `<div style="display:flex;gap:8px;font-size:12px;color:#525252;line-height:1.65;"><span class="sky">‚úì</span><span>${escapeHtml(action)}</span></div>`).join('')}
+              ${result.actions.map(action => `<div style="display:flex;gap:8px;font-size:12px;color:#525252;line-height:1.65;"><span class="sky">✓</span><span>${escapeHtml(action)}</span></div>`).join('')}
             </div>
           </div>
 
