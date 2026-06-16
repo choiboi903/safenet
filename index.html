@@ -2060,7 +2060,12 @@
 
     function getAiProxyEndpoint() {
       if (location.protocol === 'file:') return '';
+      if (location.hostname.endsWith('github.io')) return '';
       return window.SAFENET_AI_PROXY_ENDPOINT || AI_PROXY_ENDPOINT;
+    }
+
+    function shouldShowAiNotice(error) {
+      return !String(error?.message || '').includes('Private AI proxy');
     }
 
     function normalizeUrlInput(value) {
@@ -2107,6 +2112,11 @@
           max_tokens: 2200
         })
       });
+
+      const contentType = response.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        throw new Error('Private AI proxy is missing or not deployed.');
+      }
 
       const payload = await response.json();
       if (!response.ok) {
@@ -2450,7 +2460,9 @@
         result = await analyzeWithOpenRouter(state.scanTab, input);
       } catch (error) {
         result = runScan(state.scanTab, input);
-        result.notice = `AI scan is temporarily unavailable (${error.message}). Showing the local safety scan instead.`;
+        if (shouldShowAiNotice(error)) {
+          result.notice = `AI scan is temporarily unavailable (${error.message}). Showing the local safety scan instead.`;
+        }
         result.tactics = ['Heuristic Fallback', ...result.tactics].slice(0, 6);
       } finally {
         submitButton.disabled = false;
