@@ -385,12 +385,6 @@
       color: #404040;
     }
 
-    .button.warn {
-      border-color: rgba(245, 158, 11, 0.34);
-      background: rgba(245, 158, 11, 0.10);
-      color: #b45309;
-    }
-
     .button.danger {
       border-color: rgba(225, 29, 72, 0.22);
       background: #fff1f2;
@@ -932,26 +926,23 @@
       margin-top: 14px;
     }
 
-    .report-list {
+    .history-list {
       display: grid;
       gap: 0;
       border-radius: 28px;
       overflow: hidden;
     }
 
-    .report-item,
     .history-item {
       border-bottom: 1px solid #f5f5f5;
       padding: 20px;
       background: white;
     }
 
-    .report-item:last-child,
     .history-item:last-child {
       border-bottom: 0;
     }
 
-    .report-top,
     .history-item {
       display: flex;
       align-items: flex-start;
@@ -959,20 +950,11 @@
       gap: 18px;
     }
 
-    .report-item h3,
     .history-item h4 {
       margin: 10px 0 0;
       color: #171717;
       font-size: 14px;
       font-weight: 900;
-    }
-
-    .report-item p {
-      margin: 9px 0 0;
-      white-space: pre-wrap;
-      color: #525252;
-      font-size: 12px;
-      line-height: 1.65;
     }
 
     .code {
@@ -1355,7 +1337,7 @@
     body.elderly-mode .page-copy,
     body.elderly-mode .hero p,
     body.elderly-mode .side-card,
-    body.elderly-mode .report-item p {
+    body.elderly-mode .history-item {
       font-size: 1rem;
       line-height: 1.85;
     }
@@ -1452,7 +1434,6 @@
       }
 
       .sim-head,
-      .report-top,
       .history-item,
       .footer-inner {
         flex-direction: column;
@@ -1495,7 +1476,6 @@
 
         <nav class="desktop-nav" aria-label="Primary navigation">
           <button class="nav-link" data-route="/scan"><span data-icon="file"></span>Scam Scanner</button>
-          <button class="nav-link" data-route="/reports"><span data-icon="users"></span>Report Board</button>
           <button class="nav-link" data-route="/dashboard"><span data-icon="layout"></span>History Logs</button>
         </nav>
 
@@ -1515,7 +1495,6 @@
       </div>
       <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
         <button class="mobile-link" data-route="/scan">Scam Scanner</button>
-        <button class="mobile-link" data-route="/reports">Report Board</button>
         <button class="mobile-link" data-route="/dashboard">History Logs</button>
         <button class="mobile-link" data-route="/auth">Sign In</button>
       </nav>
@@ -1579,10 +1558,7 @@
     };
 
     const app = document.getElementById('app');
-    const BUNDLED_OPENROUTER_KEY = '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';
-    const SUPABASE_URL = 'https://fytvxnsrjpxqcjyzczve.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_AIkMDn2iw0tw0Skz4QRX5g_vhMe_50r';
-    const SUPABASE_REPORTS_TABLE = 'reports';
+    const BUNDLED_OPENROUTER_KEY = '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';
     const ANALYSIS_SCHEMA = `Return ONLY valid JSON with this structure:
 {
   "riskScore": <number 0-100>,
@@ -1622,10 +1598,6 @@
       currentUser: storage.get('safenet-current-user', null),
       users: storage.get('safenet-users', []),
       scans: storage.get('safenet-scans', []),
-      reports: storage.get('safenet-reports', []),
-      reportsLoaded: false,
-      reportsLoading: false,
-      reportSyncError: '',
       elderlyMode: localStorage.getItem('safenet-elderly') === 'true',
       elderlyConfirmOpen: false,
       scanTab: 'TEXT',
@@ -1661,40 +1633,6 @@
       return `${text.slice(0, maxLength - 3)}...`;
     }
 
-    function reportSummaryFromResult(result) {
-      if (!result) return 'No findings available.';
-      const tacticText = result.tactics?.length ? `Tactics: ${result.tactics.slice(0, 3).join(', ')}. ` : '';
-      const reasonText = result.reasons?.[0] || 'No specific finding available.';
-      return shortText(`${result.verdict.replace('_', ' ')} (${result.riskScore}/100). ${tacticText}${reasonText}`, 190);
-    }
-
-    function sharedReportsEnabled() {
-      return /^https:\/\/.+\.supabase\.co$/i.test(SUPABASE_URL) && SUPABASE_ANON_KEY.length > 20;
-    }
-
-    function supabaseHeaders(extra = {}) {
-      return {
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-        'Content-Type': 'application/json',
-        ...extra
-      };
-    }
-
-    function mapSharedReport(row) {
-      return {
-        id: row.id,
-        scamType: row.scam_type,
-        title: row.title || 'Community Scam Report',
-        description: row.summary || '',
-        summary: row.summary || '',
-        scannedItem: row.scanned_item || '',
-        offendingSource: row.scanned_item || '',
-        reportedBy: row.reported_by || 'Anonymous',
-        reportedAt: row.reported_at || new Date().toISOString()
-      };
-    }
-
     function icon(name) {
       return icons[name] || '';
     }
@@ -1710,7 +1648,6 @@
       storage.set('safenet-current-user', state.currentUser);
       storage.set('safenet-users', state.users);
       storage.set('safenet-scans', state.scans);
-      if (!sharedReportsEnabled()) storage.set('safenet-reports', state.reports);
     }
 
     function routeTo(route) {
@@ -1761,7 +1698,7 @@
         <div class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="elderlyConfirmTitle">
           <span class="feature-icon rose" aria-hidden="true">${icon('heart')}</span>
           <h2 id="elderlyConfirmTitle">Turn on Elderly Mode?</h2>
-          <p>This will make text, buttons, inputs, reports, and scanner controls larger and easier to read. You can turn it off anytime from the top bar.</p>
+          <p>This will make text, buttons, inputs, scanner explanations, and history logs larger and easier to read. You can turn it off anytime from the top bar.</p>
           <div class="confirm-actions">
             <button class="button ghost" id="cancelElderly" type="button">Cancel</button>
             <button class="button primary" id="confirmElderly" type="button">${icon('heart')} Turn On</button>
@@ -1804,7 +1741,6 @@
             <p>SafeNet is a free scanner that instantly checks emails, DMs, texts, or websites for fraud. Paste text or website links to audit risk metrics and preview choice simulations.</p>
             <div class="cta-row">
               <button class="cta primary" data-route="/scan">Start Scam Scan</button>
-              <button class="cta ghost" data-route="/reports">View Scam Trends</button>
             </div>
             <div class="features">
               ${feature('file', 'sky', 'Message Scanner', 'Paste SMS codes, urgent bank notifications, or social DMs. AI isolates urgent indicators and flags malicious intents.')}
@@ -1910,13 +1846,13 @@
               </div>
               <button class="button ghost" id="resetScan">${icon('refresh')} Scan Another Item</button>
             </div>
-            ${resultsDisplay(state.lastResult, true)}
+            ${resultsDisplay(state.lastResult)}
           </div>
         </section>
       `;
     }
 
-    function resultsDisplay(result, allowReport) {
+    function resultsDisplay(result) {
       const verdictClass = result.verdict === 'SAFE' ? 'verdict-safe' : result.verdict === 'SUSPICIOUS' ? 'verdict-suspicious' : 'verdict-high';
       const ringColor = result.riskScore < 30 ? 'var(--emerald)' : result.riskScore < 70 ? 'var(--amber)' : 'var(--rose)';
       const dash = 251.2 * (1 - result.riskScore / 100);
@@ -1939,6 +1875,7 @@
             </div>
             <div class="panel analysis-card">
               <h4>${icon('info')} Audit Analysis</h4>
+              ${result.notice ? `<div class="info-box" style="margin-top:14px;">${icon('info')}<span>${escapeHtml(result.notice)}</span></div>` : ''}
               <ul class="reason-list">
                 ${result.reasons.map(reason => `<li><span class="sky">&bull;</span><span>${escapeHtml(reason)}</span></li>`).join('')}
               </ul>
@@ -1983,7 +1920,6 @@
             </div>
           </div>
 
-          ${allowReport ? reportActionMarkup() : ''}
         </div>
       `;
     }
@@ -2004,93 +1940,6 @@
             <div><span class="mini-label">Emotional Toll:</span>${escapeHtml(scenario.impactEmotional)}</div>
           </div>
         </article>
-      `;
-    }
-
-    function reportActionMarkup() {
-      if (!state.currentUser) {
-        return `<button class="button ghost" style="width:100%;" data-route="/auth">${icon('login')} Sign in to Warn the Community</button>`;
-      }
-      return `<button class="button warn" style="width:100%;" id="warnCommunity">${icon('alert')} Warn Community - Forward This Report</button>`;
-    }
-
-    async function loadSharedReports() {
-      if (!sharedReportsEnabled() || state.reportsLoading || state.reportsLoaded) return;
-      state.reportsLoading = true;
-      state.reportSyncError = '';
-      try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_REPORTS_TABLE}?select=*&order=reported_at.desc`, {
-          headers: supabaseHeaders()
-        });
-        if (!response.ok) throw new Error('Could not load shared reports.');
-        const rows = await response.json();
-        state.reports = rows.map(mapSharedReport);
-        state.reportsLoaded = true;
-      } catch (error) {
-        state.reportSyncError = error.message || 'Could not sync shared reports.';
-      } finally {
-        state.reportsLoading = false;
-        if (state.route === '/reports') render();
-      }
-    }
-
-    async function saveSharedReport(report) {
-      if (!sharedReportsEnabled()) {
-        state.reports.push(report);
-        persist();
-        return;
-      }
-
-      const payload = {
-        id: report.id,
-        scam_type: report.scamType,
-        title: report.title,
-        summary: report.summary,
-        scanned_item: report.scannedItem,
-        reported_by: report.reportedBy,
-        reported_at: report.reportedAt
-      };
-
-      const response = await fetch(`${SUPABASE_URL}/rest/v1/${SUPABASE_REPORTS_TABLE}`, {
-        method: 'POST',
-        headers: supabaseHeaders({ Prefer: 'return=representation' }),
-        body: JSON.stringify(payload)
-      });
-      if (!response.ok) throw new Error('Could not save shared report.');
-      const rows = await response.json();
-      const saved = rows[0] ? mapSharedReport(rows[0]) : report;
-      state.reports = [saved, ...state.reports.filter(item => item.id !== saved.id)];
-      state.reportsLoaded = true;
-    }
-
-    function reportsPage() {
-      const reports = [...state.reports].sort((a, b) => new Date(b.reportedAt) - new Date(a.reportedAt));
-      return `
-        <section class="page">
-          <div class="container narrow stack">
-            ${shellHeader('Community Scam Reports', sharedReportsEnabled() ? 'Shared scam reports from everyone using this site.' : 'Local demo reports. Add Supabase settings in the HTML to share reports across all devices.')}
-            <div class="info-box">${icon('info')}<span><strong>How to Report:</strong> First run a safety audit in the Scam Scanner. When the analysis complete screen appears, click Warn Community to publish the report here.</span></div>
-            ${state.reportsLoading ? `<div class="info-box">${icon('refresh')}<span>Loading shared reports...</span></div>` : ''}
-            ${state.reportSyncError ? `<div class="error-box">${escapeHtml(state.reportSyncError)}</div>` : ''}
-            ${reports.length ? `
-              <div class="panel report-list">
-                ${reports.map(report => `
-                  <article class="report-item">
-                    <div class="report-top">
-                      <span class="tag">${escapeHtml(report.scamType)}</span>
-                      <span class="mini-label">${icon('calendar')} ${date(report.reportedAt)}</span>
-                    </div>
-                    <h3>${escapeHtml(report.reportedBy || 'Anonymous')}</h3>
-                    <div><span class="mini-label" style="margin-top:12px;">Text / Website Scanned:</span><code class="code">${escapeHtml(shortText(report.scannedItem || report.offendingSource || 'Unknown item', 150))}</code></div>
-                    <div><span class="mini-label" style="margin-top:14px;">Summary of Findings:</span><p>${escapeHtml(report.summary || report.description || 'No summary available.')}</p></div>
-                  </article>
-                `).join('')}
-              </div>
-            ` : `
-              <div class="empty"><p>No community reports submitted yet.</p></div>
-            `}
-          </div>
-        </section>
       `;
     }
 
@@ -2135,7 +1984,7 @@
               ${stat('Average Risk Score', average + '%', '')}
             </div>
             ${scans.length ? `
-              <div class="panel report-list">
+              <div class="panel history-list">
                 ${scans.map(scan => historyItem(scan)).join('')}
               </div>
             ` : `
@@ -2283,6 +2132,27 @@
       return /^(yo|hi|hello|hey|sup|what'?s up|good morning|good afternoon|good evening)[!.?\s]*$/i.test(input.trim());
     }
 
+    function extractFallbackHighlights(type, input) {
+      const text = input.trim();
+      if (!text) return [];
+      if (type === 'URL') {
+        try {
+          const url = new URL(normalizeUrlInput(text));
+          return [url.hostname, ...url.pathname.split('/').filter(Boolean).slice(0, 2)];
+        } catch {
+          return [shortText(text, 48)];
+        }
+      }
+
+      const quotedPhrases = text.match(/https?:\/\/\S+|www\.\S+|\b[\w.-]+\.(?:com|org|net|xyz|top|info|cc|zip)\b/gi) || [];
+      const importantWords = text
+        .split(/[^a-zA-Z0-9']+/)
+        .filter(word => word.length > 3)
+        .filter(word => !['this', 'that', 'with', 'from', 'your', 'have', 'will', 'they', 'them', 'then', 'than'].includes(word.toLowerCase()))
+        .slice(0, 4);
+      return [...quotedPhrases, ...importantWords].slice(0, 6);
+    }
+
     function runScan(type, input) {
       const normalized = input.toLowerCase();
       let riskScore = 10;
@@ -2321,7 +2191,7 @@
         }
         if (!reasons.length) {
           reasons.push('No obvious phishing patterns were detected in the URL structure.');
-          highlights.push('No major red flags');
+          highlights.push(...extractFallbackHighlights(type, input));
           tactics.push('Low-Risk URL Pattern');
         }
       } else if (type === 'IMAGE') {
@@ -2380,7 +2250,11 @@
           reasons.push(isSimpleGreeting(input) ? 'The message is a simple, informal greeting.' : 'The message appears to be normal communication.');
           reasons.push('There are no indicators of scam, phishing, or malicious intent.');
           reasons.push('No abusive language, threats, or requests for personal information are present.');
-          highlights.push(isSimpleGreeting(input) ? 'Informal greeting' : 'No suspicious terms');
+          if (isSimpleGreeting(input)) {
+            highlights.push('Informal greeting');
+          } else {
+            highlights.push(...extractFallbackHighlights(type, input));
+          }
         }
       }
 
@@ -2471,13 +2345,11 @@
     function render() {
       updateChrome();
       if (state.route === '/scan') app.innerHTML = scanPage();
-      else if (state.route === '/reports') app.innerHTML = reportsPage();
       else if (state.route === '/dashboard') app.innerHTML = dashboardPage();
       else if (state.route === '/auth') app.innerHTML = authPage();
       else app.innerHTML = homePage();
       injectIcons(app);
       bindPage();
-      if (state.route === '/reports') loadSharedReports();
     }
 
     function bindPage() {
@@ -2536,9 +2408,6 @@
         render();
       });
 
-      const warnCommunity = document.getElementById('warnCommunity');
-      if (warnCommunity) warnCommunity.addEventListener('click', forwardReport);
-
       const authForm = document.getElementById('authForm');
       if (authForm) authForm.addEventListener('submit', handleAuthSubmit);
     }
@@ -2580,10 +2449,7 @@
         result = await analyzeWithOpenRouter(state.scanTab, input);
       } catch (error) {
         result = runScan(state.scanTab, input);
-        result.reasons = [
-          `AI scanner could not run: ${error.message}`,
-          ...result.reasons
-        ];
+        result.notice = `AI scan is temporarily unavailable (${error.message}). Showing the local safety scan instead.`;
         result.tactics = ['Heuristic Fallback', ...result.tactics].slice(0, 6);
       } finally {
         submitButton.disabled = false;
@@ -2608,41 +2474,6 @@
         persist();
       }
       render();
-    }
-
-    async function forwardReport() {
-      if (!state.currentUser || !state.lastResult) return;
-      const report = {
-        id: id(),
-        scamType: state.lastType,
-        title: `AI Alert: ${state.lastResult.verdict.replace('_', ' ')} (${state.lastResult.riskScore}/100 Risk)`,
-        summary: reportSummaryFromResult(state.lastResult),
-        description: reportSummaryFromResult(state.lastResult),
-        scannedItem: state.lastInput,
-        offendingSource: state.lastType === 'URL' ? state.lastInput : state.lastInput.slice(0, 80),
-        reportedBy: state.currentUser.name || state.currentUser.email,
-        reportedAt: new Date().toISOString()
-      };
-      const button = app.querySelector('#warnCommunity');
-      if (button) {
-        button.disabled = true;
-        button.innerHTML = `${icon('refresh')} Forwarding Scam Alert...`;
-      }
-      try {
-        await saveSharedReport(report);
-        app.querySelector('#warnCommunity')?.replaceWith(Object.assign(document.createElement('div'), {
-          className: 'success-box',
-          textContent: sharedReportsEnabled()
-            ? 'Successfully forwarded to the shared community report board.'
-            : 'Successfully saved to this browser report board.'
-        }));
-      } catch (error) {
-        if (button) {
-          button.disabled = false;
-          button.innerHTML = `${icon('alert')} Warn Community - Forward This Report`;
-        }
-        alert(error.message || 'Could not submit community report.');
-      }
     }
 
     function handleAuthSubmit(event) {
