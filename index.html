@@ -1695,6 +1695,7 @@
 
     const app = document.getElementById('app');
     const AI_PROXY_ENDPOINT = '/api/openrouter';
+    const SAFENET_HOSTED_PROXY_ENDPOINT = 'https://safenet-zeta.vercel.app/api/openrouter';
     const ANALYSIS_SCHEMA = `Return ONLY valid JSON with this structure:
 {
   "riskScore": <number 0-100>,
@@ -2197,9 +2198,14 @@
     }
 
     function getAiProxyEndpoint() {
-      if (location.protocol === 'file:') return '';
-      if (location.hostname.endsWith('github.io')) return '';
-      return window.SAFENET_AI_PROXY_ENDPOINT || AI_PROXY_ENDPOINT;
+      if (window.SAFENET_AI_PROXY_ENDPOINT) return window.SAFENET_AI_PROXY_ENDPOINT;
+      if (location.hostname === 'acelearn.org' || location.pathname.startsWith('/safenet')) {
+        return '/safenet/api/openrouter';
+      }
+      if (location.hostname === 'safenet-zeta.vercel.app' || location.hostname.endsWith('.vercel.app')) {
+        return AI_PROXY_ENDPOINT;
+      }
+      return SAFENET_HOSTED_PROXY_ENDPOINT;
     }
 
     function shouldShowAiNotice(error) {
